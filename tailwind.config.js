@@ -6,8 +6,15 @@ export default {
         "./resources/**/*.vue",
     ],
   theme: {
-    extend: {},
+    extend: {
+        //agregar el font family Monserrat
+        fontFamily: {
+            'sans': ['Montserrat', 'sans-serif'],
+
+        },
+    },
   },
-  plugins: [],
+  plugins: [
+  ],
 }
 

@@ -31,23 +31,13 @@
             </li>
 
         </ul>
-        <ul class="flex items-center space-x-4 ml-auto">
-            <li>
-                <a href="#" class="text-gray-500 hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-200">
-                    <i class="ri-search-line"></i>
-                </a>
-            </li>
-            <li>
-                <a href="#" class="text-gray-500 hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-200">
-                    <i class="ri-notification-3-line"></i>
-                </a>
-            </li>
-            <li>
-                <a href="#" class="text-gray-500 hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-200">
-                    <i class="ri-user-line"></i>
-                </a>
-            </li>
-        </ul>
+        <div class="flex items-center ml-auto gap-4">
+                <img src="http://placehold.co/40x40" alt="" class="size-10 rounded object-cover">
+            <a href="#">
+                <span class="text-md font-normal text-gray-600">Cerrar sesion</span>
+            </a>
+
+        </div>
 
     </div>
     @yield('content')

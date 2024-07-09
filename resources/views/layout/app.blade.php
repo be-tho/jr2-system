@@ -17,7 +17,39 @@
 </head>
 <body>
 <x-navbar/>
-<main class="w-[calc(100%-256px)] ml-64 p-4">
+<main class="w-[calc(100%-256px)] ml-64">
+    <div class="py-2 px-6 bg-white flex items-center shadow-md shadow-black/5">
+        <button class="text-gray-500 focus:outline-none dark:text-gray-300">
+            <i class="ri-menu-line"></i>
+        </button>
+        <ul class="flex items-center text-sm ml-4">
+            <li class="mr2">
+                <a href="#" class="text-gray-400 hover:text-gray-600 font-medium mr-2">Home</a>
+            </li>
+            <li class="mr2">
+                <a href="#" class="text-gray-400 hover:text-gray-600 font-medium"></a>
+            </li>
+
+        </ul>
+        <ul class="flex items-center space-x-4 ml-auto">
+            <li>
+                <a href="#" class="text-gray-500 hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-200">
+                    <i class="ri-search-line"></i>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="text-gray-500 hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-200">
+                    <i class="ri-notification-3-line"></i>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="text-gray-500 hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-200">
+                    <i class="ri-user-line"></i>
+                </a>
+            </li>
+        </ul>
+
+    </div>
     @yield('content')
 </main>
 <footer class="bg-white rounded-lg shadow dark:bg-gray-800 fixed left-0 bottom-0 right-0">

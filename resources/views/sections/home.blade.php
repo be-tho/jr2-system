@@ -2,29 +2,35 @@
 @section('title', 'Home')
 @section('content')
     <x-container-wrapp>
-        <h1 class="text-4xl font-bold text-gray-800">Bienvenido a Jr2</h1>
-        <p class="text-gray-800">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci alias aspernatur atque
-            autem
-            blanditiis consequatur cumque, delectus doloremque doloribus ducimus ea eius eligendi eos esse est eum
-            exercitationem explicabo facere facilis fugiat harum id illum impedit in incidunt ipsa iure laborum magnam
-            magni
-            maxime minus molestias natus nemo neque nihil nisi nobis non nulla numquam obcaecati officiis omnis optio
-            pariatur
-            perferendis perspiciatis placeat praesentium quae quam quas qui quia quidem quisquam quo ratione recusandae
-            rem
-            repellendus repudiandae rerum saepe sapiente sequi similique sit soluta sunt suscipit tempora tenetur totam
-            ullam
-            unde vel veniam voluptas voluptate voluptatem voluptates voluptatum. Adipisci alias aspernatur atque autem
-            blanditiis consequatur cumque, delectus doloremque doloribus ducimus ea eius eligendi eos esse est eum
-            exercitationem explicabo facere facilis fugiat harum id illum impedit in incidunt ipsa iure laborum magnam
-            magni
-            maxime minus molestias natus nemo neque nihil nisi nobis non nulla numquam obcaecati officiis omnis optio
-            pariatur
-            perferendis perspiciatis placeat praesentium quae quam quas qui quia quidem quisquam quo ratione recusandae
-            rem
-            repellendus repudiandae rerum saepe sapiente sequi similique sit soluta sunt suscipit tempora tenetur totam
-            ullam
-            unde vel veniam voluptas voluptate voluptatem voluptates voluptatum.
-        </p>
+        <div class="flex mb-2">
+            <h1 class="text-4xl font-bold text-gray-800">Dashboard</h1>
+        </div>
+        <div class="grid grid-col-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="bg-white rounded-md border border-gray-100 p-6">
+                <div class="flex justify-between">
+                    <div>
+                        <div class="text-2xl font-semibold mb-1">Cortes activos</div>
+                        <div class="font-normal text-gray-400">5</div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-md border border-gray-100 p-6">
+                <div class="flex justify-between">
+                    <div>
+                        <div class="text-2xl font-semibold mb-1">Cortes entregados</div>
+                        <div class="font-normal text-gray-400">3</div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-md border border-gray-100 p-6">
+                <div class="flex justify-between">
+                    <div>
+                        <div class="text-2xl font-semibold mb-1">Cortes terminados</div>
+                        <div class="font-normal text-gray-400">10</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </x-container-wrapp>
 @endsection

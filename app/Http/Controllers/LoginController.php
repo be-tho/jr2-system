@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\LoginRequest;
 
 class LoginController extends Controller
 {
@@ -11,20 +13,19 @@ class LoginController extends Controller
         return view('sections.login');
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->only(['email', 'password']);
 
-        if (auth()->attempt($credentials)) {
-            $request->session()->regenerate();
-
-            return redirect()->intended('dashboard');
+        if (Auth::attempt($credentials)) {
+            return to_route('home.index')->with('success', 'Login realizado con éxito');
         }
 
-        return back()->withErrors([
-            'message' => 'Las credenciales proporcionadas no coinciden con nuestros registros.',
+        return redirect()->back()->withInput()->with([
+            'error' => 'Credenciales incorrectas',
         ]);
     }
+
     public function logout()
     {
         auth()->logout();

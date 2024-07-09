@@ -32,13 +32,21 @@
 
         </ul>
         <div class="flex items-center ml-auto gap-4">
-                <img src="http://placehold.co/40x40" alt="" class="size-10 rounded object-cover">
-            <a href="#">
-                <span class="text-md font-normal text-gray-600">Cerrar sesion</span>
-            </a>
+            @auth()
+                <img src="{{ asset("./src/assets/images/usuario.jpg") }}" alt="foto del usuario logeado" class="size-8  rounded-full bg-gray-900/5 object-cover shadow-lg" />
+                <form action="{{ route('login.logout') }}" method="post" class="hidden m-0 lg:flex lg:flex-1 lg:justify-end">
+                    @csrf
+                    <button class="text-sm font-semibold leading-6 text-gray-900">({{ auth()->user()->name }}) Cerrar sesión</button>
+                </form>
+            @endauth
+            @guest()
+                <div class="hidden lg:flex lg:flex-1 lg:justify-end">
+                    <a href="{{ route('login.index') }}" class="text-sm font-semibold leading-6 text-gray-900">Iniciar sesión</a>
+                </div>
+            @endguest
+
 
         </div>
-
     </div>
     @yield('content')
 </main>

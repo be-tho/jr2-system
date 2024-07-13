@@ -16,3 +16,4 @@ Route::controller(LoginController::class)->prefix('/login')->group(function () {
 
 //cortes
 Route::get('/cortes', [CorteController::class, 'index'])->name('cortes.index');
+Route::get('/cortes/create', [CorteController::class, 'create'])->name('cortes.create');

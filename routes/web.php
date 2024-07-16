@@ -15,6 +15,6 @@ Route::controller(LoginController::class)->prefix('/login')->group(function () {
 });
 
 //cortes
-Route::get('/cortes', [CorteController::class, 'index'])->name('cortes.index');
-Route::get('/cortes/create', [CorteController::class, 'create'])->name('cortes.create');
-Route::post('/cortes', [CorteController::class, 'store'])->name('cortes.store');
+Route::get('/cortes', [CorteController::class, 'index'])->name('cortes.index')->middleware('auth');
+Route::get('/cortes/create', [CorteController::class, 'create'])->name('cortes.create')->middleware('auth');
+Route::post('/cortes', [CorteController::class, 'store'])->name('cortes.store')->middleware('auth');

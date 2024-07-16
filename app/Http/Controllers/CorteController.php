@@ -54,7 +54,7 @@ class CorteController extends Controller
             ]);
             return to_route('home.index')->with('success', 'Corte creado correctamente');
         }catch (\Exception $e) {
-            return to_route('home.index')->with('error', 'Error al crear el corte');
+            return to_route('home.index')->with('error', 'Error al crear el corte', $e->getMessage());
         }
     }
 

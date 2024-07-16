@@ -2,8 +2,12 @@
 @section('title', 'Cortes')
 @section('content')
     <x-container-wrapp>
-        <div class="flex mb-2">
+        <div class="flex justify-between items-center mb-2">
             <h1 class="text-4xl font-bold text-gray-800">Cortes</h1>
+
+            <a href="{{ route('cortes.create') }}" class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                Crear un corte nuevo
+            </a>
         </div>
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">

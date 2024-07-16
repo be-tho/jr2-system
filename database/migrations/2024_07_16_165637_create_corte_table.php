@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('colores');
             $table->integer('cantidad');
             $table->string('articulos');
+            $table->string('descripcion');
             $table->string('costureros');
             $table->string('imagen');
             $table->string('imagen_alt')->nullable();

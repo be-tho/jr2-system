@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('corte', function (Blueprint $table) {
+        Schema::create('cortes', function (Blueprint $table) {
             $table->id();
             $table->integer('numero_corte');
             $table->string('nombre');
@@ -20,10 +20,10 @@ return new class extends Migration
             $table->string('articulos');
             $table->string('descripcion');
             $table->string('costureros');
+            $table->boolean('estado')->default(0);
             $table->string('imagen');
             $table->string('imagen_alt')->nullable();
             $table->date('fecha')->format('d-m-Y');
-            $table->boolean('estado')->default(0);
             $table->timestamps();
         });
     }
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('corte');
+        Schema::dropIfExists('cortes');
     }
 };

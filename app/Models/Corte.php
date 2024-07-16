@@ -10,7 +10,6 @@ class Corte extends Model
     use HasFactory;
 
     protected $fillable = [
-        'fecha',
         'numero_corte',
         'nombre',
         'colores',
@@ -21,6 +20,7 @@ class Corte extends Model
         'estado',
         'imagen',
         'imagen_alt',
+        'fecha',
         'created_at',
         'updated_at'
     ];

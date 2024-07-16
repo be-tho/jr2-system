@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CorteRequest;
 use Illuminate\Http\Request;
-use Intervention\Image\Facades\Image;
 use App\Models\Corte;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class CorteController extends Controller
 {
@@ -23,16 +24,16 @@ class CorteController extends Controller
     {
         try {
             if($request->hasFile('imagen')) {
-                $imagen = $request->file('imagen');
-                $nombre_imagen = time() . '.' . $imagen->getClientOriginalName();
-                $ruta_imagen = public_path().'/uploads/images/cortes/'.$nombre_imagen;
-                Image::make($imagen->getRealPath())
-                    ->resize(450, 600, function ($constraint) {
-                        $constraint->aspectRatio();
-                    })
-                    ->save($ruta_imagen);
-                $request->imagen = $nombre_imagen;
-                $request->imagen_alt = $nombre_imagen;
+                $manager = new ImageManager(new Driver());
+                $name_img = time() . $request->file('imagen')->getClientOriginalName();
+                $img = $manager->read($request->file('imagen')->getRealPath());
+                $img = $img->resize(450, 600, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+                $img->toJpeg(80)->save(public_path('./src/assets/uploads/images/cortes/' . $name_img));
+
+                $request->imagen = $name_img;
+                $request->imagen_alt = $name_img;
             } else {
                 $request->imagen = 'default-corte.jpg';
                 $request->imagen_alt = 'default-corte.jpg';
@@ -54,7 +55,7 @@ class CorteController extends Controller
             ]);
             return to_route('home.index')->with('success', 'Corte creado correctamente');
         }catch (\Exception $e) {
-            return to_route('home.index')->with('error', 'Error al crear el corte', $e->getMessage());
+            return to_route('cortes.index')->with('error', $e->getMessage());
         }
     }
 

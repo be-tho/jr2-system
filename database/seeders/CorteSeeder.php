@@ -13,7 +13,7 @@ class CorteSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('corte')->insert([
+        DB::table('cortes')->insert([
             [
                 'numero_corte'      => '10',
                 'nombre'            => 'Lurex',

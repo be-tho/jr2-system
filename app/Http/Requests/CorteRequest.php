@@ -28,7 +28,6 @@ class CorteRequest extends FormRequest
             'cantidad' => 'required',
             'articulos' => ['required', 'min:3'],
             'costureros' => ['required', 'min:3'],
-            'imagen' => 'image|mimes:jpeg,png,jpg,gif,svg'
         ];
     }
 
@@ -46,8 +45,6 @@ class CorteRequest extends FormRequest
             'articulos.min' => 'El campo artículos debe tener al menos 3 caracteres',
             'costureros.required' => 'El campo costureros es requerido',
             'costureros.min' => 'El campo costureros debe tener al menos 3 caracteres',
-            'imagen.image' => 'El archivo debe ser una imagen',
-            'imagen.mimes' => 'El archivo debe ser de tipo: jpeg, png, jpg, gif, svg'
         ];
     }
 }

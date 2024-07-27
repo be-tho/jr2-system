@@ -12,7 +12,9 @@ class CorteController extends Controller
 {
     public function index()
     {
-        return view('sections.cortes');
+        // $cortes = Corte::all();
+        $cortes = Corte::orderBy('id', 'desc')->get();
+        return view('sections.cortes', compact('cortes'));
     }
 
     public function create()

@@ -64,6 +64,6 @@ class CorteController extends Controller
     public function show($id)
     {
         $corte = Corte::find($id);
-        return view('sections.cortes', compact('corte'));
+        return view('sections.cortes-show', compact('corte'));
     }
 }

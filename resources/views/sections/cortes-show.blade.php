@@ -71,7 +71,7 @@
                     </div>
 {{--                    modal en el medio --}}
                     <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                        <img src="{{ asset('src/assets/uploads/cortes/' . $corte->imagen) }}" alt="imagen del corte" class="w-full max-h-[80%] object-contain" />
+                        <img src="{{ asset('src/assets/uploads/cortes/' . $corte->imagen) }}" alt="imagen del corte" class="w-auto max-h-[100%] object-contain border-gray-100 border-4 rounded-2xl" />
                     </div>
                 </div>
             </div>

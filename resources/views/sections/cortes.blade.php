@@ -92,7 +92,7 @@
                                 <i class="ri-pencil-line"></i>
                                 Ver
                             </a>
-                            <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-1.5">
+                            <a href="{{ route('corte.edit', ['id' => $corte->id]) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-1.5">
                                 <i class="ri-eye-line"></i>
                                 Editar
                             </a>

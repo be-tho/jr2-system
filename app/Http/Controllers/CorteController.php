@@ -32,7 +32,7 @@ class CorteController extends Controller
                 $img = $img->resize(450, 600, function ($constraint) {
                     $constraint->aspectRatio();
                 });
-                $img->toJpeg(80)->save(public_path('./src/assets/uploads/images/cortes/' . $name_img));
+                $img->toJpeg(80)->save(public_path('./src/assets/uploads/cortes/' . $name_img));
 
                 $request->imagen = $name_img;
                 $request->imagen_alt = $name_img;
@@ -65,5 +65,57 @@ class CorteController extends Controller
     {
         $corte = Corte::find($id);
         return view('sections.cortes-show', compact('corte'));
+    }
+
+//    funcion para editar el corte /
+
+    public function edit($id)
+    {
+        $corte = Corte::find($id);
+        return view('sections.cortes-edit-form', compact('corte'));
+    }
+
+    public function update(CorteRequest $request, $id)
+    {
+        try {
+            $corte = Corte::find($id);
+            if($request->hasFile('imagen')) {
+                $manager = new ImageManager(new Driver());
+                $name_img = time() . $request->file('imagen')->getClientOriginalName();
+                $img = $manager->read($request->file('imagen')->getRealPath());
+                $img = $img->resize(450, 600, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+                $img->toJpeg(80)->save(public_path('./src/assets/uploads/cortes/' . $name_img));
+
+                $request->imagen = $name_img;
+                $request->imagen_alt = $name_img;
+
+                if($corte->imagen != 'default-corte.jpg') {
+                    unlink(public_path('./src/assets/uploads/cortes/' . $corte->imagen));
+                }
+            } else {
+                $request->imagen = $corte->imagen;
+                $request->imagen_alt = $corte->imagen_alt;
+            }
+
+            $corte->update([
+                'numero_corte' => $request->numero_corte,
+                'nombre' => $request->nombre,
+                'colores' => $request->colores,
+                'cantidad' => $request->cantidad,
+                'articulos' => $request->articulos,
+                'descripcion' => $request->descripcion,
+                'costureros' => $request->costureros,
+                'imagen' => $request->imagen,
+                'imagen_alt' => $request->imagen_alt,
+                'estado' => $request->estado,
+                'fecha' => now(),
+                'updated_at' => now(),
+            ]);
+            return to_route('cortes.index')->with('success', 'Corte creado correctamente');
+        }catch (\Exception $e) {
+            return to_route('cortes.index')->with('error', $e->getMessage());
+        }
     }
 }

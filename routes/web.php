@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ArticuloController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
@@ -21,3 +22,6 @@ Route::post('/cortes', [CorteController::class, 'store'])->name('cortes.store')-
 Route::get('/corte/{id}', [CorteController::class, 'show'])->name('corte.show')->middleware('auth');
 Route::get('/corte/{id}/edit', [CorteController::class, 'edit'])->name('corte.edit')->middleware('auth');
 Route::put('/corte/{id}', [CorteController::class, 'update'])->name('corte.update')->middleware('auth');
+
+//articulos
+Route::get('/articulos', [ArticuloController::class, 'index'])->name('articulos.index')->middleware('auth');

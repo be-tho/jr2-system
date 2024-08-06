@@ -9,11 +9,11 @@ use App\Http\Controllers\CorteController;
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
 
 //login
-Route::controller(LoginController::class)->prefix('/login')->group(function () {
-    Route::get('', 'index')->name('login.index')->middleware('guest');
-    Route::post('', 'login')->name('login.login');
-    Route::post('logout', 'logout')->name('login.logout');
-});
+Route::get('/login', [LoginController::class, 'index'])->name('login.index');
+Route::post('/login/', [LoginController::class, 'login'])->name('login.login');
+Route::post('/logout', [LoginController::class, 'logout'])->name('login.logout')->middleware('auth');
+
+
 
 //cortes
 Route::get('/cortes', [CorteController::class, 'index'])->name('cortes.index')->middleware('auth');
@@ -25,3 +25,8 @@ Route::put('/corte/{id}', [CorteController::class, 'update'])->name('corte.updat
 
 //articulos
 Route::get('/articulos', [ArticuloController::class, 'index'])->name('articulos.index')->middleware('auth');
+
+//si no encuentra la ruta redirige a la home
+Route::fallback(function () {
+    return redirect()->route('home.index');
+});

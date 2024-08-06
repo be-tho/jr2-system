@@ -21,7 +21,7 @@ class ArticulosSeeder extends Seeder
                 'codigo' => 'REM001',
                 'stock' => 10,
                 'precio' => 1500,
-                'imagen' => 'remera-lurex.jpg',
+                'imagen' => 'default-articulo.png',
                 'categoria' => 'Remeras',
             ],
             [
@@ -31,7 +31,7 @@ class ArticulosSeeder extends Seeder
                 'codigo' => 'PAN001',
                 'stock' => 5,
                 'precio' => 2500,
-                'imagen' => 'pantalon-jean.jpg',
+                'imagen' => 'default-articulo.png',
                 'categoria' => 'Pantalones',
             ],
             [
@@ -41,7 +41,7 @@ class ArticulosSeeder extends Seeder
                 'codigo' => 'CAL001',
                 'stock' => 15,
                 'precio' => 1200,
-                'imagen' => 'calza-algodon.jpg',
+                'imagen' => 'default-articulo.png',
                 'categoria' => 'Calzas',
             ],
             [
@@ -51,7 +51,7 @@ class ArticulosSeeder extends Seeder
                 'codigo' => 'CAM001',
                 'stock' => 3,
                 'precio' => 3500,
-                'imagen' => 'campera-jean.jpg',
+                'imagen' => 'default-articulo.png',
                 'categoria' => 'Camperas',
             ],
             [
@@ -61,7 +61,7 @@ class ArticulosSeeder extends Seeder
                 'codigo' => 'POL001',
                 'stock' => 7,
                 'precio' => 2000,
-                'imagen' => 'pollera-gabardina.jpg',
+                'imagen' => 'default-articulo.png',
                 'categoria' => 'Polleras',
             ],
             [
@@ -71,7 +71,7 @@ class ArticulosSeeder extends Seeder
                 'codigo' => 'VES001',
                 'stock' => 2,
                 'precio' => 3000,
-                'imagen' => 'vestido-lino.jpg',
+                'imagen' => 'default-articulo.png',
                 'categoria' => 'Vestidos',
             ]
         ]);

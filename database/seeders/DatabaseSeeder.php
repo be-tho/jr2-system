@@ -17,5 +17,6 @@ class DatabaseSeeder extends Seeder
         $this->call(UserSeeder::class);
         $this->call(CorteSeeder::class);
         $this->call(TemporadaSeeder::class);
+        $this->call(ArticulosSeeder::class);
     }
 }

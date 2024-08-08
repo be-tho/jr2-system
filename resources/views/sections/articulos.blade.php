@@ -11,9 +11,9 @@
                 Crear artículo nuevo
             </a>
         </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mx-auto">
                 @foreach( $articulos as $articulo )
-                <div class="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 justify-center items-center mx-auto">
                     <a href="#">
                         <img class="p-8 rounded-t-lg" src="{{ asset('src/assets/uploads/articulos/' . $articulo->imagen) }}" alt="Imagen del artículo" />
                     </a>

@@ -26,6 +26,7 @@
                 </div>
                 <div class="ms-3 text-sm font-normal text-white">{{ session('success') }}.</div>
                 <button type="button"
+                        id="cerrar"
                         class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center size-8"
                         data-dismiss-target="#toast"
                         aria-label="Close">
@@ -55,7 +56,7 @@
         </div>
     @endif
 <x-navbar/>
-<main class="w-[calc(100%-256px)] ml-64">
+<main class="w-[calc(100%-256px)] ml-64 main">
     <div class="py-2 px-6 bg-white flex items-center shadow-md shadow-black/5">
         <button
             class="text-gray-500 focus:outline-none dark:text-gray-300"
@@ -63,10 +64,12 @@
         >
             <i class="ri-menu-line"></i>
         </button>
+
+{{--        sidebar --}}
         <nav class="flex" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                 <li class="inline-flex items-center ml-2">
-                    <a href="#" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                    <a href="/" class="inline-flex items-center text-sm font-medium text-gray-400 {{ Route::is('home.index') ? 'text-gray-700' : '' }} ">
                         Home
                     </a>
                 </li>
@@ -75,20 +78,20 @@
                         <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                         </svg>
-                        <a href="#" class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">Projects</a>
+                        <a href="{{ route("cortes.index") }}" class="ms-1 text-sm font-medium text-gray-400 {{ Route::is('cortes.index') ? 'text-gray-700' : '' }}   md:ms-2 ">Cortes</a>
                     </div>
                 </li>
-                <li aria-current="page">
+                <li>
                     <div class="flex items-center">
                         <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                         </svg>
-                        <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">Flowbite</span>
+                        <a href="{{ route("articulos.index") }}" class="ms-1 text-sm font-medium text-gray-400 {{ Route::is('articulos.index') ? 'text-gray-700' : '' }}  md:ms-2 ">Artículos</a>
                     </div>
                 </li>
             </ol>
         </nav>
-
+{{--        fin sidebar--}}
         <div class="flex items-center ml-auto gap-4">
             @auth()
                 <img src="{{ asset("./src/assets/images/usuario.jpg") }}" alt="foto del usuario logeado" class="size-8  rounded-full bg-gray-900/5 object-cover shadow-lg" />
@@ -112,7 +115,7 @@
     <div class="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
       <span class="text-sm text-white sm:text-center dark:text-gray-400">© 2024 <a href="https://flowbite.com/" class="hover:underline">JR2™</a>. Todos los derechos reservados.
     </span>
-        <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-white dark:text-gray-400 sm:mt-0">
+        <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-white sm:mt-0">
             <li>
                 <a href="#" class="hover:underline me-4 md:me-6">Politicas de privacidad</a>
             </li>
@@ -125,6 +128,38 @@
         </ul>
     </div>
 </footer>
-@vite('resources/js/msjalert.js')
+<script>
+    //cerrar el toast global
+    document.addEventListener('DOMContentLoaded', function () {
+        var toast = document.getElementById('toast');
+        var cerrar = document.getElementById('cerrar');
+
+        //si el toast tiene display block entonces se cierra
+        if(toast.display !== 'none') {
+            function cerrarToast() {
+                toast.style.display = 'none';
+            }
+            //si y solo si el toast existe
+            cerrar.addEventListener('click', cerrarToast);
+            setTimeout(cerrarToast, 3000);
+        }
+     });
+
+    // cuando se haga click en el boton de menu, se despliega el sidebar y se oculta
+    document.addEventListener('DOMContentLoaded', function () {
+        var sidebarToggle = document.getElementById('sidebar-toggle');
+        var sidebar = document.querySelector('.fixed.left-0.top-0.h-full');
+        var main = document.querySelector('.main');
+
+        sidebarToggle.addEventListener('click', function () {
+            sidebar.classList.toggle('hidden');
+            main.classList.toggle('w-full');
+            main.classList.toggle('ml-64');
+            main.classList.toggle('transition-all');
+            sidebarToggle.classList.toggle('transition-all');
+            sidebar.classList.toggle('transition-all');
+        });
+    });
+</script>
 </body>
 </html>

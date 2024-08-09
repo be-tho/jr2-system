@@ -112,11 +112,11 @@
     </div>
     @yield('content')
 </main>
-<footer class="bg-gray-800 text-white rounded-lg shadow dark:bg-gray-800 fixed left-0 bottom-0 right-0">
-    <div class="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
+<footer class="bg-gray-800 text-white shadow block md:fixed dark:bg-gray-800 left-0 bottom-0 right-0">
+    <div class="w-full mx-auto max-w-screen-xl p-4 text-center md:flex md:items-center md:justify-between">
       <span class="text-sm text-white sm:text-center dark:text-gray-400">© 2024 <a href="https://flowbite.com/" class="hover:underline">JR2™</a>. Todos los derechos reservados.
     </span>
-        <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-white sm:mt-0">
+        <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-white justify-center text-center md:text-left sm:mt-0">
             <li>
                 <a href="#" class="hover:underline me-4 md:me-6">Politicas de privacidad</a>
             </li>
@@ -160,6 +160,20 @@
             sidebarToggle.classList.toggle('transition-all');
             sidebar.classList.toggle('transition-all');
         });
+    });
+
+    //si el dispositivo es menor a 768px entonces el sidebar se oculta
+    document.addEventListener('DOMContentLoaded', function () {
+        var sidebar = document.querySelector('.fixed.left-0.top-0.h-full');
+        var main = document.querySelector('.main');
+        if(window.innerWidth < 768) {
+            sidebar.classList.toggle('hidden');
+            main.classList.toggle('w-full');
+            main.classList.toggle('ml-64');
+            main.classList.toggle('transition-all');
+            sidebarToggle.classList.toggle('transition-all');
+            sidebar.classList.toggle('transition-all');
+        }
     });
 </script>
 {{--<script src="{{ asset('build/assets/app-C1-XIpUa.js') }}"></script>--}}

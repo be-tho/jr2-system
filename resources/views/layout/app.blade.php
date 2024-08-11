@@ -13,7 +13,7 @@
         rel="stylesheet"
     />
     @vite('resources/css/app.css')
-{{--     <link rel="stylesheet" href="{{ asset('build/assets/app-BFmjNON7.css') }}">--}}
+{{--     <link rel="stylesheet" href="{{ asset('build/assets/app-DrpMioM7.css') }}">--}}
     <title>Jr2 | @yield('title')</title>
 </head>
 <body>
@@ -71,6 +71,7 @@
         </button>
 
 {{--        sidebar --}}
+        @auth()
         <nav class="flex" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                 <li class="inline-flex items-center ml-2">
@@ -96,6 +97,7 @@
                 </li>
             </ol>
         </nav>
+        @endauth
 {{--        fin sidebar--}}
         <div class="flex items-center ml-auto gap-4">
             @auth()

@@ -7,11 +7,17 @@ use App\Models\Articulo;
 
 class ArticuloController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        //mandar a la vista todos los articulos
+        if(empty($request->search)){
+            $articulos = Articulo::all();
+        }else{
+            $articulos = Articulo::where('nombre', 'like', '%'.$request->query('search').'%')->get();
+        }
 
-        $articulos = Articulo::all();
-        return view('sections.articulos', compact('articulos'));
+        return view('sections.articulos', [
+            'articulos' => $articulos,
+            'search' => $request->query('search')
+        ]);
     }
 }

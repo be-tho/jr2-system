@@ -10,11 +10,17 @@ use Intervention\Image\Drivers\Gd\Driver;
 
 class CorteController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // $cortes = Corte::all();
-        $cortes = Corte::orderBy('id', 'desc')->get();
-        return view('sections.cortes', compact('cortes'));
+        if(empty($request->search)){
+            $cortes = Corte::orderBy('id', 'desc')->get();
+        }else{
+            $cortes = Corte::where('id', 'like', '%'.$request->query('search').'%')->get();
+        }
+        return view('sections.cortes', [
+            'cortes' => $cortes,
+            'search' => $request->query('search')
+        ]);
     }
 
     public function create()

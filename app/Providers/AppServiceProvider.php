@@ -19,6 +19,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        //editar paginador en tailwind
+        $this->app->bind('paginator', function ($app, $data) {
+            return new \App\Paginator($data);
+        });
     }
 }

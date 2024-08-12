@@ -9,12 +9,15 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Articulo extends Model
 {
     use HasFactory;
+
+    protected $table = 'articulos';
+
     protected $fillable = [
         'nombre',
+        'codigo',
         'temporada_id',
         'categoria_id',
         'descripcion',
-        'codigo',
         'stock',
         'precio',
         'imagen',

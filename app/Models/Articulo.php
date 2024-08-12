@@ -11,6 +11,7 @@ class Articulo extends Model
     protected $fillable = [
         'nombre',
         'temporada_id',
+        'categoria_id',
         'descripcion',
         'codigo',
         'stock',
@@ -22,6 +23,10 @@ class Articulo extends Model
     public function temporada()
     {
         return $this->hasOne(Temporada::class, 'id', 'temporada_id');
+    }
+    public function categoria()
+    {
+        return $this->hasOne(Categoria::class, 'id', 'categoria_id');
     }
 
 }

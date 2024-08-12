@@ -14,16 +14,16 @@ return new class extends Migration
         Schema::create('articulos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('temporada_id')->constrained('temporada');
+            $table->foreignId('categoria_id')->constrained('categoria');
             $table->string('nombre');
             $table->string('descripcion');
             $table->string('codigo');
             $table->integer('stock');
             $table->integer('precio');
             $table->string('imagen');
-            $table->string('categoria');
             $table->timestamps();
-        });
-    }
+            });
+        }
 
     /**
      * Reverse the migrations.

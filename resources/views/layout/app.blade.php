@@ -61,7 +61,7 @@
         </div>
     @endif
 <x-navbar/>
-<main class="w-[calc(100%-256px)] ml-64 main">
+<main class="w-[calc(100%-256px)] ml-64 main mb-14">
     <div class="py-2 px-6 bg-white flex items-center shadow-md shadow-black/5">
         <button
             class="text-gray-500 focus:outline-none dark:text-gray-300"
@@ -116,7 +116,7 @@
     </div>
     @yield('content')
 </main>
-<footer class="bg-gray-800 text-white shadow block md:fixed dark:bg-gray-800 left-0 bottom-0 right-0">
+<footer class="bg-gray-800 text-white shadow block dark:bg-gray-800 ">
     <div class="w-full mx-auto max-w-screen-xl p-4 text-center md:flex md:items-center md:justify-between">
       <span class="text-sm text-white sm:text-center dark:text-gray-400">© 2024 <a href="https://flowbite.com/" class="hover:underline">JR2™</a>. Todos los derechos reservados.
     </span>

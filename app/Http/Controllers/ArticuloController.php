@@ -20,4 +20,16 @@ class ArticuloController extends Controller
             'search' => $request->query('search')
         ]);
     }
+
+    public function show($id)
+    {
+        $articulo = Articulo::with(['categoria', 'temporada'])->findOrFail($id);
+        $articulo['categoria'] = $articulo['categoria']['nombre'];
+        $articulo['temporada'] = $articulo['temporada']['nombre'];
+
+        return view('sections.articulos-show', [
+            'articulo' => $articulo,
+        ]);
+
+    }
 }

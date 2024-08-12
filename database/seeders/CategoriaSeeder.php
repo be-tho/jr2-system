@@ -15,34 +15,44 @@ class CategoriaSeeder extends Seeder
     {
         DB::table('categoria')->insert([
             [
+                'id' => 1,
                 'nombre' => 'Remeras',
             ],
             [
+                'id' => 2,
                 'nombre' => 'Pantalones',
             ],
             [
+                'id' => 3,
                 'nombre' => 'Calzas',
             ],
             [
+                'id' => 4,
                 'nombre' => 'Camperas',
             ],
             [
+                'id' => 5,
                 'nombre' => 'Polleras',
             ],
             [
+                'id' => 6,
                 'nombre' => 'Vestidos',
             ],
             [
+                'id' => 7,
                 'nombre' => 'Buzos',
             ],
             [
+                'id' => 8,
+                'nombre' => 'Shorts',
+            ],
+            [
+                'id' => 9,
                 'nombre' => 'Sweaters',
             ],
             [
+                'id' => 10,
                 'nombre' => 'Camisas',
-            ],
-            [
-                'nombre' => 'Shorts',
             ],
         ]);
     }

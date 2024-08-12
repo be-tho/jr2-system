@@ -25,6 +25,10 @@ Route::put('/corte/{id}', [CorteController::class, 'update'])->name('corte.updat
 
 //articulos
 Route::get('/articulos', [ArticuloController::class, 'index'])->name('articulos.index')->middleware('auth');
+Route::get('/articulos/{id}', [ArticuloController::class, 'show'])->name('articulos.show')->middleware('auth');
+
+
+
 
 //si no encuentra la ruta redirige a la home
 Route::fallback(function () {

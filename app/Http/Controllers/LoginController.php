@@ -21,9 +21,7 @@ class LoginController extends Controller
             return to_route('home.index')->with('success', 'Login realizado con éxito');
         }
 
-        return redirect()->back()->withInput()->with([
-            'error' => 'Credenciales incorrectas',
-        ]);
+        return to_route('login.index')->with('error', 'Credenciales incorrectas');
     }
 
     public function logout()
@@ -34,6 +32,6 @@ class LoginController extends Controller
 
         request()->session()->regenerateToken();
 
-        return redirect('/')->with('success', 'Sesión cerrada con éxito');
+        return redirect('/login')->with('success', 'Sesión cerrada con éxito');
     }
 }

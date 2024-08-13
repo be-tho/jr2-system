@@ -111,11 +111,11 @@
                         </td>
                         <td>
                             <a href="{{ route('corte.show', ['id' => $corte->id]) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-1.5">
-                                <i class="ri-pencil-line"></i>
+                                <i class="ri-eye-line"></i>
                                 Ver
                             </a>
                             <a href="{{ route('corte.edit', ['id' => $corte->id]) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-1.5">
-                                <i class="ri-eye-line"></i>
+                                <i class="ri-pencil-line"></i>
                                 Editar
                             </a>
                         </td>

@@ -1,3 +1,10 @@
+<?php
+    /** @var \App\Models\Corte $cortes */
+    //    filtrar la informacion de corte por el estado, 0 es cortado, 1 es costurando y 2 es entregado
+    $cortesCortado = $cortes->where('estado', 0);
+    $cortesCosturando = $cortes->where('estado', 1);
+    $cortesEntregado = $cortes->where('estado', 2);
+?>
 @extends('layout.app')
 @section('title', 'Home')
 @section('content')
@@ -10,7 +17,7 @@
                 <div class="flex justify-between">
                     <div>
                         <div class="text-2xl font-semibold mb-1">Cortes activos</div>
-                        <div class="font-normal text-gray-400">5</div>
+                        <div class="font-normal text-gray-400">{{ $cortesCortado->count() }}</div>
                     </div>
                 </div>
             </div>
@@ -18,7 +25,7 @@
                 <div class="flex justify-between">
                     <div>
                         <div class="text-2xl font-semibold mb-1">Cortes entregados</div>
-                        <div class="font-normal text-gray-400">3</div>
+                        <div class="font-normal text-gray-400">{{ $cortesEntregado->count() }}</div>
                     </div>
                 </div>
             </div>
@@ -26,7 +33,7 @@
                 <div class="flex justify-between">
                     <div>
                         <div class="text-2xl font-semibold mb-1">Cortes terminados</div>
-                        <div class="font-normal text-gray-400">10</div>
+                        <div class="font-normal text-gray-400">{{ $cortesCosturando->count() }}</div>
                     </div>
                 </div>
             </div>

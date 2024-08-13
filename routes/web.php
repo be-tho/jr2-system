@@ -6,7 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\CorteController;
 
-Route::get('/', [HomeController::class, 'index'])->name('home.index');
+Route::get('/', [HomeController::class, 'index'])->name('home.index')->middleware('auth');
 
 //login
 Route::get('/login', [LoginController::class, 'index'])->name('login.index');
@@ -28,6 +28,8 @@ Route::get('/articulos', [ArticuloController::class, 'index'])->name('articulos.
 Route::get('/articulos/create', [ArticuloController::class, 'create'])->name('articulos.create')->middleware('auth');
 Route::get('/articulos/{id}', [ArticuloController::class, 'show'])->name('articulos.show')->middleware('auth');
 Route::post('/articulos', [ArticuloController::class, 'store'])->name('articulos.store')->middleware('auth');
+Route::get('/articulos/{id}/edit', [ArticuloController::class, 'edit'])->name('articulos.edit')->middleware('auth');
+Route::put('/articulos/{id}', [ArticuloController::class, 'update'])->name('articulos.update')->middleware('auth');
 
 
 

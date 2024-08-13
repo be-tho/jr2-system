@@ -80,4 +80,55 @@ class ArticuloController extends Controller
             return to_route('articulos.index')->with('error', $e->getMessage());
         }
     }
+
+    public function edit($id)
+    {
+        $articulo = Articulo::findOrFail($id);
+        return view('sections.articulos-edit-form', [
+            'articulo' => $articulo,
+        ]);
+    }
+
+    public function update(ArticuloRequest $request, $id)
+    {
+        try {
+            $articulo = Articulo::findOrFail($id);
+            if($request->hasFile('imagen')) {
+                $manager = new ImageManager(new Driver());
+                $name_img = time() . $request->file('imagen')->getClientOriginalName();
+                $img = $manager->read($request->file('imagen')->getRealPath());
+                $img = $img->resize(450, 600, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+                $img->toJpeg(80)->save(public_path('./src/assets/uploads/articulos/' . $name_img));
+
+                $request->imagen = $name_img;
+                $request->imagen_alt = $name_img;
+
+                if($articulo->imagen != 'default-articulo.jpg') {
+                    unlink(public_path('./src/assets/uploads/articulos/' . $articulo->imagen));
+                }
+            } else {
+                $request->imagen = $articulo->imagen;
+                $request->imagen_alt = $articulo->imagen_alt;
+            }
+
+            $request->codigo = strtoupper($request->codigo);
+
+            $articulo->update([
+                'nombre' => $request->nombre,
+                'descripcion' => $request->descripcion,
+                'precio' => $request->precio,
+                'categoria_id' => $request->categoria_id,
+                'temporada_id' => $request->temporada_id,
+                'imagen' => $request->imagen,
+                'stock' => $request->stock,
+                'codigo' => $request->codigo,
+                'updated_at' => now(),
+            ]);
+            return to_route('articulos.index')->with('success', 'Artículo actualizado correctamente');
+        }catch (\Exception $e) {
+            return to_route('articulos.index')->with('error', 'Error al actualizar el artículo');
+        }
+    }
 }

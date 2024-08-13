@@ -37,6 +37,30 @@ class TemporadaSeeder extends Seeder
                 'nombre' => 'Invierno 2024',
                 'created_at' => now(),
                 'updated_at' => now()
+            ],
+            [
+                'id' => 5,
+                'nombre' => 'Primavera 2025',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id' => 6,
+                'nombre' => 'Verano 2025',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id' => 7,
+                'nombre' => 'Otoño 2025',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id' => 8,
+                'nombre' => 'Invierno 2025',
+                'created_at' => now(),
+                'updated_at' => now()
             ]
         ]);
     }

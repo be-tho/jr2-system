@@ -101,10 +101,10 @@
                                 @enderror
                             >
                                 <option value="0" selected>Seleccione</option>
-                                <option value="1">Primavera 2024</option>
-                                <option value="2">Verano 2024</option>
-                                <option value="3">Otoño 2024</option>
                                 <option value="4">Invierno 2024</option>
+                                <option value="5">Primavera 2025</option>
+                                <option value="6">Verano 2025</option>
+                                <option value="7">Otoño 2025</option>
                             </select>
                             @error('temporada_id')
                             <div class="text-red-700" id="error-temporada_id">{{ $errors->first('temporada_id') }}</div>

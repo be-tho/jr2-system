@@ -104,10 +104,11 @@
                                 @enderror
                             >
                                 <option value="0" selected>Seleccione</option>
-                                <option value="1" {{ old('temporada_id', $articulo->temporada_id) == 1 ? 'selected' : '' }}>Primavera 2024</option>
-                                <option value="2" {{ old('temporada_id', $articulo->temporada_id) == 2 ? 'selected' : '' }}>Verano 2024</option>
-                                <option value="3" {{ old('temporada_id', $articulo->temporada_id) == 3 ? 'selected' : '' }}>Otoño 2024</option>
                                 <option value="4" {{ old('temporada_id', $articulo->temporada_id) == 4 ? 'selected' : '' }}>Invierno 2024</option>
+                                <option value="5" {{ old('temporada_id', $articulo->temporada_id) == 5 ? 'selected' : '' }}>Primavera 2025</option>
+                                <option value="6" {{ old('temporada_id', $articulo->temporada_id) == 6 ? 'selected' : '' }}>Verano 2025</option>
+                                <option value="7" {{ old('temporada_id', $articulo->temporada_id) == 7 ? 'selected' : '' }}>Otoño 2025</option>
+
                             </select>
                             @error('temporada_id')
                             <div class="text-red-700" id="error-temporada_id">{{ $errors->first('temporada_id') }}</div>

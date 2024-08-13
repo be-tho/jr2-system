@@ -97,7 +97,9 @@ class ArticuloController extends Controller
                 $manager = new ImageManager(new Driver());
                 $name_img = time() . $request->file('imagen')->getClientOriginalName();
                 $img = $manager->read($request->file('imagen')->getRealPath());
-                $img = $img->resize(450, 600, function ($constraint) {
+                //resize image hancho 450px y alto automatico
+
+                $img = $img->resize(500, 600, function ($constraint) {
                     $constraint->aspectRatio();
                 });
                 $img->toJpeg(80)->save(public_path('./src/assets/uploads/articulos/' . $name_img));
@@ -105,7 +107,7 @@ class ArticuloController extends Controller
                 $request->imagen = $name_img;
                 $request->imagen_alt = $name_img;
 
-                if($articulo->imagen != 'default-articulo.jpg') {
+                if($articulo->imagen != 'default-articulo.png') {
                     unlink(public_path('./src/assets/uploads/articulos/' . $articulo->imagen));
                 }
             } else {

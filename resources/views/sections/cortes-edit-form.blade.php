@@ -178,6 +178,13 @@
                             <div class="text-red-700" id="error-estado">{{ $errors->first('estado') }}</div>
                             @enderror
                         </div>
+                        <div class="w-full">
+                            <label for="fecha" class="block mb-2 text-sm font-medium text-gray-900">Fecha</label>
+                            <input type="date" name="fecha" id="fecha" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" value="{{ old('fecha', $corte->fecha) }}">
+                            @error('fecha')
+                            <div class="text-red-700" id="error-fecha">{{ $errors->first('fecha') }}</div>
+                            @enderror
+                        </div>
 
                         <div class="w-full">
                             <label for="description" class="block mb-2 text-sm font-medium text-gray-900">Description</label>

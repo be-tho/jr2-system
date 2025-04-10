@@ -57,7 +57,7 @@ class CorteController extends Controller
                 'costureros' => $request->costureros,
                 'imagen' => $request->imagen,
                 'imagen_alt' => $request->nombre,
-                'fecha' => now(),
+                'fecha' => $request->fecha,
                 'estado' => 0,
                 'created_at' => now(),
             ]);
@@ -73,8 +73,7 @@ class CorteController extends Controller
         return view('sections.cortes-show', compact('corte'));
     }
 
-//    funcion para editar el corte /
-
+    
     public function edit($id)
     {
         $corte = Corte::find($id);
@@ -116,7 +115,7 @@ class CorteController extends Controller
                 'imagen' => $request->imagen,
                 'imagen_alt' => $request->imagen_alt,
                 'estado' => $request->estado,
-                'fecha' => now(),
+                'fecha' => $request->fecha,
                 'updated_at' => now(),
             ]);
             return to_route('cortes.index')->with('success', 'Corte creado correctamente');

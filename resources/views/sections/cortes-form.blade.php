@@ -151,6 +151,13 @@
                                 class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500"
                                 placeholder="Descripción del corte aquí"></textarea>
                         </div>
+                        <div class="w-full">
+                            <label for="fecha" class="block mb-2 text-sm font-medium text-gray-900">Fecha</label>
+                            <input type="date" name="fecha" id="fecha" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5">
+                            @error('fecha')
+                            <div class="text-red-700" id="error-fecha">{{ $errors->first('fecha') }}</div>
+                            @enderror
+                        </div>
                     </div>
                     <button type="submit" class="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 hover:bg-primary-800">
                         CREAR CORTE

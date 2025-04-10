@@ -28,7 +28,8 @@ class CorteRequest extends FormRequest
             'cantidad' => 'required',
             'articulos' => ['required', 'min:3'],
             'costureros' => ['required', 'min:3'],
-            'imagen' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:8048'
+            'imagen' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:8048',
+            'fecha' => 'required',
         ];
     }
 
@@ -47,7 +48,8 @@ class CorteRequest extends FormRequest
             'costureros.required' => 'El campo costureros es requerido',
             'costureros.min' => 'El campo costureros debe tener al menos 3 caracteres',
             'imagen.image' => 'El archivo debe ser una imagen',
-            'imagen.mimes' => 'El archivo debe ser una imagen de tipo: jpeg, png, jpg, gif, svg, webp'
+            'imagen.mimes' => 'El archivo debe ser una imagen de tipo: jpeg, png, jpg, gif, svg, webp',
+            'fecha.required' => 'El campo fecha es requerido'
         ];
     }
 }

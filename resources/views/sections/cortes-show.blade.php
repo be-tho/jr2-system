@@ -27,7 +27,7 @@
                     </div>
                     <div>
                         <p class="text-gray-500">Fecha de corte</p>
-                        <p class="text-gray-800 font-semibold">{{ $corte->fecha }}</p>
+                        <p class="text-gray-800 font-semibold">{{ \Carbon\Carbon::parse($corte->fecha)->locale('es')->isoFormat('dddd D/M/Y') }}</p>
                     </div>
                     <div>
                         <p class="text-gray-500">Tipo de tela</p>

@@ -23,6 +23,7 @@ Route::post('/cortes', [CorteController::class, 'store'])->name('cortes.store')-
 Route::get('/corte/{id}', [CorteController::class, 'show'])->name('corte.show')->middleware('auth');
 Route::get('/corte/{id}/edit', [CorteController::class, 'edit'])->name('corte.edit')->middleware('auth');
 Route::put('/corte/{id}', [CorteController::class, 'update'])->name('corte.update')->middleware('auth');
+Route::delete('/corte/{id}', [CorteController::class, 'delete'])->name('corte.delete')->middleware('auth');
 
 //articulos
 Route::get('/articulos', [ArticuloController::class, 'index'])->name('articulos.index')->middleware('auth');

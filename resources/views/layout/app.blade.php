@@ -13,7 +13,7 @@
         rel="stylesheet"
     />
     @vite('resources/css/app.css')
-{{--   <link rel="stylesheet" href="{{ asset('build/assets/app-BwDHbyWl.css') }}">--}}
+   {{--<link rel="stylesheet" href="{{ asset('build/assets/app-BOC-1fP2.css') }}">--}}
     <title>Jr2 | @yield('title')</title>
 </head>
 <body>

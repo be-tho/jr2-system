@@ -89,7 +89,7 @@
                             {{ $corte->articulos }}
                         </td>
                         <td class="px-6 py-4">
-                            {{ $corte->fecha }}
+                            {{ \Carbon\Carbon::parse($corte->fecha)->locale('es')->isoFormat('dddd D/M/Y') }}
                         </td>
                         <td class="px-6 py-4">
                             @if($corte->estado == 0)
@@ -118,6 +118,14 @@
                                 <i class="ri-pencil-line"></i>
                                 Editar
                             </a>
+                            <form action="{{ route('corte.delete', ['id' => $corte->id]) }}" method="POST" class="inline" onsubmit="return confirm('¿Estás seguro que deseas eliminar este corte?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="font-medium text-red-600 dark:text-red-500 hover:underline mr-1.5">
+                                    <i class="ri-delete-bin-line"></i>
+                                    Eliminar
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 @endforeach

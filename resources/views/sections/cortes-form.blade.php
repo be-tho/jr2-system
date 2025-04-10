@@ -66,7 +66,7 @@
                             <div class="text-red-700" id="error-colores">{{ $errors->first('colores') }}</div>
                             @enderror
                         </div>
-                        <div>
+                        <div class="w-full">
                             <label for="cantidad" class="block mb-2 text-sm font-medium text-gray-900">Cantidad de Encimadas</label>
                             <input
                                 type="number"

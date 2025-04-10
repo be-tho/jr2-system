@@ -53,7 +53,7 @@ class CorteController extends Controller
                 'colores' => $request->colores,
                 'cantidad' => $request->cantidad,
                 'articulos' => $request->articulos,
-                'descripcion' => $request->descripcion,
+                'descripcion' => $request->descripcion ?? 'Sin descripcion', 
                 'costureros' => $request->costureros,
                 'imagen' => $request->imagen,
                 'imagen_alt' => $request->nombre,
@@ -122,6 +122,20 @@ class CorteController extends Controller
             return to_route('cortes.index')->with('success', 'Corte creado correctamente');
         }catch (\Exception $e) {
             return to_route('cortes.index')->with('error', $e->getMessage());
+    }
+}
+
+    public function delete($id)
+    {
+        try {
+            $corte = Corte::find($id);
+            if($corte->imagen != 'default-corte.jpg') {
+                unlink(public_path('./src/assets/uploads/cortes/' . $corte->imagen));
+            }
+            $corte->delete();
+            return to_route('cortes.index')->with('success', 'Corte eliminado correctamente');
+        }catch (\Exception $e) {
+            return to_route('cortes.index')-with('error', $e-getMessage());
         }
     }
 }

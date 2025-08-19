@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ArticuloRequest;
 use Illuminate\Http\Request;
 use App\Models\Articulo;
+use App\Models\Categoria;
+use App\Models\Temporada;
 use mysql_xdevapi\Exception;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
@@ -13,29 +15,83 @@ class ArticuloController extends Controller
 {
     public function index(Request $request)
     {
-        if(empty($request->search)){
-            //traer todos los articulos paginados
-            $articulos = Articulo::orderBy('id', 'desc')->paginate(8);
-        }else{
-            $articulos = Articulo::where('nombre', 'like', '%'.$request->query('search').'%')->get();
+        // Obtener parámetros de búsqueda y filtros
+        $search = $request->get('search');
+        $categoriaId = $request->get('categoria_id');
+        $temporadaId = $request->get('temporada_id');
+        $orderBy = $request->get('order_by', 'latest');
+        $perPage = $request->get('per_page', 8);
+
+        // Construir consulta optimizada
+        $query = Articulo::with(['categoria:id,nombre', 'temporada:id,nombre']);
+
+        // Aplicar búsqueda si existe
+        if ($search) {
+            $query->search($search);
         }
+
+        // Aplicar filtros
+        if ($categoriaId) {
+            $query->byCategoria($categoriaId);
+        }
+
+        if ($temporadaId) {
+            $query->byTemporada($temporadaId);
+        }
+
+        // Aplicar ordenamiento
+        switch ($orderBy) {
+            case 'precio_asc':
+                $query->orderByPrecio('asc');
+                break;
+            case 'precio_desc':
+                $query->orderByPrecio('desc');
+                break;
+            case 'nombre_asc':
+                $query->orderByNombre('asc');
+                break;
+            case 'nombre_desc':
+                $query->orderByNombre('desc');
+                break;
+            case 'stock_asc':
+                $query->orderBy('stock', 'asc');
+                break;
+            case 'stock_desc':
+                $query->orderBy('stock', 'desc');
+                break;
+            default:
+                $query->latest();
+                break;
+        }
+
+        // Ejecutar consulta con paginación
+        $articulos = $query->paginate($perPage)->withQueryString();
+
+        // Obtener categorías y temporadas para los filtros
+        $categorias = Categoria::select('id', 'nombre')->orderBy('nombre')->get();
+        $temporadas = Temporada::select('id', 'nombre')->orderBy('nombre')->get();
 
         return view('sections.articulos', [
             'articulos' => $articulos,
-            'search' => $request->query('search')
+            'categorias' => $categorias,
+            'temporadas' => $temporadas,
+            'filters' => [
+                'search' => $search,
+                'categoria_id' => $categoriaId,
+                'temporada_id' => $temporadaId,
+                'order_by' => $orderBy,
+                'per_page' => $perPage,
+            ]
         ]);
     }
 
     public function show($id)
     {
-        $articulo = Articulo::with(['categoria', 'temporada'])->findOrFail($id);
-        $articulo['categoria'] = $articulo['categoria']['nombre'];
-        $articulo['temporada'] = $articulo['temporada']['nombre'];
+        $articulo = Articulo::with(['categoria:id,nombre', 'temporada:id,nombre'])->findOrFail($id);
 
         return view('sections.articulos-show', [
             'articulo' => $articulo,
         ]);
-
     }
 
     public function create()

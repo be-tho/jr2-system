@@ -79,6 +79,17 @@
                         <div class="absolute right-2 w-2 h-2 bg-blue-500 rounded-full {{ Route::is('dolar.*') ? 'opacity-100 scale-100' : 'opacity-0 scale-0' }} transition-all duration-300 group-hover:opacity-100 group-hover:scale-100"></div>
                     </a>
 
+                    {{-- Reportes --}}
+                    <a href="{{ route('reportes.index') }}" 
+                       class="flex items-center gap-x-3 px-3 py-3 rounded-xl text-gray-300 dark:text-gray-400 hover:text-white hover:bg-gray-800/80 dark:hover:bg-gray-800/60 hover:translate-x-2 transition-all duration-300 relative overflow-hidden group cursor-pointer {{ Route::is('reportes.*') ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-white border-r-2 border-blue-500 shadow-lg shadow-blue-500/30' : '' }}"
+                       data-tooltip="Reportes y Estadísticas">
+                        <div class="w-10 h-10 rounded-lg {{ Route::is('reportes.*') ? 'bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg shadow-blue-500/40' : 'bg-gray-700 dark:bg-gray-600 group-hover:bg-gray-600 dark:group-hover:bg-gray-500' }} flex items-center justify-center transition-all duration-300">
+                            <i class="ri-bar-chart-2-line text-lg"></i>
+                        </div>
+                        <span class="text-sm font-medium transition-all duration-300 {{ Route::is('reportes.*') ? 'font-semibold' : '' }}">Reportes</span>
+                        <div class="absolute right-2 w-2 h-2 bg-blue-500 rounded-full {{ Route::is('reportes.*') ? 'opacity-100 scale-100' : 'opacity-0 scale-0' }} transition-all duration-300 group-hover:opacity-100 group-hover:scale-100"></div>
+                    </a>
+
                     {{-- Cuenta --}}
                     <a href="#" 
                        class="flex items-center gap-x-3 px-3 py-3 rounded-xl text-gray-300 dark:text-gray-400 hover:text-white hover:bg-gray-800/80 dark:hover:bg-gray-800/60 hover:translate-x-2 transition-all duration-300 relative overflow-hidden group cursor-pointer"

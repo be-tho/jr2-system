@@ -5,6 +5,7 @@ use App\Http\Controllers\CorteController;
 use App\Http\Controllers\DolarController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ReporteController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -74,6 +75,16 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [DolarController::class, 'index'])->name('index');
         Route::get('/api', [DolarController::class, 'api'])->name('api');
         Route::post('/clear-cache', [DolarController::class, 'clearCache'])->name('clear-cache');
+    });
+    
+    // ========================================================================
+    // REPORTS
+    // ========================================================================
+    Route::prefix('reportes')->name('reportes.')->group(function () {
+        Route::get('/', [ReporteController::class, 'index'])->name('index');
+        Route::get('/articulos', [ReporteController::class, 'articulos'])->name('articulos');
+        Route::get('/cortes', [ReporteController::class, 'cortes'])->name('cortes');
+        
     });
 });
 

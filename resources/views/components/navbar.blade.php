@@ -91,14 +91,14 @@
                     </a>
 
                     {{-- Cuenta --}}
-                    <a href="#" 
-                       class="flex items-center gap-x-3 px-3 py-3 rounded-xl text-gray-300 dark:text-gray-400 hover:text-white hover:bg-gray-800/80 dark:hover:bg-gray-800/60 hover:translate-x-2 transition-all duration-300 relative overflow-hidden group cursor-pointer"
+                    <a href="{{ route('cuenta.index') }}" 
+                       class="flex items-center gap-x-3 px-3 py-3 rounded-xl text-gray-300 dark:text-gray-400 hover:text-white hover:bg-gray-800/80 dark:hover:bg-gray-800/60 hover:translate-x-2 transition-all duration-300 relative overflow-hidden group cursor-pointer {{ Route::is('cuenta.*') ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-white border-r-2 border-blue-500 shadow-lg shadow-blue-500/30' : '' }}"
                        data-tooltip="Configuración de Cuenta">
-                        <div class="w-10 h-10 rounded-lg bg-gray-700 dark:bg-gray-600 group-hover:bg-gray-600 dark:group-hover:bg-gray-500 flex items-center justify-center transition-all duration-300">
+                        <div class="w-10 h-10 rounded-lg {{ Route::is('cuenta.*') ? 'bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg shadow-blue-500/40' : 'bg-gray-700 dark:bg-gray-600 group-hover:bg-gray-600 dark:group-hover:bg-gray-500' }} flex items-center justify-center transition-all duration-300">
                             <i class="ri-settings-3-line text-lg"></i>
                         </div>
-                        <span class="text-sm font-medium transition-all duration-300">Cuenta</span>
-                        <div class="absolute right-2 w-2 h-2 bg-blue-500 rounded-full opacity-0 scale-0 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100"></div>
+                        <span class="text-sm font-medium transition-all duration-300 {{ Route::is('cuenta.*') ? 'font-semibold' : '' }}">Cuenta</span>
+                        <div class="absolute right-2 w-2 h-2 bg-blue-500 rounded-full {{ Route::is('cuenta.*') ? 'opacity-100 scale-100' : 'opacity-0 scale-0' }} transition-all duration-300 group-hover:opacity-100 group-hover:scale-100"></div>
                     </a>
                 </div>
 
@@ -110,14 +110,16 @@
                     <div class="bg-gray-800/50 dark:bg-gray-700/50 rounded-lg p-3 border border-gray-700/30 dark:border-gray-600/30 backdrop-blur-sm">
                         <div class="flex items-center gap-x-3">
                             <div class="relative">
-                                <img src="{{ asset('./src/assets/images/usuario.jpg') }}" 
+                                <img src="{{ asset('./src/assets/images/' . (auth()->user()->profile_image ?? 'usuario.jpg')) }}" 
                                      alt="Usuario" 
                                      class="w-10 h-10 rounded-full object-cover border-2 border-gray-600 dark:border-gray-500 shadow-lg">
                                 <div class="absolute -bottom-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-gray-800 dark:border-gray-700 animate-pulse"></div>
                             </div>
                             <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-white truncate">{{ auth()->user()->name }}</p>
-                                <p class="text-xs text-gray-400 dark:text-gray-500">Administrador</p>
+                                <a href="{{ route('cuenta.index') }}" class="block hover:opacity-80 transition-opacity duration-200">
+                                    <p class="text-sm font-medium text-white truncate">{{ auth()->user()->name }}</p>
+                                    <p class="text-xs text-gray-400 dark:text-gray-500">Administrador</p>
+                                </a>
                             </div>
                             <div class="flex-shrink-0">
                                 <form action="{{ route('logout') }}" method="post" class="m-0">

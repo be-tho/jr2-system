@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ArticuloController;
 use App\Http\Controllers\CorteController;
+use App\Http\Controllers\CuentaController;
 use App\Http\Controllers\DolarController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
@@ -89,6 +90,19 @@ Route::middleware('auth')->group(function () {
         Route::get('/stats/realtime', [ReporteController::class, 'getRealTimeStats'])->name('stats.realtime');
         Route::post('/export/articulos/pdf', [ReporteController::class, 'exportArticulosPDF'])->name('export.articulos.pdf');
         Route::post('/export/cortes/pdf', [ReporteController::class, 'exportCortesPDF'])->name('export.cortes.pdf');
+    });
+
+    // ========================================================================
+    // ACCOUNT MANAGEMENT
+    // ========================================================================
+    Route::prefix('cuenta')->name('cuenta.')->group(function () {
+        Route::get('/', [CuentaController::class, 'index'])->name('index');
+        Route::get('/edit', [CuentaController::class, 'edit'])->name('edit');
+        Route::put('/update', [CuentaController::class, 'update'])->name('update');
+        Route::get('/change-password', [CuentaController::class, 'changePassword'])->name('change-password');
+        Route::put('/update-password', [CuentaController::class, 'updatePassword'])->name('update-password');
+        Route::get('/settings', [CuentaController::class, 'settings'])->name('settings');
+        Route::put('/update-settings', [CuentaController::class, 'updateSettings'])->name('update-settings');
     });
 
     // ========================================================================

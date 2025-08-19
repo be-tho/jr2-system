@@ -41,8 +41,32 @@
             @endif
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {{-- Número de Corte --}}
+                <div>
+                    <label for="numero_corte" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Número de Corte <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="ri-hashtag text-gray-400 dark:text-gray-500"></i>
+                        </div>
+                        <input 
+                            type="number" 
+                            id="numero_corte" 
+                            name="numero_corte" 
+                            value="{{ old('numero_corte', $corte->numero_corte ?? '') }}"
+                            class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 @error('numero_corte') border-red-500 dark:border-red-400 @enderror"
+                            placeholder="Ej: 001"
+                            required
+                        >
+                    </div>
+                    @error('numero_corte')
+                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 {{-- Nombre del Corte --}}
-                <div class="md:col-span-2">
+                <div>
                     <label for="nombre" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Nombre del Corte <span class="text-red-500">*</span>
                     </label>
@@ -65,19 +89,99 @@
                     @enderror
                 </div>
 
-                {{-- Descripción --}}
-                <div class="md:col-span-2">
-                    <label for="descripcion" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Descripción
+                {{-- Colores --}}
+                <div>
+                    <label for="colores" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Colores <span class="text-red-500">*</span>
                     </label>
-                    <textarea 
-                        id="descripcion" 
-                        name="descripcion" 
-                        rows="3"
-                        class="block w-full px-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 resize-vertical @error('descripcion') border-red-500 dark:border-red-400 @enderror"
-                        placeholder="Describe las características del corte..."
-                    >{{ old('descripcion', $corte->descripcion ?? '') }}</textarea>
-                    @error('descripcion')
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="ri-palette-line text-gray-400 dark:text-gray-500"></i>
+                        </div>
+                        <input 
+                            type="text" 
+                            id="colores" 
+                            name="colores" 
+                            value="{{ old('colores', $corte->colores ?? '') }}"
+                            class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 @error('colores') border-red-500 dark:border-red-400 @enderror"
+                            placeholder="Ej: Azul, Rojo, Verde"
+                            required
+                        >
+                    </div>
+                    @error('colores')
+                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                {{-- Cantidad --}}
+                <div>
+                    <label for="cantidad" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Cantidad <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="ri-stack-line text-gray-400 dark:text-gray-500"></i>
+                        </div>
+                        <input 
+                            type="number" 
+                            id="cantidad" 
+                            name="cantidad" 
+                            value="{{ old('cantidad', $corte->cantidad ?? '') }}"
+                            min="1"
+                            class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 @error('cantidad') border-red-500 dark:border-red-400 @enderror"
+                            placeholder="Cantidad a producir"
+                            required
+                        >
+                    </div>
+                    @error('cantidad')
+                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                {{-- Artículos --}}
+                <div>
+                    <label for="articulos" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Artículos <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="ri-shirt-line text-gray-400 dark:text-gray-500"></i>
+                        </div>
+                        <input 
+                            type="text" 
+                            id="articulos" 
+                            name="articulos" 
+                            value="{{ old('articulos', $corte->articulos ?? '') }}"
+                            class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 @error('articulos') border-red-500 dark:border-red-400 @enderror"
+                            placeholder="Ej: Polleras, Pantalones"
+                            required
+                        >
+                    </div>
+                    @error('articulos')
+                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                {{-- Costureros --}}
+                <div>
+                    <label for="costureros" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Costureros <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="ri-user-settings-line text-gray-400 dark:text-gray-500"></i>
+                        </div>
+                        <input 
+                            type="text" 
+                            id="costureros" 
+                            name="costureros" 
+                            value="{{ old('costureros', $corte->costureros ?? '') }}"
+                            class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 @error('costureros') border-red-500 dark:border-red-400 @enderror"
+                            placeholder="Ej: María, Juan"
+                            required
+                        >
+                    </div>
+                    @error('costureros')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
                 </div>
@@ -98,9 +202,9 @@
                             required
                         >
                             <option value="">Selecciona un estado</option>
-                            <option value="cortado" {{ (old('estado', $corte->estado ?? '') == 'cortado') ? 'selected' : '' }}>Cortado</option>
-                            <option value="costurando" {{ (old('estado', $corte->estado ?? '') == 'costurando') ? 'selected' : '' }}>Costurando</option>
-                            <option value="entregado" {{ (old('estado', $corte->estado ?? '') == 'entregado') ? 'selected' : '' }}>Entregado</option>
+                            <option value="0" {{ (old('estado', $corte->estado ?? '') == '0') ? 'selected' : '' }}>Cortado</option>
+                            <option value="1" {{ (old('estado', $corte->estado ?? '') == '1') ? 'selected' : '' }}>Costurando</option>
+                            <option value="2" {{ (old('estado', $corte->estado ?? '') == '2') ? 'selected' : '' }}>Recibido</option>
                         </select>
                     </div>
                     @error('estado')
@@ -108,10 +212,10 @@
                     @enderror
                 </div>
 
-                {{-- Fecha de Entrega --}}
+                {{-- Fecha --}}
                 <div>
-                    <label for="fecha_entrega" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Fecha de Entrega
+                    <label for="fecha" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Fecha <span class="text-red-500">*</span>
                     </label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -119,13 +223,31 @@
                         </div>
                         <input 
                             type="date" 
-                            id="fecha_entrega" 
-                            name="fecha_entrega" 
-                            value="{{ old('fecha_entrega', isset($corte) ? $corte->fecha_entrega->format('Y-m-d') : '') }}"
-                            class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 @error('fecha_entrega') border-red-500 dark:border-red-400 @enderror"
+                            id="fecha" 
+                            name="fecha" 
+                            value="{{ old('fecha', isset($corte) ? $corte->fecha : '') }}"
+                            class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 @error('fecha') border-red-500 dark:border-red-400 @enderror"
+                            required
                         >
                     </div>
-                    @error('fecha_entrega')
+                    @error('fecha')
+                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                {{-- Descripción --}}
+                <div class="md:col-span-2">
+                    <label for="descripcion" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Descripción
+                    </label>
+                    <textarea 
+                        id="descripcion" 
+                        name="descripcion" 
+                        rows="3"
+                        class="block w-full px-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 resize-vertical @error('descripcion') border-red-500 dark:border-red-400 @enderror"
+                        placeholder="Describe las características del corte..."
+                    >{{ old('descripcion', $corte->descripcion ?? '') }}</textarea>
+                    @error('descripcion')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
                 </div>

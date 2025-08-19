@@ -6,32 +6,36 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Default Cache Store
+    | Default Cache Connection Name
     |--------------------------------------------------------------------------
     |
-    | This option controls the default cache store that will be used by the
-    | framework. This connection is utilized if another isn't explicitly
-    | specified when running a cache operation inside the application.
+    | This option controls the default cache connection that gets used while
+    | using this caching facade. This connection name is used when another
+    | is not explicitly specified when executing a given caching function.
     |
     */
 
-    'default' => env('CACHE_STORE', 'database'),
+    'default' => env('CACHE_DRIVER', 'file'),
 
     /*
     |--------------------------------------------------------------------------
-    | Cache Stores
+    | Cache Connections
     |--------------------------------------------------------------------------
     |
-    | Here you may define all of the cache "stores" for your application as
-    | well as their drivers. You may even define multiple stores for the
-    | same cache driver to group types of items stored in your caches.
+    | Here you may define all of the cache "connections" for your application as
+    | well as their drivers. You may even define multiple connections for the
+    | same driver to easily switch between cache implementations.
     |
-    | Supported drivers: "array", "database", "file", "memcached",
-    |                    "redis", "dynamodb", "octane", "null"
+    | Supported drivers: "apc", "array", "database", "file",
+    |         "memcached", "redis", "dynamodb", "octane", "null"
     |
     */
 
-    'stores' => [
+    'connections' => [
+
+        'apc' => [
+            'driver' => 'apc',
+        ],
 
         'array' => [
             'driver' => 'array',
@@ -40,10 +44,9 @@ return [
 
         'database' => [
             'driver' => 'database',
-            'connection' => env('DB_CACHE_CONNECTION'),
-            'table' => env('DB_CACHE_TABLE', 'cache'),
-            'lock_connection' => env('DB_CACHE_LOCK_CONNECTION'),
-            'lock_table' => env('DB_CACHE_LOCK_TABLE'),
+            'table' => 'cache',
+            'connection' => null,
+            'lock_connection' => null,
         ],
 
         'file' => [
@@ -73,8 +76,8 @@ return [
 
         'redis' => [
             'driver' => 'redis',
-            'connection' => env('REDIS_CACHE_CONNECTION', 'cache'),
-            'lock_connection' => env('REDIS_CACHE_LOCK_CONNECTION', 'default'),
+            'connection' => 'cache',
+            'lock_connection' => 'default',
         ],
 
         'dynamodb' => [
@@ -97,12 +100,61 @@ return [
     | Cache Key Prefix
     |--------------------------------------------------------------------------
     |
-    | When utilizing the APC, database, memcached, Redis, and DynamoDB cache
-    | stores, there might be other applications using the same cache. For
+    | When utilizing the APC, database, memcached, Redis, or DynamoDB cache
+    | stores there might be other applications using the same cache. For
     | that reason, you may prefix every cache key to avoid collisions.
     |
     */
 
-    'prefix' => env('CACHE_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_cache_'),
+    'prefix' => env(
+        'CACHE_PREFIX',
+        Str::slug(env('APP_NAME', 'laravel'), '_').'_cache_'
+    ),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cache TTL (Time To Live) Settings
+    |--------------------------------------------------------------------------
+    |
+    | Default TTL values for different types of cached data
+    |
+    */
+
+    'ttl' => [
+        'dolar_rates' => 300, // 5 minutos para tasas del dólar
+        'articulos_list' => 600, // 10 minutos para listas de artículos
+        'categorias' => 1800, // 30 minutos para categorías
+        'temporadas' => 1800, // 30 minutos para temporadas
+        'search_results' => 300, // 5 minutos para resultados de búsqueda
+        'dashboard_stats' => 900, // 15 minutos para estadísticas del dashboard
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cache Compression
+    |--------------------------------------------------------------------------
+    |
+    | Enable compression for cache data to reduce memory usage
+    |
+    */
+
+    'compression' => env('CACHE_COMPRESSION', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cache Warming
+    |--------------------------------------------------------------------------
+    |
+    | Enable automatic cache warming for frequently accessed data
+    |
+    */
+
+    'warming' => [
+        'enabled' => env('CACHE_WARMING', true),
+        'strategies' => [
+            'dolar_rates' => \App\Jobs\UpdateDolarRatesJob::class,
+            'articulos_stats' => \App\Jobs\WarmArticulosCacheJob::class,
+        ],
+    ],
 
 ];

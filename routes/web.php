@@ -35,8 +35,8 @@ Route::put('/articulos/{id}', [ArticuloController::class, 'update'])->name('arti
 
 //dolar
 Route::get('/dolar', [DolarController::class, 'index'])->name('dolar.index')->middleware('auth');
-
-
+Route::get('/dolar/api', [DolarController::class, 'api'])->name('dolar.api')->middleware('auth');
+Route::post('/dolar/clear-cache', [DolarController::class, 'clearCache'])->name('dolar.clear-cache')->middleware('auth');
 
 
 //si no encuentra la ruta redirige a la home

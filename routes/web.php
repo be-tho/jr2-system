@@ -101,8 +101,7 @@ Route::middleware('auth')->group(function () {
         Route::put('/update', [CuentaController::class, 'update'])->name('update');
         Route::get('/change-password', [CuentaController::class, 'changePassword'])->name('change-password');
         Route::put('/update-password', [CuentaController::class, 'updatePassword'])->name('update-password');
-        Route::get('/settings', [CuentaController::class, 'settings'])->name('settings');
-        Route::put('/update-settings', [CuentaController::class, 'updateSettings'])->name('update-settings');
+
     });
 
     // ========================================================================

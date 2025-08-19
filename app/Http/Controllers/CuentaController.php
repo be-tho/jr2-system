@@ -86,35 +86,5 @@ class CuentaController extends Controller
             ->with('success', 'Contraseña actualizada correctamente');
     }
 
-    /**
-     * Mostrar configuración de cuenta
-     */
-    public function settings()
-    {
-        $user = Auth::user();
-        return view('sections.cuenta.settings', compact('user'));
-    }
 
-    /**
-     * Actualizar configuración de cuenta
-     */
-    public function updateSettings(Request $request)
-    {
-        $user = Auth::user();
-        
-        $request->validate([
-            'email_notifications' => 'boolean',
-            'dark_mode' => 'boolean',
-            'language' => 'in:es,en'
-        ]);
-        
-        $user->update([
-            'email_notifications' => $request->boolean('email_notifications'),
-            'dark_mode' => $request->boolean('dark_mode'),
-            'language' => $request->language ?? 'es'
-        ]);
-        
-        return redirect()->route('cuenta.settings')
-            ->with('success', 'Configuración actualizada correctamente');
-    }
 }

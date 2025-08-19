@@ -6,11 +6,14 @@ use App\Http\Requests\CorteRequest;
 use App\Traits\ImageHandler;
 use Illuminate\Http\Request;
 use App\Models\Corte;
+use App\Repositories\CorteRepository;
 use Illuminate\Support\Facades\Log;
 
 class CorteController extends Controller
 {
     use ImageHandler;
+
+    protected $corteRepository;
 
     // Configuración de imágenes para cortes
     private const IMAGE_DIRECTORY = 'src/assets/uploads/cortes';
@@ -22,61 +25,35 @@ class CorteController extends Controller
         'format' => 'jpeg'
     ];
 
+    public function __construct(CorteRepository $corteRepository)
+    {
+        $this->corteRepository = $corteRepository;
+    }
+
     public function index(Request $request)
     {
-        $query = Corte::query();
+        // Preparar filtros
+        $filters = [
+            'search' => $request->get('search'),
+            'estado' => $request->get('estado'),
+            'fecha' => $request->get('fecha'),
+            'order_by' => $request->get('order_by', 'latest'),
+            'order_direction' => $this->getOrderDirection($request->get('order_by', 'latest')),
+        ];
 
-        // Búsqueda por número de corte o nombre
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('numero_corte', 'like', "%{$search}%")
-                  ->orWhere('nombre', 'like', "%{$search}%");
-            });
-        }
+        // Obtener cortes paginados con filtros
+        $cortes = $this->corteRepository->getPaginatedWithFilters($filters, 12);
 
-        // Filtro por estado
-        if ($request->filled('estado')) {
-            $query->where('estado', $request->estado);
-        }
+        return view('sections.cortes', compact('cortes'));
+    }
 
-        // Filtro por fecha
-        if ($request->filled('fecha')) {
-            switch ($request->fecha) {
-                case 'today':
-                    $query->whereDate('fecha', today());
-                    break;
-                case 'week':
-                    $query->whereBetween('fecha', [now()->startOfWeek(), now()->endOfWeek()]);
-                    break;
-                case 'month':
-                    $query->whereMonth('fecha', now()->month);
-                    break;
-            }
-        }
-
-        // Ordenamiento
-        switch ($request->get('order_by', 'latest')) {
-            case 'oldest':
-                $query->orderBy('created_at', 'asc');
-                break;
-            case 'numero_asc':
-                $query->orderBy('numero_corte', 'asc');
-                break;
-            case 'numero_desc':
-                $query->orderBy('numero_corte', 'desc');
-                break;
-            case 'latest':
-            default:
-                $query->orderBy('created_at', 'desc');
-                break;
-        }
-
-        $cortes = $query->paginate(12);
-
-        return view('sections.cortes', [
-            'cortes' => $cortes
-        ]);
+    /**
+     * Determinar la dirección del ordenamiento basado en el tipo de orden
+     */
+    private function getOrderDirection(string $orderBy): string
+    {
+        $ascendingOrders = ['oldest', 'numero_asc'];
+        return in_array($orderBy, $ascendingOrders) ? 'asc' : 'desc';
     }
 
     public function create()

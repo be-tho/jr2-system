@@ -8,11 +8,14 @@ use Illuminate\Http\Request;
 use App\Models\Articulo;
 use App\Models\Categoria;
 use App\Models\Temporada;
+use App\Repositories\ArticuloRepository;
 use Illuminate\Support\Facades\Log;
 
 class ArticuloController extends Controller
 {
     use ImageHandler;
+
+    protected $articuloRepository;
 
     // Configuración de imágenes para artículos
     private const IMAGE_DIRECTORY = 'src/assets/uploads/articulos';
@@ -24,80 +27,44 @@ class ArticuloController extends Controller
         'format' => 'jpeg'
     ];
 
+    public function __construct(ArticuloRepository $articuloRepository)
+    {
+        $this->articuloRepository = $articuloRepository;
+    }
+
     public function index(Request $request)
     {
-        // Obtener parámetros de búsqueda y filtros
-        $search = $request->get('search');
-        $categoriaId = $request->get('categoria_id');
-        $temporadaId = $request->get('temporada_id');
-        $orderBy = $request->get('order_by', 'latest');
-        $perPage = $request->get('per_page', 12);
+        // Preparar filtros
+        $filters = [
+            'search' => $request->get('search'),
+            'categoria_id' => $request->get('categoria_id'),
+            'temporada_id' => $request->get('temporada_id'),
+            'order_by' => $request->get('order_by', 'latest'),
+            'order_direction' => $this->getOrderDirection($request->get('order_by', 'latest')),
+        ];
 
-        // Construir consulta optimizada
-        $query = Articulo::with(['categoria:id,nombre', 'temporada:id,nombre']);
-
-        // Aplicar búsqueda si existe
-        if ($search) {
-            $query->search($search);
-        }
-
-        // Aplicar filtros
-        if ($categoriaId) {
-            $query->byCategoria($categoriaId);
-        }
-
-        if ($temporadaId) {
-            $query->byTemporada($temporadaId);
-        }
-
-        // Aplicar ordenamiento
-        switch ($orderBy) {
-            case 'oldest':
-                $query->orderBy('created_at', 'asc');
-                break;
-            case 'precio_asc':
-                $query->orderByPrecio('asc');
-                break;
-            case 'precio_desc':
-                $query->orderByPrecio('desc');
-                break;
-            case 'nombre_asc':
-                $query->orderByNombre('asc');
-                break;
-            case 'nombre_desc':
-                $query->orderByNombre('desc');
-                break;
-            case 'stock_asc':
-                $query->orderBy('stock', 'asc');
-                break;
-            case 'stock_desc':
-                $query->orderBy('stock', 'desc');
-                break;
-            case 'latest':
-            default:
-                $query->latest();
-                break;
-        }
-
-        // Ejecutar consulta con paginación
-        $articulos = $query->paginate($perPage)->withQueryString();
+        // Obtener artículos paginados con filtros
+        $articulos = $this->articuloRepository->getPaginatedWithFilters($filters, $request->get('per_page', 12));
 
         // Obtener categorías y temporadas para los filtros
         $categorias = Categoria::select('id', 'nombre')->orderBy('nombre')->get();
         $temporadas = Temporada::select('id', 'nombre')->orderBy('nombre')->get();
 
-        return view('sections.articulos', [
-            'articulos' => $articulos,
-            'categorias' => $categorias,
-            'temporadas' => $temporadas,
-            'filters' => [
-                'search' => $search,
-                'categoria_id' => $categoriaId,
-                'temporada_id' => $temporadaId,
-                'order_by' => $orderBy,
-                'per_page' => $perPage,
-            ]
-        ]);
+        return view('sections.articulos', compact(
+            'articulos',
+            'categorias',
+            'temporadas',
+            'filters'
+        ));
+    }
+
+    /**
+     * Determinar la dirección del ordenamiento basado en el tipo de orden
+     */
+    private function getOrderDirection(string $orderBy): string
+    {
+        $ascendingOrders = ['nombre_asc', 'precio_asc', 'stock_asc', 'oldest'];
+        return in_array($orderBy, $ascendingOrders) ? 'asc' : 'desc';
     }
 
     public function show($id)

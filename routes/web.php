@@ -85,6 +85,18 @@ Route::middleware('auth')->group(function () {
         Route::get('/articulos', [ReporteController::class, 'articulos'])->name('articulos');
         Route::get('/cortes', [ReporteController::class, 'cortes'])->name('cortes');
         
+        // Rutas AJAX para estadísticas en tiempo real
+        Route::get('/stats/realtime', [ReporteController::class, 'getRealTimeStats'])->name('stats.realtime');
+        Route::post('/export/articulos/pdf', [ReporteController::class, 'exportArticulosPDF'])->name('export.articulos.pdf');
+        Route::post('/export/cortes/pdf', [ReporteController::class, 'exportCortesPDF'])->name('export.cortes.pdf');
+    });
+
+    // ========================================================================
+    // DASHBOARD STATS (AJAX)
+    // ========================================================================
+    Route::prefix('dashboard')->name('dashboard.')->group(function () {
+        Route::get('/stats/realtime', [HomeController::class, 'getRealTimeStats'])->name('stats.realtime');
+        Route::post('/stats/clear-cache', [HomeController::class, 'clearStatsCache'])->name('stats.clear-cache');
     });
 });
 

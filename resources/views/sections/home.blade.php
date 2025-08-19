@@ -1,10 +1,3 @@
-<?php
-    /** @var \App\Models\Corte $cortes */
-    //    filtrar la informacion de corte por el estado, 0 es cortado, 1 es costurando y 2 es entregado
-    $cortesCortado = $cortes->where('estado', 0);
-    $cortesCosturando = $cortes->where('estado', 1);
-    $cortesEntregado = $cortes->where('estado', 2);
-?>
 @extends('layout.app')
 
 @section('content')
@@ -97,9 +90,9 @@
                 </h3>
             </div>
             <div class="px-6 py-4">
-                @if(isset($cortesRecientes) && count($cortesRecientes) > 0)
+                @if(isset($cortes) && count($cortes) > 0)
                     <div class="space-y-3">
-                        @foreach($cortesRecientes as $corte)
+                        @foreach($cortes as $corte)
                         <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                             <div class="flex items-center space-x-3">
                                 <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/20 rounded-lg flex items-center justify-center">

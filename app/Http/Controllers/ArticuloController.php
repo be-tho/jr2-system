@@ -3,16 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ArticuloRequest;
+use App\Traits\ImageHandler;
 use Illuminate\Http\Request;
 use App\Models\Articulo;
 use App\Models\Categoria;
 use App\Models\Temporada;
-use mysql_xdevapi\Exception;
-use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Gd\Driver;
+use Illuminate\Support\Facades\Log;
 
 class ArticuloController extends Controller
 {
+    use ImageHandler;
+
+    // Configuración de imágenes para artículos
+    private const IMAGE_DIRECTORY = 'src/assets/uploads/articulos';
+    private const DEFAULT_IMAGE = 'default-articulo.png';
+    private const IMAGE_OPTIONS = [
+        'width' => 500,
+        'height' => 600,
+        'quality' => 80,
+        'format' => 'jpeg'
+    ];
+
     public function index(Request $request)
     {
         // Obtener parámetros de búsqueda y filtros
@@ -102,38 +113,53 @@ class ArticuloController extends Controller
     public function store(ArticuloRequest $request)
     {
         try {
+            Log::info('Creando nuevo artículo', ['request' => $request->except(['imagen'])]);
+            
+            $imageFilename = null;
+            
             if($request->hasFile('imagen')) {
-                $manager = new ImageManager(new Driver());
-                $name_img = time() . $request->file('imagen')->getClientOriginalName();
-                $img = $manager->read($request->file('imagen')->getRealPath());
-                $img = $img->resize(450, 600, function ($constraint) {
-                    $constraint->aspectRatio();
-                });
-                $img->toJpeg(80)->save(public_path('./src/assets/uploads/articulos/' . $name_img));
-
-                $request->imagen = $name_img;
-                $request->imagen_alt = $name_img;
+                // Validar imagen antes de procesar
+                $this->validateImage($request->file('imagen'));
+                
+                // Procesar y guardar imagen
+                $imageFilename = $this->processAndSaveImage(
+                    $request->file('imagen'), 
+                    self::IMAGE_DIRECTORY, 
+                    self::IMAGE_OPTIONS
+                );
             } else {
-                $request->imagen = 'default-articulo.jpg';
-                $request->imagen_alt = 'default-articulo.jpg';
+                $imageFilename = self::DEFAULT_IMAGE;
             }
 
             $request->codigo = strtoupper($request->codigo);
 
-            Articulo::create([
+            $articulo = Articulo::create([
                 'nombre' => $request->nombre,
                 'descripcion' => $request->descripcion,
                 'precio' => $request->precio,
                 'categoria_id' => $request->categoria_id,
                 'temporada_id' => $request->temporada_id,
-                'imagen' => $request->imagen,
+                'imagen' => $imageFilename,
                 'stock' => $request->stock,
                 'codigo' => $request->codigo,
                 'created_at' => now(),
             ]);
+            
+            Log::info('Artículo creado exitosamente', [
+                'articulo_id' => $articulo->id,
+                'imagen' => $imageFilename
+            ]);
+            
             return to_route('articulos.index')->with('success', 'Artículo creado correctamente');
-        }catch (\Exception $e) {
-            return to_route('articulos.index')->with('error', $e->getMessage());
+            
+        } catch (\Exception $e) {
+            Log::error('Error al crear artículo', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'request' => $request->except(['imagen'])
+            ]);
+            
+            return to_route('articulos.index')->with('error', 'Error al crear el artículo: ' . $e->getMessage());
         }
     }
 
@@ -148,27 +174,26 @@ class ArticuloController extends Controller
     public function update(ArticuloRequest $request, $id)
     {
         try {
+            Log::info('Actualizando artículo', ['articulo_id' => $id, 'request' => $request->except(['imagen'])]);
+            
             $articulo = Articulo::findOrFail($id);
+            $imageFilename = $articulo->imagen; // Mantener imagen actual por defecto
+            
             if($request->hasFile('imagen')) {
-                $manager = new ImageManager(new Driver());
-                $name_img = time() . $request->file('imagen')->getClientOriginalName();
-                $img = $manager->read($request->file('imagen')->getRealPath());
-                //resize image hancho 450px y alto automatico
-
-                $img = $img->resize(500, 600, function ($constraint) {
-                    $constraint->aspectRatio();
-                });
-                $img->toJpeg(80)->save(public_path('./src/assets/uploads/articulos/' . $name_img));
-
-                $request->imagen = $name_img;
-                $request->imagen_alt = $name_img;
-
-                if($articulo->imagen != 'default-articulo.png') {
-                    unlink(public_path('./src/assets/uploads/articulos/' . $articulo->imagen));
+                // Validar nueva imagen
+                $this->validateImage($request->file('imagen'));
+                
+                // Procesar y guardar nueva imagen
+                $imageFilename = $this->processAndSaveImage(
+                    $request->file('imagen'), 
+                    self::IMAGE_DIRECTORY, 
+                    self::IMAGE_OPTIONS
+                );
+                
+                // Eliminar imagen anterior si no es la imagen por defecto
+                if($articulo->imagen !== self::DEFAULT_IMAGE) {
+                    $this->deleteImage($articulo->imagen, self::IMAGE_DIRECTORY, self::DEFAULT_IMAGE);
                 }
-            } else {
-                $request->imagen = $articulo->imagen;
-                $request->imagen_alt = $articulo->imagen_alt;
             }
 
             $request->codigo = strtoupper($request->codigo);
@@ -179,14 +204,56 @@ class ArticuloController extends Controller
                 'precio' => $request->precio,
                 'categoria_id' => $request->categoria_id,
                 'temporada_id' => $request->temporada_id,
-                'imagen' => $request->imagen,
+                'imagen' => $imageFilename,
                 'stock' => $request->stock,
                 'codigo' => $request->codigo,
                 'updated_at' => now(),
             ]);
+            
+            Log::info('Artículo actualizado exitosamente', [
+                'articulo_id' => $articulo->id,
+                'imagen' => $imageFilename
+            ]);
+            
             return to_route('articulos.index')->with('success', 'Artículo actualizado correctamente');
-        }catch (\Exception $e) {
-            return to_route('articulos.index')->with('error', 'Error al actualizar el artículo');
+            
+        } catch (\Exception $e) {
+            Log::error('Error al actualizar artículo', [
+                'articulo_id' => $id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'request' => $request->except(['imagen'])
+            ]);
+            
+            return to_route('articulos.index')->with('error', 'Error al actualizar el artículo: ' . $e->getMessage());
+        }
+    }
+
+    public function delete($id)
+    {
+        try {
+            Log::info('Eliminando artículo', ['articulo_id' => $id]);
+            
+            $articulo = Articulo::findOrFail($id);
+            
+            // Eliminar imagen si no es la imagen por defecto
+            if($articulo->imagen !== self::DEFAULT_IMAGE) {
+                $this->deleteImage($articulo->imagen, self::IMAGE_DIRECTORY, self::DEFAULT_IMAGE);
+            }
+            
+            $articulo->delete();
+            
+            Log::info('Artículo eliminado exitosamente', ['articulo_id' => $id]);
+            return to_route('articulos.index')->with('success', 'Artículo eliminado correctamente');
+            
+        } catch (\Exception $e) {
+            Log::error('Error al eliminar artículo', [
+                'articulo_id' => $id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return to_route('articulos.index')->with('error', 'Error al eliminar el artículo: ' . $e->getMessage());
         }
     }
 }

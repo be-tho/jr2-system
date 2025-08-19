@@ -48,7 +48,9 @@
                 <!-- Image gallery -->
                 <div class="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8">
                     <div class="aspect-h-4 aspect-w-3 hidden overflow-hidden rounded-lg lg:block">
-                        <img src="{{ asset('src/assets/uploads/articulos/' . $articulo->imagen) }}" alt="foto del producto {{$articulo->nombre}}" class="w-auto max-h-[100%] object-contain border-gray-100 border-4 rounded-2xl" />
+                        <img src="{{ \App\Helpers\ImageHelper::getArticuloImageUrl($articulo->imagen) }}" 
+                             alt="{{ \App\Helpers\ImageHelper::getDefaultImageAlt($articulo->imagen, 'default-articulo.svg', $articulo->nombre, 'artículo') }}" 
+                             class="w-auto max-h-[100%] object-contain border-gray-100 border-4 rounded-2xl {{ \App\Helpers\ImageHelper::getDefaultImageClass($articulo->imagen, 'default-articulo.svg') }}" />
                     </div>
 
                 </div>

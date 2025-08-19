@@ -133,7 +133,9 @@
                 @foreach($articulos as $articulo)
                 <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow hover:shadow-lg transition-shadow duration-200 dark:bg-gray-800 dark:border-gray-700 justify-center items-center mx-auto">
                     <a href="{{ route('articulos.show', $articulo) }}">
-                        <img class="p-4 rounded-t-lg w-full h-48 object-cover" src="{{ asset('src/assets/uploads/articulos/' . $articulo->imagen) }}" alt="Imagen del artículo" />
+                        <img class="p-4 rounded-t-lg w-full h-48 object-cover {{ \App\Helpers\ImageHelper::getDefaultImageClass($articulo->imagen, 'default-articulo.svg') }}" 
+                             src="{{ \App\Helpers\ImageHelper::getArticuloImageUrl($articulo->imagen) }}" 
+                             alt="{{ \App\Helpers\ImageHelper::getDefaultImageAlt($articulo->imagen, 'default-articulo.svg', $articulo->nombre, 'artículo') }}" />
                     </a>
                     <div class="px-5 pb-5">
                         <a href="{{ route('articulos.show', $articulo) }}">

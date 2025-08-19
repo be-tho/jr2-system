@@ -1,0 +1,37 @@
+<svg width="450" height="600" viewBox="0 0 450 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fondo -->
+  <rect width="450" height="600" fill="#f8fafc"/>
+  
+  <!-- Borde -->
+  <rect x="20" y="20" width="410" height="560" rx="20" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="2"/>
+  
+  <!-- Icono de producto -->
+  <g transform="translate(175, 200)">
+    <!-- Caja -->
+    <rect x="0" y="0" width="100" height="80" rx="8" fill="#3b82f6" stroke="#1d4ed8" stroke-width="2"/>
+    
+    <!-- Líneas de detalle -->
+    <rect x="15" y="15" width="70" height="4" rx="2" fill="#ffffff"/>
+    <rect x="15" y="25" width="50" height="4" rx="2" fill="#ffffff"/>
+    <rect x="15" y="35" width="60" height="4" rx="2" fill="#ffffff"/>
+    
+    <!-- Sombra -->
+    <rect x="8" y="8" width="100" height="80" rx="8" fill="#1d4ed8" opacity="0.3"/>
+  </g>
+  
+  <!-- Texto "Sin imagen" -->
+  <text x="225" y="380" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="600" fill="#64748b">
+    Sin imagen disponible
+  </text>
+  
+  <!-- Texto descriptivo -->
+  <text x="225" y="410" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#94a3b8">
+    Imagen por defecto
+  </text>
+  
+  <!-- Decoración de esquinas -->
+  <circle cx="40" cy="40" r="8" fill="#3b82f6" opacity="0.2"/>
+  <circle cx="410" cy="40" r="8" fill="#3b82f6" opacity="0.2"/>
+  <circle cx="40" cy="560" r="8" fill="#3b82f6" opacity="0.2"/>
+  <circle cx="410" cy="560" r="8" fill="#3b82f6" opacity="0.2"/>
+</svg>

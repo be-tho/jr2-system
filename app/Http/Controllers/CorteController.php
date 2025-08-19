@@ -14,7 +14,7 @@ class CorteController extends Controller
 
     // Configuración de imágenes para cortes
     private const IMAGE_DIRECTORY = 'src/assets/uploads/cortes';
-    private const DEFAULT_IMAGE = 'default-corte.jpg';
+    private const DEFAULT_IMAGE = 'default-corte.svg';
     private const IMAGE_OPTIONS = [
         'width' => 450,
         'height' => 600,
@@ -24,14 +24,58 @@ class CorteController extends Controller
 
     public function index(Request $request)
     {
-        if(empty($request->search)){
-            $cortes = Corte::orderBy('id', 'desc')->get();
-        }else{
-            $cortes = Corte::where('id', 'like', '%'.$request->query('search').'%')->get();
+        $query = Corte::query();
+
+        // Búsqueda por número de corte o nombre
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('numero_corte', 'like', "%{$search}%")
+                  ->orWhere('nombre', 'like', "%{$search}%");
+            });
         }
+
+        // Filtro por estado
+        if ($request->filled('estado')) {
+            $query->where('estado', $request->estado);
+        }
+
+        // Filtro por fecha
+        if ($request->filled('fecha')) {
+            switch ($request->fecha) {
+                case 'today':
+                    $query->whereDate('fecha', today());
+                    break;
+                case 'week':
+                    $query->whereBetween('fecha', [now()->startOfWeek(), now()->endOfWeek()]);
+                    break;
+                case 'month':
+                    $query->whereMonth('fecha', now()->month);
+                    break;
+            }
+        }
+
+        // Ordenamiento
+        switch ($request->get('order_by', 'latest')) {
+            case 'oldest':
+                $query->orderBy('created_at', 'asc');
+                break;
+            case 'numero_asc':
+                $query->orderBy('numero_corte', 'asc');
+                break;
+            case 'numero_desc':
+                $query->orderBy('numero_corte', 'desc');
+                break;
+            case 'latest':
+            default:
+                $query->orderBy('created_at', 'desc');
+                break;
+        }
+
+        $cortes = $query->paginate(12);
+
         return view('sections.cortes', [
-            'cortes' => $cortes,
-            'search' => $request->query('search')
+            'cortes' => $cortes
         ]);
     }
 

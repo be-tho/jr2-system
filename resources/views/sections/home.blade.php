@@ -75,7 +75,7 @@
             </div>
         </a>
 
-        <a href="#" class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 group">
+        <a href="{{ route('reportes.index') }}"  class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 group">
             <div class="px-6 py-4 text-center">
                 <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
                     <i class="ri-bar-chart-line text-2xl text-white"></i>

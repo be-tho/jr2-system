@@ -1,255 +1,320 @@
 <?php
 /** @var \App\Models\Articulo $articulo **/
-
 ?>
 @extends('layout.app')
 @section('title', $articulo->nombre)
 @section('content')
     <x-container-wrapp>
-        <div>
-            <div class="flex justify-between items-center mb-2">
-                <h1 class="text-4xl font-semibold text-gray-800">Artículo: {{ $articulo->codigo }}</h1>
+        <!-- Header con breadcrumb y botón volver -->
+        <div class="mb-6">
+            <nav aria-label="Breadcrumb" class="mb-4">
+                <ol class="flex items-center space-x-2 text-sm text-gray-600">
+                    <li>
+                        <a href="{{ route('articulos.index') }}" class="hover:text-blue-600 transition-colors duration-200">
+                            Artículos
+                        </a>
+                    </li>
+                    <li>
+                        <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                    </li>
+                    @if($articulo->categoria)
+                    <li>
+                        <a href="{{ route('articulos.index', ['categoria_id' => $articulo->categoria->id]) }}" class="hover:text-blue-600 transition-colors duration-200">
+                            {{ $articulo->categoria->nombre }}
+                        </a>
+                    </li>
+                    <li>
+                        <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                    </li>
+                    @endif
+                    <li class="text-gray-900 font-medium">{{ $articulo->nombre }}</li>
+                </ol>
+            </nav>
 
-                <a href="{{ route('articulos.index') }}" class="text-white
-                bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4
-                focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5
-                py-2.5 text-center mb-2">
-                    Volver
-                </a>
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ $articulo->nombre }}</h1>
+                    <p class="text-lg text-gray-600 font-mono">#{{ $articulo->codigo }}</p>
+                </div>
+                
+                <div class="flex gap-3">
+                    <a href="{{ route('articulos.edit', $articulo) }}" 
+                       class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                        Editar
+                    </a>
+                    
+                    <a href="{{ route('articulos.index') }}" 
+                       class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                        Volver
+                    </a>
+                </div>
             </div>
         </div>
-        <div class="bg-white">
-            <div class="pt-6">
-                <nav aria-label="Breadcrumb">
-                    <ol role="list" class="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-                        <li>
-                            <div class="flex items-center">
-                                <a href="#" class="mr-2 text-sm font-medium text-gray-900">{{$articulo->temporada}}</a>
-                                <svg width="16" height="20" viewBox="0 0 16 20" fill="currentColor" aria-hidden="true" class="h-5 w-4 text-gray-300">
-                                    <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
-                                </svg>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="flex items-center">
-                                <a href="#" class="mr-2 text-sm font-medium text-gray-900">{{$articulo->categoria}}</a>
-                                <svg width="16" height="20" viewBox="0 0 16 20" fill="currentColor" aria-hidden="true" class="h-5 w-4 text-gray-300">
-                                    <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
-                                </svg>
-                            </div>
-                        </li>
 
-                        <li class="text-sm">
-                            <a href="#" aria-current="page" class="font-medium text-gray-500 hover:text-gray-600">{{$articulo->nombre}}</a>
-                        </li>
-                    </ol>
-                </nav>
-
-                <!-- Image gallery -->
-                <div class="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8">
-                    <div class="aspect-h-4 aspect-w-3 hidden overflow-hidden rounded-lg lg:block">
+        <!-- Contenido principal -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Columna izquierda - Imagen -->
+            <div class="space-y-6">
+                <!-- Imagen principal -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="relative group cursor-pointer" onclick="openImageModal()">
                         <img src="{{ \App\Helpers\ImageHelper::getArticuloImageUrl($articulo->imagen) }}" 
                              alt="{{ \App\Helpers\ImageHelper::getDefaultImageAlt($articulo->imagen, 'default-articulo.svg', $articulo->nombre, 'artículo') }}" 
-                             class="w-auto max-h-[100%] object-contain border-gray-100 border-4 rounded-2xl {{ \App\Helpers\ImageHelper::getDefaultImageClass($articulo->imagen, 'default-articulo.svg') }}" />
+                             class="w-full h-96 object-cover {{ \App\Helpers\ImageHelper::getDefaultImageClass($articulo->imagen, 'default-articulo.svg') }}" />
+                        
+                        <!-- Overlay de zoom -->
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+                            <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 7v3m0 0v3m0-3h3m-3 0H7"></path>
+                                </svg>
+                            </div>
+                        </div>
                     </div>
-
+                    
+                    <div class="p-4 text-center">
+                        <p class="text-sm text-gray-500">Click para ampliar</p>
+                    </div>
                 </div>
 
-                <!-- Product info -->
-                <div class="mx-auto max-w-2xl px-4 pb-16 pt-10 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pb-24 lg:pt-16">
-                    <div class="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
-                        <h1 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">{{$articulo->nombre}}</h1>
+                <!-- Información adicional -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                        <svg class="w-5 h-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Información del Artículo
+                    </h3>
+                    
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                            <span class="text-gray-600">Código:</span>
+                            <span class="font-mono font-medium text-gray-900">#{{ $articulo->codigo }}</span>
+                        </div>
+                        
+                        @if($articulo->categoria)
+                        <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                            <span class="text-gray-600">Categoría:</span>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-blue-100 text-blue-800">
+                                {{ $articulo->categoria->nombre }}
+                            </span>
+                        </div>
+                        @endif
+                        
+                        @if($articulo->temporada)
+                        <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                            <span class="text-gray-600">Temporada:</span>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-purple-100 text-purple-800">
+                                {{ $articulo->temporada->nombre }}
+                            </span>
+                        </div>
+                        @endif
+                        
+                        <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                            <span class="text-gray-600">Fecha de creación:</span>
+                            <span class="text-gray-900">{{ $articulo->created_at ? $articulo->created_at->format('d/m/Y') : 'No disponible' }}</span>
+                        </div>
+                        
+                        <div class="flex justify-between items-center py-2">
+                            <span class="text-gray-600">Última actualización:</span>
+                            <span class="text-gray-900">{{ $articulo->updated_at ? $articulo->updated_at->format('d/m/Y') : 'No disponible' }}</span>
+                        </div>
                     </div>
+                </div>
+            </div>
 
-                    <!-- Options -->
-                    <div class="mt-4 lg:row-span-3 lg:mt-0">
-                        <h2 class="sr-only">Product information</h2>
-                        <p class="text-3xl tracking-tight text-gray-900">$ {{ number_format($articulo->precio, 0, ',', '.') }}</p>
-
-                        <!-- Reviews -->
-                        <div class="mt-6">
-                            <h3 class="sr-only">Reviews</h3>
-                            <div class="flex items-center">
-                                <div class="flex items-center">
-                                    <!-- Active: "text-gray-900", Default: "text-gray-200" -->
-                                    <svg class="h-5 w-5 flex-shrink-0 text-gray-900" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                        <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
-                                    </svg>
-                                    <svg class="h-5 w-5 flex-shrink-0 text-gray-900" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                        <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
-                                    </svg>
-                                    <svg class="h-5 w-5 flex-shrink-0 text-gray-900" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                        <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
-                                    </svg>
-                                    <svg class="h-5 w-5 flex-shrink-0 text-gray-900" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                        <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
-                                    </svg>
-                                    <svg class="h-5 w-5 flex-shrink-0 text-gray-200" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                        <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                                <p class="sr-only">4 out of 5 stars</p>
-                                <a href="#" class="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">117 reviews</a>
-                            </div>
-                        </div>
-
-                        <form class="mt-10">
-                            <!-- Colors -->
-                            <div>
-                                <h3 class="text-sm font-medium text-gray-900">Color</h3>
-
-                                <fieldset aria-label="Choose a color" class="mt-4">
-                                    <div class="flex items-center space-x-3">
-                                        <!-- Active and Checked: "ring ring-offset-1" -->
-                                        <label aria-label="White" class="relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 ring-gray-400 focus:outline-none">
-                                            <input type="radio" name="color-choice" value="White" class="sr-only">
-                                            <span aria-hidden="true" class="h-8 w-8 rounded-full border border-black border-opacity-10 bg-white"></span>
-                                        </label>
-                                        <!-- Active and Checked: "ring ring-offset-1" -->
-                                        <label aria-label="Gray" class="relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 ring-gray-400 focus:outline-none">
-                                            <input type="radio" name="color-choice" value="Gray" class="sr-only">
-                                            <span aria-hidden="true" class="h-8 w-8 rounded-full border border-black border-opacity-10 bg-gray-200"></span>
-                                        </label>
-                                        <!-- Active and Checked: "ring ring-offset-1" -->
-                                        <label aria-label="Black" class="relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 ring-gray-900 focus:outline-none">
-                                            <input type="radio" name="color-choice" value="Black" class="sr-only">
-                                            <span aria-hidden="true" class="h-8 w-8 rounded-full border border-black border-opacity-10 bg-gray-900"></span>
-                                        </label>
-                                    </div>
-                                </fieldset>
-                            </div>
-
-                            <!-- Sizes -->
-                            <div class="mt-10">
-                                <div class="flex items-center justify-between">
-                                    <h3 class="text-sm font-medium text-gray-900">Size</h3>
-                                    <a href="#" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">Size guide</a>
-                                </div>
-
-                                <fieldset aria-label="Choose a size" class="mt-4">
-                                    <div class="grid grid-cols-4 gap-4 sm:grid-cols-8 lg:grid-cols-4">
-                                        <!-- Active: "ring-2 ring-indigo-500" -->
-                                        <label class="group relative flex cursor-not-allowed items-center justify-center rounded-md border bg-gray-50 px-4 py-3 text-sm font-medium uppercase text-gray-200 hover:bg-gray-50 focus:outline-none sm:flex-1 sm:py-6">
-                                            <input type="radio" name="size-choice" value="XXS" disabled class="sr-only">
-                                            <span>XXS</span>
-                                            <span aria-hidden="true" class="pointer-events-none absolute -inset-px rounded-md border-2 border-gray-200">
-                    <svg class="absolute inset-0 h-full w-full stroke-2 text-gray-200" viewBox="0 0 100 100" preserveAspectRatio="none" stroke="currentColor">
-                      <line x1="0" y1="100" x2="100" y2="0" vector-effect="non-scaling-stroke" />
-                    </svg>
-                  </span>
-                                        </label>
-                                        <!-- Active: "ring-2 ring-indigo-500" -->
-                                        <label class="group relative flex cursor-pointer items-center justify-center rounded-md border bg-white px-4 py-3 text-sm font-medium uppercase text-gray-900 shadow-sm hover:bg-gray-50 focus:outline-none sm:flex-1 sm:py-6">
-                                            <input type="radio" name="size-choice" value="XS" class="sr-only">
-                                            <span>XS</span>
-                                            <!--
-                                              Active: "border", Not Active: "border-2"
-                                              Checked: "border-indigo-500", Not Checked: "border-transparent"
-                                            -->
-                                            <span class="pointer-events-none absolute -inset-px rounded-md" aria-hidden="true"></span>
-                                        </label>
-                                        <!-- Active: "ring-2 ring-indigo-500" -->
-                                        <label class="group relative flex cursor-pointer items-center justify-center rounded-md border bg-white px-4 py-3 text-sm font-medium uppercase text-gray-900 shadow-sm hover:bg-gray-50 focus:outline-none sm:flex-1 sm:py-6">
-                                            <input type="radio" name="size-choice" value="S" class="sr-only">
-                                            <span>S</span>
-                                            <!--
-                                              Active: "border", Not Active: "border-2"
-                                              Checked: "border-indigo-500", Not Checked: "border-transparent"
-                                            -->
-                                            <span class="pointer-events-none absolute -inset-px rounded-md" aria-hidden="true"></span>
-                                        </label>
-                                        <!-- Active: "ring-2 ring-indigo-500" -->
-                                        <label class="group relative flex cursor-pointer items-center justify-center rounded-md border bg-white px-4 py-3 text-sm font-medium uppercase text-gray-900 shadow-sm hover:bg-gray-50 focus:outline-none sm:flex-1 sm:py-6">
-                                            <input type="radio" name="size-choice" value="M" class="sr-only">
-                                            <span>M</span>
-                                            <!--
-                                              Active: "border", Not Active: "border-2"
-                                              Checked: "border-indigo-500", Not Checked: "border-transparent"
-                                            -->
-                                            <span class="pointer-events-none absolute -inset-px rounded-md" aria-hidden="true"></span>
-                                        </label>
-                                        <!-- Active: "ring-2 ring-indigo-500" -->
-                                        <label class="group relative flex cursor-pointer items-center justify-center rounded-md border bg-white px-4 py-3 text-sm font-medium uppercase text-gray-900 shadow-sm hover:bg-gray-50 focus:outline-none sm:flex-1 sm:py-6">
-                                            <input type="radio" name="size-choice" value="L" class="sr-only">
-                                            <span>L</span>
-                                            <!--
-                                              Active: "border", Not Active: "border-2"
-                                              Checked: "border-indigo-500", Not Checked: "border-transparent"
-                                            -->
-                                            <span class="pointer-events-none absolute -inset-px rounded-md" aria-hidden="true"></span>
-                                        </label>
-                                        <!-- Active: "ring-2 ring-indigo-500" -->
-                                        <label class="group relative flex cursor-pointer items-center justify-center rounded-md border bg-white px-4 py-3 text-sm font-medium uppercase text-gray-900 shadow-sm hover:bg-gray-50 focus:outline-none sm:flex-1 sm:py-6">
-                                            <input type="radio" name="size-choice" value="XL" class="sr-only">
-                                            <span>XL</span>
-                                            <!--
-                                              Active: "border", Not Active: "border-2"
-                                              Checked: "border-indigo-500", Not Checked: "border-transparent"
-                                            -->
-                                            <span class="pointer-events-none absolute -inset-px rounded-md" aria-hidden="true"></span>
-                                        </label>
-                                        <!-- Active: "ring-2 ring-indigo-500" -->
-                                        <label class="group relative flex cursor-pointer items-center justify-center rounded-md border bg-white px-4 py-3 text-sm font-medium uppercase text-gray-900 shadow-sm hover:bg-gray-50 focus:outline-none sm:flex-1 sm:py-6">
-                                            <input type="radio" name="size-choice" value="2XL" class="sr-only">
-                                            <span>2XL</span>
-                                            <!--
-                                              Active: "border", Not Active: "border-2"
-                                              Checked: "border-indigo-500", Not Checked: "border-transparent"
-                                            -->
-                                            <span class="pointer-events-none absolute -inset-px rounded-md" aria-hidden="true"></span>
-                                        </label>
-                                        <!-- Active: "ring-2 ring-indigo-500" -->
-                                        <label class="group relative flex cursor-pointer items-center justify-center rounded-md border bg-white px-4 py-3 text-sm font-medium uppercase text-gray-900 shadow-sm hover:bg-gray-50 focus:outline-none sm:flex-1 sm:py-6">
-                                            <input type="radio" name="size-choice" value="3XL" class="sr-only">
-                                            <span>3XL</span>
-                                            <!--
-                                              Active: "border", Not Active: "border-2"
-                                              Checked: "border-indigo-500", Not Checked: "border-transparent"
-                                            -->
-                                            <span class="pointer-events-none absolute -inset-px rounded-md" aria-hidden="true"></span>
-                                        </label>
-                                    </div>
-                                </fieldset>
-                            </div>
-
-                            <a href="{{ route('articulos.edit', $articulo) }}"  type="submit" class="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Editar</a>
-                        </form>
+            <!-- Columna derecha - Información del producto -->
+            <div class="space-y-6">
+                <!-- Precio y stock -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-2xl font-bold text-gray-900">${{ number_format($articulo->precio, 0, ',', '.') }}</h2>
+                        
+                        <!-- Badge de stock -->
+                        @if($articulo->stock > 10)
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                En stock
+                            </span>
+                        @elseif($articulo->stock > 0)
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"></path>
+                                </svg>
+                                Stock bajo
+                            </span>
+                        @else
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"></path>
+                                </svg>
+                                Sin stock
+                            </span>
+                        @endif
                     </div>
-
-                    <div class="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pb-16 lg:pr-8 lg:pt-6">
-                        <!-- Description and details -->
-                        <div>
-                            <h3 class="text-sm font-medium text-gray-900">Descripción</h3>
-
-                            <div class="mt-4 space-y-6">
-                                <p class="text-base text-gray-900">{{$articulo->descripcion}}</p>
+                    
+                    <!-- Información de stock -->
+                    <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-600">Stock disponible:</span>
+                            <span class="text-2xl font-bold {{ $articulo->stock > 10 ? 'text-green-600' : ($articulo->stock > 0 ? 'text-yellow-600' : 'text-red-600') }}">
+                                {{ $articulo->stock }} unidades
+                            </span>
+                        </div>
+                        
+                        @if($articulo->stock > 0)
+                        <div class="mt-2">
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                @php
+                                    $stockPercentage = min(100, ($articulo->stock / max(1, $articulo->stock)) * 100);
+                                    $stockColor = $articulo->stock > 10 ? 'bg-green-500' : 'bg-yellow-500';
+                                @endphp
+                                <div class="{{ $stockColor }} h-2 rounded-full transition-all duration-300" style="width: {{ $stockPercentage }}%"></div>
                             </div>
                         </div>
+                        @endif
+                    </div>
+                    
+                    <!-- Acciones rápidas -->
+                    <div class="space-y-3">
+                        <a href="{{ route('articulos.edit', $articulo) }}" 
+                           class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                            Editar Artículo
+                        </a>
+                        
+                        <button onclick="window.print()" 
+                                class="w-full bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                            </svg>
+                            Imprimir
+                        </button>
+                    </div>
+                </div>
 
-                        <div class="mt-10">
-                            <h3 class="text-sm font-medium text-gray-900">Highlights</h3>
+                <!-- Descripción -->
+                @if($articulo->descripcion)
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                        <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Descripción
+                    </h3>
+                    <p class="text-gray-700 leading-relaxed">{{ $articulo->descripcion }}</p>
+                </div>
+                @endif
 
-                            <div class="mt-4">
-                                <ul role="list" class="list-disc space-y-2 pl-4 text-sm">
-                                    <li class="text-gray-400"><span class="text-gray-600">Hand cut and sewn locally</span></li>
-                                    <li class="text-gray-400"><span class="text-gray-600">Dyed with our proprietary colors</span></li>
-                                    <li class="text-gray-400"><span class="text-gray-600">Pre-washed &amp; pre-shrunk</span></li>
-                                    <li class="text-gray-400"><span class="text-gray-600">Ultra-soft 100% cotton</span></li>
-                                </ul>
-                            </div>
+                <!-- Características del producto -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                        <svg class="w-5 h-5 text-purple-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Características
+                    </h3>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center">
+                            <svg class="w-4 h-4 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">Código único identificador</span>
                         </div>
-
-                        <div class="mt-10">
-                            <h2 class="text-sm font-medium text-gray-900">Detalles</h2>
-
-                            <div class="mt-4 space-y-6">
-                                <p class="text-sm text-gray-600">The 6-Pack includes two black, two white, and two heather gray Basic Tees. Sign up for our subscription service and be the first to get new, exciting colors, like our upcoming &quot;Charcoal Gray&quot; limited release.</p>
-                            </div>
+                        
+                        @if($articulo->categoria)
+                        <div class="flex items-center">
+                            <svg class="w-4 h-4 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">Categorizado como {{ $articulo->categoria->nombre }}</span>
+                        </div>
+                        @endif
+                        
+                        @if($articulo->temporada)
+                        <div class="flex items-center">
+                            <svg class="w-4 h-4 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">Temporada {{ $articulo->temporada->nombre }}</span>
+                        </div>
+                        @endif
+                        
+                        <div class="flex items-center">
+                            <svg class="w-4 h-4 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">Precio competitivo en el mercado</span>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <svg class="w-4 h-4 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">Control de inventario en tiempo real</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- Modal de imagen -->
+        <div id="imageModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+            <div class="relative max-w-4xl max-h-full">
+                <img src="{{ \App\Helpers\ImageHelper::getArticuloImageUrl($articulo->imagen) }}" 
+                     alt="{{ \App\Helpers\ImageHelper::getDefaultImageAlt($articulo->imagen, 'default-articulo.svg', $articulo->nombre, 'artículo') }}" 
+                     class="w-full h-auto max-h-[90vh] object-contain rounded-lg shadow-2xl {{ \App\Helpers\ImageHelper::getDefaultImageClass($articulo->imagen, 'default-articulo.svg') }}">
+                
+                <!-- Botón cerrar -->
+                <button onclick="closeImageModal()" 
+                        class="absolute -top-4 -right-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-full w-10 h-10 flex items-center justify-center shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <script>
+        function openImageModal() {
+            document.getElementById('imageModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImageModal() {
+            document.getElementById('imageModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Cerrar modal con ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeImageModal();
+            }
+        });
+
+        // Cerrar modal haciendo click fuera de la imagen
+        document.getElementById('imageModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeImageModal();
+            }
+        });
+        </script>
     </x-container-wrapp>
 @endsection

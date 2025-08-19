@@ -3,8 +3,55 @@
 ?>
 @extends('layout.app')
 @section('title', 'Artículos')
+@section('styles')
+<style>
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    .group:hover .group-hover\:scale-105 {
+        transform: scale(1.05);
+    }
+    
+    .group:hover .group-hover\:text-blue-600 {
+        color: #2563eb;
+    }
+    
+    @media (max-width: 768px) {
+        .grid {
+            gap: 1rem;
+        }
+    }
+</style>
+@endsection
 @section('content')
     <x-container-wrapp>
+        <!-- Mensajes de notificación -->
+        @if(session('success'))
+            <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                <div class="flex items-center">
+                    <svg class="w-5 h-5 text-green-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                    </svg>
+                    <p class="text-sm text-green-800">{{ session('success') }}</p>
+                </div>
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <div class="flex items-center">
+                    <svg class="w-5 h-5 text-red-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L10.586 10l-1.293 1.293a1 1 0 101.414 1.414L12 11.414l1.293 1.293a1 1 0 001.414-1.414L13.414 10l1.293-1.293a1 1 0 00-1.414-1.414L12 8.586l-1.293-1.293a1 1 0 00-1.414 0z" clip-rule="evenodd"></path>
+                    </svg>
+                    <p class="text-sm text-red-800">{{ session('error') }}</p>
+                </div>
+            </div>
+        @endif
+
         <!-- Formulario de búsqueda y filtros -->
         <div class="mb-6">
             <form method="get" action="{{route('articulos.index')}}" class="space-y-4">
@@ -61,6 +108,7 @@
                         <label for="order_by" class="block text-sm font-medium text-gray-700 mb-2">Ordenar por</label>
                         <select name="order_by" id="order_by" class="block w-full p-3 text-sm border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
                             <option value="latest" {{ ($filters['order_by'] ?? 'latest') == 'latest' ? 'selected' : '' }}>Más recientes</option>
+                            <option value="oldest" {{ ($filters['order_by'] ?? '') == 'oldest' ? 'selected' : '' }}>Más antiguos</option>
                             <option value="nombre_asc" {{ ($filters['order_by'] ?? '') == 'nombre_asc' ? 'selected' : '' }}>Nombre A-Z</option>
                             <option value="nombre_desc" {{ ($filters['order_by'] ?? '') == 'nombre_desc' ? 'selected' : '' }}>Nombre Z-A</option>
                             <option value="precio_asc" {{ ($filters['order_by'] ?? '') == 'precio_asc' ? 'selected' : '' }}>Precio menor</option>
@@ -74,10 +122,10 @@
                     <div>
                         <label for="per_page" class="block text-sm font-medium text-gray-700 mb-2">Por página</label>
                         <select name="per_page" id="per_page" class="block w-full p-3 text-sm border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
-                            <option value="8" {{ ($filters['per_page'] ?? 8) == 8 ? 'selected' : '' }}>8</option>
-                            <option value="16" {{ ($filters['per_page'] ?? 8) == 16 ? 'selected' : '' }}>16</option>
-                            <option value="24" {{ ($filters['per_page'] ?? 8) == 24 ? 'selected' : '' }}>24</option>
-                            <option value="32" {{ ($filters['per_page'] ?? 8) == 32 ? 'selected' : '' }}>32</option>
+                            <option value="12" {{ ($filters['per_page'] ?? 12) == 12 ? 'selected' : '' }}>12</option>
+                            <option value="24" {{ ($filters['per_page'] ?? 12) == 24 ? 'selected' : '' }}>24</option>
+                            <option value="36" {{ ($filters['per_page'] ?? 12) == 36 ? 'selected' : '' }}>36</option>
+                            <option value="48" {{ ($filters['per_page'] ?? 12) == 48 ? 'selected' : '' }}>48</option>
                         </select>
                     </div>
                 </div>
@@ -123,48 +171,123 @@
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-4xl font-bold text-gray-800">Artículos</h1>
             <a href="{{ route('articulos.create') }}" class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
                 Crear artículo nuevo
             </a>
         </div>
 
+        <!-- Estadísticas de artículos -->
+        <x-articulos-stats :articulos="$articulos" />
+
         <!-- Grid de artículos -->
         @if($articulos->count() > 0)
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mx-auto mb-5">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 @foreach($articulos as $articulo)
-                <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow hover:shadow-lg transition-shadow duration-200 dark:bg-gray-800 dark:border-gray-700 justify-center items-center mx-auto">
-                    <a href="{{ route('articulos.show', $articulo) }}">
-                        <img class="p-4 rounded-t-lg w-full h-48 object-cover {{ \App\Helpers\ImageHelper::getDefaultImageClass($articulo->imagen, 'default-articulo.svg') }}" 
-                             src="{{ \App\Helpers\ImageHelper::getArticuloImageUrl($articulo->imagen) }}" 
-                             alt="{{ \App\Helpers\ImageHelper::getDefaultImageAlt($articulo->imagen, 'default-articulo.svg', $articulo->nombre, 'artículo') }}" />
-                    </a>
-                    <div class="px-5 pb-5">
-                        <a href="{{ route('articulos.show', $articulo) }}">
-                            <h5 class="text-xl font-semibold tracking-tight text-gray-900 dark:text-white mb-2">{{ $articulo->nombre }}</h5>
-                            <p class="text-sm text-gray-600 mb-1">Código: #{{ $articulo->codigo }}</p>
-                            @if($articulo->categoria)
-                                <p class="text-sm text-gray-500 mb-1">Categoría: {{ $articulo->categoria->nombre }}</p>
-                            @endif
-                            @if($articulo->temporada)
-                                <p class="text-sm text-gray-500 mb-1">Temporada: {{ $articulo->temporada->nombre }}</p>
-                            @endif
+                <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden group">
+                    <!-- Imagen del artículo -->
+                    <div class="relative overflow-hidden">
+                        <a href="{{ route('articulos.show', $articulo) }}" class="block">
+                            <img class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300 {{ \App\Helpers\ImageHelper::getDefaultImageClass($articulo->imagen, 'default-articulo.svg') }}" 
+                                 src="{{ \App\Helpers\ImageHelper::getArticuloImageUrl($articulo->imagen) }}" 
+                                 alt="{{ \App\Helpers\ImageHelper::getDefaultImageAlt($articulo->imagen, 'default-articulo.svg', $articulo->nombre, 'artículo') }}" />
                         </a>
                         
-                        <!-- Rating (placeholder) -->
-                        <div class="flex items-center mt-2.5 mb-3">
-                            <div class="flex items-center space-x-1 rtl:space-x-reverse">
-                                @for($i = 1; $i <= 5; $i++)
-                                    <svg class="w-4 h-4 {{ $i <= 4 ? 'text-yellow-300' : 'text-gray-200' }}" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+                        <!-- Badge de stock -->
+                        <div class="absolute top-3 right-3">
+                            @if($articulo->stock > 10)
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                     </svg>
-                                @endfor
-                            </div>
-                            <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded ms-3">4.0</span>
+                                    En stock
+                                </span>
+                            @elseif($articulo->stock > 0)
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    Stock bajo
+                                </span>
+                            @else
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    Sin stock
+                                </span>
+                            @endif
                         </div>
-                        
+
+                        <!-- Badge de precio -->
+                        <div class="absolute bottom-3 left-3">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-white/90 text-gray-900 shadow-sm">
+                                ${{ number_format($articulo->precio, 0, ',', '.') }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Contenido del artículo -->
+                    <div class="p-5 space-y-3">
+                        <!-- Nombre y código -->
+                        <div>
+                            <a href="{{ route('articulos.show', $articulo) }}" class="block">
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-1 group-hover:text-blue-600 transition-colors duration-200 line-clamp-2">
+                                    {{ $articulo->nombre }}
+                                </h3>
+                            </a>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 font-mono">#{{ $articulo->codigo }}</p>
+                        </div>
+
+                        <!-- Categoría y temporada -->
+                        <div class="flex flex-wrap gap-2">
+                            @if($articulo->categoria)
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
+                                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                                    </svg>
+                                    {{ $articulo->categoria->nombre }}
+                                </span>
+                            @endif
+                            @if($articulo->temporada)
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400">
+                                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    {{ $articulo->temporada->nombre }}
+                                </span>
+                            @endif
+                        </div>
+
+                        <!-- Stock -->
                         <div class="flex items-center justify-between">
-                            <span class="text-3xl font-bold text-gray-900 dark:text-white">$ {{ number_format($articulo->precio, 0, ',', '.') }}</span>
-                            <a href="{{ route('articulos.show', $articulo) }}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                Ver más
+                            <div class="flex items-center">
+                                <svg class="w-4 h-4 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                </svg>
+                                <span class="text-sm text-gray-600 dark:text-gray-400">
+                                    Stock: <span class="font-semibold {{ $articulo->stock > 10 ? 'text-green-600' : ($articulo->stock > 0 ? 'text-yellow-600' : 'text-red-600') }}">{{ $articulo->stock }}</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Acciones -->
+                        <div class="flex gap-2 pt-2">
+                            <a href="{{ route('articulos.show', $articulo) }}" 
+                               class="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded-lg text-center transition-colors duration-200">
+                                <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                                Ver
+                            </a>
+                            
+                            <a href="{{ route('articulos.edit', $articulo) }}" 
+                               class="bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors duration-200">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
                             </a>
                         </div>
                     </div>
@@ -172,7 +295,7 @@
                 @endforeach
             </div>
 
-            <!-- Paginación mejorada -->
+            <!-- Paginación -->
             @if($articulos->hasPages())
                 <div class="flex justify-center mt-8">
                     {{ $articulos->appends(request()->query())->links() }}

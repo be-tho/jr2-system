@@ -16,7 +16,7 @@ class ArticuloController extends Controller
 
     // Configuración de imágenes para artículos
     private const IMAGE_DIRECTORY = 'src/assets/uploads/articulos';
-    private const DEFAULT_IMAGE = 'default-articulo.png';
+    private const DEFAULT_IMAGE = 'default-articulo.svg';
     private const IMAGE_OPTIONS = [
         'width' => 500,
         'height' => 600,
@@ -31,7 +31,7 @@ class ArticuloController extends Controller
         $categoriaId = $request->get('categoria_id');
         $temporadaId = $request->get('temporada_id');
         $orderBy = $request->get('order_by', 'latest');
-        $perPage = $request->get('per_page', 8);
+        $perPage = $request->get('per_page', 12);
 
         // Construir consulta optimizada
         $query = Articulo::with(['categoria:id,nombre', 'temporada:id,nombre']);
@@ -52,6 +52,9 @@ class ArticuloController extends Controller
 
         // Aplicar ordenamiento
         switch ($orderBy) {
+            case 'oldest':
+                $query->orderBy('created_at', 'asc');
+                break;
             case 'precio_asc':
                 $query->orderByPrecio('asc');
                 break;
@@ -70,6 +73,7 @@ class ArticuloController extends Controller
             case 'stock_desc':
                 $query->orderBy('stock', 'desc');
                 break;
+            case 'latest':
             default:
                 $query->latest();
                 break;
@@ -107,7 +111,14 @@ class ArticuloController extends Controller
 
     public function create()
     {
-        return view('sections.articulos-create');
+        // Obtener categorías y temporadas para el formulario
+        $categorias = Categoria::select('id', 'nombre')->orderBy('nombre')->get();
+        $temporadas = Temporada::select('id', 'nombre')->orderBy('nombre')->get();
+
+        return view('sections.articulos-create', [
+            'categorias' => $categorias,
+            'temporadas' => $temporadas,
+        ]);
     }
 
     public function store(ArticuloRequest $request)
@@ -166,8 +177,15 @@ class ArticuloController extends Controller
     public function edit($id)
     {
         $articulo = Articulo::findOrFail($id);
+        
+        // Obtener categorías y temporadas para el formulario
+        $categorias = Categoria::select('id', 'nombre')->orderBy('nombre')->get();
+        $temporadas = Temporada::select('id', 'nombre')->orderBy('nombre')->get();
+
         return view('sections.articulos-edit-form', [
             'articulo' => $articulo,
+            'categorias' => $categorias,
+            'temporadas' => $temporadas,
         ]);
     }
 

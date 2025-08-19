@@ -1,204 +1,267 @@
-<!doctype html>
-<html lang="es_ES">
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <link
-        href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css"
-        rel="stylesheet"
-    />
-    @vite('resources/css/app.css')
-   {{--<link rel="stylesheet" href="{{ asset('build/assets/app-BOC-1fP2.css') }}">--}}
-    <title>Jr2 | @yield('title')</title>
-</head>
-<body class="min-h-screen flex flex-col bg-gray-50">
-    @if(session('success'))
-        <div class="absolute top-0 right-0 z-50">
-            <div id="toast" class="flex items-center w-full mx-auto mt-2 max-w-xs p-4 mb-4 text-white bg-green-500 rounded-lg shadow" role="alert">
-                <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg ">
-                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
-                    </svg>
-                </div>
-                <div class="ms-3 text-sm font-normal text-white">{{ session('success') }}.</div>
-                <button type="button"
-                        id="cerrar"
-                        class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center size-8"
-                        data-dismiss-target="#toast"
-                        aria-label="Close">
-                    <span class="sr-only">Close</span>
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                    </svg>
-                </button>
-            </div>
-        </div>
-    @elseif(session('error'))
-        <div class="absolute top-0 right-0 z-50">
-            <div id="toast" class="flex items-center w-full mx-auto mt-2 max-w-xs p-4 mb-4 text-white bg-red-500 rounded-lg shadow" role="alert">
-                <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-gray-700 bg-red-100 rounded-lg ">
-                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z"/>
-                    </svg>
-                </div>
-                <div class="ms-3 text-sm font-normal text-white">{{ session('error') }}.</div>
-                <button type="button"
-                        id="cerrar"
-                        class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center size-8"
-                        data-dismiss-target="#toast"
-                        aria-label="Close">
-                    <span class="sr-only">Close</span>
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                    </svg>
-                </button>
-            </div>
-        </div>
-    @endif
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <x-navbar/>
+    <title>{{ config('app.name', 'JR2 System') }}</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700" rel="stylesheet" />
+
+    <!-- Remix Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     
-    <main class="flex-1 w-[calc(100%-256px)] ml-64 main transition-all duration-300">
-        <div class="py-2 px-6 bg-white flex items-center shadow-md shadow-black/5">
-            <button
-                class="text-gray-500 focus:outline-none dark:text-gray-300"
-                id="sidebar-toggle"
-            >
-                <i class="ri-menu-line"></i>
-            </button>
+    <!-- Theme Script -->
+    <script>
+        // Verificar tema guardado o usar preferencia del sistema
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+</head>
+<body class="h-full bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <div class="min-h-screen flex flex-col">
+        <!-- Navbar/Sidebar -->
+        @include('components.navbar')
 
-            {{--        sidebar --}}
-            @auth()
-            <nav class="flex" aria-label="Breadcrumb">
-                <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
-                    <li class="inline-flex items-center ml-2">
-                        <a href="/" class="inline-flex items-center text-sm font-medium text-gray-400 {{ Route::is('home.index') ? 'text-gray-700' : '' }} ">
-                            Home
-                        </a>
-                    </li>
-                    <li>
-                        <div class="flex items-center">
-                            <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-                            </svg>
-                            <a href="{{ route("cortes.index") }}" class="ms-1 text-sm font-medium text-gray-400 {{ Route::is('cortes.index') ? 'text-gray-700' : '' }}   md:ms-2 ">Cortes</a>
+        <!-- Main Content -->
+        <main class="flex-1 ml-0 lg:ml-64 transition-all duration-300">
+            <div class="min-h-full p-4 lg:p-8">
+                @yield('content')
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-auto transition-colors duration-300">
+            <div class="max-w-7xl mx-auto py-6 px-4 lg:px-8">
+                <div class="flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                            <span class="text-sm font-bold text-white">JR</span>
                         </div>
-                    </li>
-                    <li>
-                        <div class="flex items-center">
-                            <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-                            </svg>
-                            <a href="{{ route("articulos.index") }}" class="ms-1 text-sm font-medium text-gray-400 {{ Route::is('articulos.index') ? 'text-gray-700' : '' }}  md:ms-2 ">Artículos</a>
+                        <div>
+                            <p class="text-sm font-medium text-gray-900 dark:text-white">JR2 System</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Management Platform</p>
                         </div>
-                    </li>
-                    <li>
-                        <div class="flex items-center">
-                            <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-                            </svg>
-                            <a href="{{ route("dolar.index") }}" class="ms-1 text-sm font-medium text-gray-400 {{ Route::is('dolar.index') ? 'text-gray-700' : '' }}  md:ms-2 ">Dolar</a>
-                        </div>
-                    </li>
-                </ol>
-            </nav>
-            @endauth
-            {{--        fin sidebar--}}
-            <div class="flex items-center ml-auto gap-4">
-                @auth()
-                    <img src="{{ asset("./src/assets/images/usuario.jpg") }}" alt="foto del usuario logeado" class="size-8  rounded-full bg-gray-900/5 object-cover shadow-lg" />
-                    <form action="{{ route('login.logout') }}" method="post" class=" m-0 lg:flex lg:flex-1 lg:justify-end">
-                        @csrf
-                        <button class="text-sm font-semibold leading-6 text-gray-900">({{ auth()->user()->name }}) Cerrar sesión</button>
-                    </form>
-                @endauth
-                @guest()
-                    <div class=" lg:flex lg:flex-1 lg:justify-end">
-                        <a href="{{ route('login.index') }}" class="text-sm font-semibold leading-6 text-gray-900">Iniciar sesión</a>
                     </div>
-                @endguest
+                    
+                    <div class="flex items-center space-x-6">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs text-gray-500 dark:text-gray-400">Tema:</span>
+                            <button id="theme-toggle" 
+                                    class="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 dark:bg-gray-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
+                                <span class="sr-only">Cambiar tema</span>
+                                <span class="inline-block h-4 w-4 transform rounded-full bg-white dark:bg-gray-900 transition-transform duration-300 translate-x-1 dark:translate-x-6"></span>
+                                <i class="ri-sun-line absolute left-1 text-xs text-yellow-500 dark:opacity-0 transition-opacity duration-300"></i>
+                                <i class="ri-moon-line absolute right-1 text-xs text-blue-500 opacity-0 dark:opacity-100 transition-opacity duration-300"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="text-xs text-gray-500 dark:text-gray-400">
+                            © 2024 JR2 System. Todos los derechos reservados.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-xl border border-gray-200 dark:border-gray-700">
+            <div class="flex items-center space-x-3">
+                <div class="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                <span class="text-gray-900 dark:text-white font-medium">Cargando...</span>
             </div>
         </div>
+    </div>
+
+    <!-- Global JavaScript -->
+    <script>
+        // Sistema de temas
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
         
-        <div class="min-h-full pb-8">
-            @yield('content')
-        </div>
-    </main>
-
-    <footer class="bg-gray-800 text-white shadow-lg mt-auto">
-        <div class="w-full mx-auto max-w-screen-xl p-4 text-center md:flex md:items-center md:justify-between">
-            <span class="text-sm text-white sm:text-center dark:text-gray-400">© 2024 <a href="#" class="hover:underline font-semibold">JR2™</a>. Todos los derechos reservados.
-            </span>
-            <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-white justify-center text-center md:text-left sm:mt-0">
-                <li>
-                    <a href="#" class="hover:underline me-4 md:me-6 transition-colors duration-200">Políticas de privacidad</a>
-                </li>
-                <li>
-                    <a href="#" class="hover:underline me-4 md:me-6 transition-colors duration-200">Licencia</a>
-                </li>
-                <li>
-                    <a href="#" class="hover:underline transition-colors duration-200">Contacto</a>
-                </li>
-            </ul>
-        </div>
-    </footer>
-
-<script>
-    //cerrar el toast global
-    document.addEventListener('DOMContentLoaded', function () {
-        var toast = document.getElementById('toast');
-        var cerrar = document.getElementById('cerrar');
-
-        //si el toast tiene display block entonces se cierra
-        if(toast && toast.display !== 'none') {
-            function cerrarToast() {
-                toast.style.display = 'none';
+        themeToggle.addEventListener('click', function() {
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                html.classList.add('dark');
+                localStorage.theme = 'dark';
             }
-            //si y solo si el toast existe
-            cerrar.addEventListener('click', cerrarToast);
-            setTimeout(cerrarToast, 3000);
+        });
+
+        // Sistema de notificaciones mejorado
+        class ToastManager {
+            constructor() {
+                this.container = document.getElementById('toast-container');
+                this.toasts = [];
+            }
+
+            show(message, type = 'info', duration = 5000) {
+                const toast = this.createToast(message, type);
+                this.container.appendChild(toast);
+                this.toasts.push(toast);
+
+                // Animación de entrada
+                setTimeout(() => {
+                    toast.classList.remove('opacity-0', 'translate-x-full');
+                }, 100);
+
+                // Auto-remover
+                setTimeout(() => {
+                    this.hide(toast);
+                }, duration);
+
+                return toast;
+            }
+
+            createToast(message, type) {
+                const toast = document.createElement('div');
+                const icons = {
+                    success: 'ri-checkbox-circle-line',
+                    error: 'ri-error-warning-line',
+                    warning: 'ri-alert-line',
+                    info: 'ri-information-line'
+                };
+                
+                const colors = {
+                    success: 'bg-green-500 dark:bg-green-600',
+                    error: 'bg-red-500 dark:bg-red-600',
+                    warning: 'bg-yellow-500 dark:bg-yellow-600',
+                    info: 'bg-blue-500 dark:bg-blue-600'
+                };
+
+                toast.className = `max-w-sm w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-4 opacity-0 translate-x-full transition-all duration-300 transform`;
+                toast.innerHTML = `
+                    <div class="flex items-start space-x-3">
+                        <div class="flex-shrink-0">
+                            <i class="${icons[type]} text-lg ${colors[type]} text-white rounded-full p-1"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium text-gray-900 dark:text-white">${message}</p>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <button class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200" onclick="this.parentElement.parentElement.parentElement.remove()">
+                                <i class="ri-close-line text-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                return toast;
+            }
+
+            hide(toast) {
+                toast.classList.add('opacity-0', 'translate-x-full');
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                    this.toasts = this.toasts.filter(t => t !== toast);
+                }, 300);
+            }
+
+            hideAll() {
+                this.toasts.forEach(toast => this.hide(toast));
+            }
         }
-     });
 
-    // cuando se haga click en el boton de menu, se despliega el sidebar y se oculta
-    document.addEventListener('DOMContentLoaded', function () {
-        var sidebarToggle = document.getElementById('sidebar-toggle');
-        var sidebar = document.querySelector('.fixed.left-0.top-0.h-full');
-        var main = document.querySelector('.main');
+        // Sistema de loading
+        class LoadingManager {
+            constructor() {
+                this.overlay = document.getElementById('loading-overlay');
+            }
 
-        if (sidebarToggle && sidebar && main) {
-            sidebarToggle.addEventListener('click', function () {
-                sidebar.classList.toggle('hidden');
-                main.classList.toggle('w-full');
-                main.classList.toggle('ml-64');
-                main.classList.toggle('transition-all');
-                sidebarToggle.classList.toggle('transition-all');
-                sidebar.classList.toggle('transition-all');
+            show() {
+                this.overlay.classList.remove('hidden');
+            }
+
+            hide() {
+                this.overlay.classList.add('hidden');
+            }
+        }
+
+        // Instanciar managers globales
+        window.toastManager = new ToastManager();
+        window.loadingManager = new LoadingManager();
+
+        // Función global para mostrar notificaciones
+        window.showToast = function(message, type = 'info', duration = 5000) {
+            return window.toastManager.show(message, type, duration);
+        };
+
+        // Función global para mostrar/ocultar loading
+        window.showLoading = function() {
+            window.loadingManager.show();
+        };
+
+        window.hideLoading = function() {
+            window.loadingManager.hide();
+        };
+
+        // Interceptor para mensajes de Laravel
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mostrar mensajes de sesión si existen
+            @if(session('success'))
+                window.showToast('{{ session('success') }}', 'success');
+            @endif
+
+            @if(session('error'))
+                window.showToast('{{ session('error') }}', 'error');
+            @endif
+
+            @if(session('warning'))
+                window.showToast('{{ session('warning') }}', 'warning');
+            @endif
+
+            @if(session('info'))
+                window.showToast('{{ session('info') }}', 'info');
+            @endif
+
+            // Mostrar errores de validación si existen
+            @if($errors->any())
+                @foreach($errors->all() as $error)
+                    window.showToast('{{ $error }}', 'error');
+                @endforeach
+            @endif
+        });
+
+        // Mejorar la experiencia de navegación
+        document.addEventListener('DOMContentLoaded', function() {
+            // Agregar indicadores de carga a los enlaces
+            const links = document.querySelectorAll('a[href]:not([href^="#"]):not([href^="javascript:"])');
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // Solo mostrar loading para enlaces internos
+                    if (this.href.startsWith(window.location.origin)) {
+                        window.showLoading();
+                    }
+                });
             });
-        }
-    });
 
-    //si el dispositivo es menor a 768px entonces el sidebar se oculta
-    document.addEventListener('DOMContentLoaded', function () {
-        var sidebar = document.querySelector('.fixed.left-0.top-0.h-full');
-        var main = document.querySelector('.main');
-        var sidebarToggle = document.getElementById('sidebar-toggle');
-        
-        if(window.innerWidth < 768 && sidebar && main && sidebarToggle) {
-            sidebar.classList.add('hidden');
-            main.classList.add('w-full');
-            main.classList.remove('ml-64');
-            main.classList.add('transition-all');
-            sidebarToggle.classList.add('transition-all');
-            sidebar.classList.add('transition-all');
-        }
-    });
-</script>
-{{--<script src="{{ asset('build/assets/app-C1-XIpUa.js') }}"></script>--}}
+            // Agregar indicadores de carga a los formularios
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                form.addEventListener('submit', function() {
+                    window.showLoading();
+                });
+            });
+        });
+    </script>
+
+    @stack('scripts')
 </body>
 </html>

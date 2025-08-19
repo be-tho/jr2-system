@@ -21,7 +21,7 @@
         </header>
 
         {{-- Navegación Principal --}}
-        @auth()
+            @auth()
             <nav class="flex-1 px-4 py-6 overflow-y-auto">
                 <div class="space-y-2">
                     {{-- Dashboard --}}
@@ -109,7 +109,7 @@
                                 <p class="text-xs text-gray-400 dark:text-gray-500">Administrador</p>
                             </div>
                             <div class="flex-shrink-0">
-                                <form action="{{ route('login.logout') }}" method="post" class="m-0">
+                                <form action="{{ route('logout') }}" method="post" class="m-0">
                                     @csrf
                                     <button type="submit" 
                                             class="text-gray-400 hover:text-red-400 dark:hover:text-red-300 transition-colors duration-200 p-1 rounded hover:bg-gray-700/50 dark:hover:bg-gray-600/50"
@@ -121,8 +121,8 @@
                         </div>
                     </div>
                 </div>
-            </nav>
-        @endauth
+                </nav>
+            @endauth
 
         {{-- Footer del Sidebar --}}
         <footer class="p-4 border-t border-gray-700/50 dark:border-gray-600/30 bg-gray-800/30 dark:bg-gray-900/30">

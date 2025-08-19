@@ -132,11 +132,11 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mx-auto mb-5">
                 @foreach($articulos as $articulo)
                 <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow hover:shadow-lg transition-shadow duration-200 dark:bg-gray-800 dark:border-gray-700 justify-center items-center mx-auto">
-                    <a href="{{ route('articulos.show', ['id' => $articulo->id]) }}">
+                    <a href="{{ route('articulos.show', $articulo) }}">
                         <img class="p-4 rounded-t-lg w-full h-48 object-cover" src="{{ asset('src/assets/uploads/articulos/' . $articulo->imagen) }}" alt="Imagen del artículo" />
                     </a>
                     <div class="px-5 pb-5">
-                        <a href="{{ route('articulos.show', ['id' => $articulo->id]) }}">
+                        <a href="{{ route('articulos.show', $articulo) }}">
                             <h5 class="text-xl font-semibold tracking-tight text-gray-900 dark:text-white mb-2">{{ $articulo->nombre }}</h5>
                             <p class="text-sm text-gray-600 mb-1">Código: #{{ $articulo->codigo }}</p>
                             @if($articulo->categoria)
@@ -161,7 +161,7 @@
                         
                         <div class="flex items-center justify-between">
                             <span class="text-3xl font-bold text-gray-900 dark:text-white">$ {{ number_format($articulo->precio, 0, ',', '.') }}</span>
-                            <a href="{{ route('articulos.show', ['id' => $articulo->id]) }}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                            <a href="{{ route('articulos.show', $articulo) }}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                 Ver más
                             </a>
                         </div>

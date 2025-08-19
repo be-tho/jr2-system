@@ -110,15 +110,15 @@
 
                         </td>
                         <td>
-                            <a href="{{ route('corte.show', ['id' => $corte->id]) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-1.5">
+                            <a href="{{ route('cortes.show', $corte) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-1.5">
                                 <i class="ri-eye-line"></i>
                                 Ver
                             </a>
-                            <a href="{{ route('corte.edit', ['id' => $corte->id]) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-1.5">
+                            <a href="{{ route('cortes.edit', $corte) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-1.5">
                                 <i class="ri-pencil-line"></i>
                                 Editar
                             </a>
-                            <form action="{{ route('corte.delete', ['id' => $corte->id]) }}" method="POST" class="inline" onsubmit="return confirm('¿Estás seguro que deseas eliminar este corte?');">
+                            <form action="{{ route('cortes.delete', $corte) }}" method="POST" class="inline" onsubmit="return confirm('¿Estás seguro que deseas eliminar este corte?');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="font-medium text-red-600 dark:text-red-500 hover:underline mr-1.5">

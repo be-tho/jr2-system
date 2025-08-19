@@ -1,45 +1,86 @@
 <?php
 
 use App\Http\Controllers\ArticuloController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\LoginController;
 use App\Http\Controllers\CorteController;
 use App\Http\Controllers\DolarController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LoginController;
+use Illuminate\Support\Facades\Route;
 
-Route::get('/', [HomeController::class, 'index'])->name('home.index')->middleware('auth');
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make sure to create
+| a great user experience for your web routes.
+|
+*/
 
-//login
-Route::get('/login', [LoginController::class, 'index'])->name('login.index');
-Route::post('/login/', [LoginController::class, 'login'])->name('login.login');
-Route::post('/logout', [LoginController::class, 'logout'])->name('login.logout')->middleware('auth');
+// ============================================================================
+// PUBLIC ROUTES (No authentication required)
+// ============================================================================
 
+Route::middleware('guest')->group(function () {
+    // Authentication routes
+    Route::get('/login', [LoginController::class, 'index'])->name('login.index');
+    Route::post('/login', [LoginController::class, 'login'])->name('login.login');
+});
 
+// ============================================================================
+// PROTECTED ROUTES (Authentication required)
+// ============================================================================
 
-//cortes
-Route::get('/cortes', [CorteController::class, 'index'])->name('cortes.index')->middleware('auth');
-Route::get('/cortes/create', [CorteController::class, 'create'])->name('cortes.create')->middleware('auth');
-Route::post('/cortes', [CorteController::class, 'store'])->name('cortes.store')->middleware('auth');
-Route::get('/corte/{id}', [CorteController::class, 'show'])->name('corte.show')->middleware('auth');
-Route::get('/corte/{id}/edit', [CorteController::class, 'edit'])->name('corte.edit')->middleware('auth');
-Route::put('/corte/{id}', [CorteController::class, 'update'])->name('corte.update')->middleware('auth');
-Route::delete('/corte/{id}', [CorteController::class, 'delete'])->name('corte.delete')->middleware('auth');
+Route::middleware('auth')->group(function () {
+    
+    // Dashboard/Home
+    Route::get('/', [HomeController::class, 'index'])->name('home.index');
+    
+    // Logout
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+    
+    // ========================================================================
+    // CORTES MANAGEMENT
+    // ========================================================================
+    Route::prefix('cortes')->name('cortes.')->group(function () {
+        Route::get('/', [CorteController::class, 'index'])->name('index');
+        Route::get('/create', [CorteController::class, 'create'])->name('create');
+        Route::post('/', [CorteController::class, 'store'])->name('store');
+        Route::get('/{corte}', [CorteController::class, 'show'])->name('show');
+        Route::get('/{corte}/edit', [CorteController::class, 'edit'])->name('edit');
+        Route::put('/{corte}', [CorteController::class, 'update'])->name('update');
+        Route::delete('/{corte}', [CorteController::class, 'delete'])->name('delete');
+    });
+    
+    // ========================================================================
+    // ARTICULOS MANAGEMENT
+    // ========================================================================
+    Route::prefix('articulos')->name('articulos.')->group(function () {
+        Route::get('/', [ArticuloController::class, 'index'])->name('index');
+        Route::get('/create', [ArticuloController::class, 'create'])->name('create');
+        Route::post('/', [ArticuloController::class, 'store'])->name('store');
+        Route::get('/{articulo}', [ArticuloController::class, 'show'])->name('show');
+        Route::get('/{articulo}/edit', [ArticuloController::class, 'edit'])->name('edit');
+        Route::put('/{articulo}', [ArticuloController::class, 'update'])->name('update');
+        Route::delete('/{articulo}', [ArticuloController::class, 'delete'])->name('delete');
+    });
+    
+    // ========================================================================
+    // DOLAR EXCHANGE RATES
+    // ========================================================================
+    Route::prefix('dolar')->name('dolar.')->group(function () {
+        Route::get('/', [DolarController::class, 'index'])->name('index');
+        Route::get('/api', [DolarController::class, 'api'])->name('api');
+        Route::post('/clear-cache', [DolarController::class, 'clearCache'])->name('clear-cache');
+    });
+});
 
-//articulos
-Route::get('/articulos', [ArticuloController::class, 'index'])->name('articulos.index')->middleware('auth');
-Route::get('/articulos/create', [ArticuloController::class, 'create'])->name('articulos.create')->middleware('auth');
-Route::get('/articulos/{id}', [ArticuloController::class, 'show'])->name('articulos.show')->middleware('auth');
-Route::post('/articulos', [ArticuloController::class, 'store'])->name('articulos.store')->middleware('auth');
-Route::get('/articulos/{id}/edit', [ArticuloController::class, 'edit'])->name('articulos.edit')->middleware('auth');
-Route::put('/articulos/{id}', [ArticuloController::class, 'update'])->name('articulos.update')->middleware('auth');
+// ============================================================================
+// FALLBACK ROUTE
+// ============================================================================
 
-//dolar
-Route::get('/dolar', [DolarController::class, 'index'])->name('dolar.index')->middleware('auth');
-Route::get('/dolar/api', [DolarController::class, 'api'])->name('dolar.api')->middleware('auth');
-Route::post('/dolar/clear-cache', [DolarController::class, 'clearCache'])->name('dolar.clear-cache')->middleware('auth');
-
-
-//si no encuentra la ruta redirige a la home
 Route::fallback(function () {
     return redirect()->route('home.index');
 });

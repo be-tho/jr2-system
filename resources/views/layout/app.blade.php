@@ -46,11 +46,11 @@
                     <div class="flex items-center space-x-4">
                         <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                             <span class="text-sm font-bold text-white">JR</span>
-                        </div>
+        </div>
                         <div>
                             <p class="text-sm font-medium text-gray-900 dark:text-white">JR2 System</p>
                             <p class="text-xs text-gray-500 dark:text-gray-400">Management Platform</p>
-                        </div>
+        </div>
                     </div>
                     
                     <div class="flex items-center space-x-6">
@@ -67,7 +67,7 @@
                         
                         <div class="text-xs text-gray-500 dark:text-gray-400">
                             © 2024 JR2 System. Todos los derechos reservados.
-                        </div>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -88,7 +88,7 @@
     </div>
 
     <!-- Global JavaScript -->
-    <script>
+<script>
         // Sistema de temas
         const themeToggle = document.getElementById('theme-toggle');
         const html = document.documentElement;
@@ -249,8 +249,8 @@
                     if (this.href.startsWith(window.location.origin)) {
                         window.showLoading();
                     }
-                });
-            });
+        });
+    });
 
             // Agregar indicadores de carga a los formularios
             const forms = document.querySelectorAll('form');
@@ -259,8 +259,8 @@
                     window.showLoading();
                 });
             });
-        });
-    </script>
+    });
+</script>
 
     @stack('scripts')
 </body>

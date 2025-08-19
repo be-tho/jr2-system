@@ -2,7 +2,85 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Hacer mas sueve los scrolls */
-html {
-    scroll-behavior: smooth;
+/* Estilos personalizados para el layout */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main {
+    flex: 1;
+    min-height: calc(100vh - 200px); /* Ajustar según la altura del footer */
+}
+
+/* Footer siempre al final */
+footer {
+    margin-top: auto;
+}
+
+/* Asegurar que el contenido principal tenga espacio suficiente */
+.min-h-full {
+    min-height: calc(100vh - 300px);
+}
+
+/* Transiciones suaves para el sidebar */
+.transition-all {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Responsive para dispositivos móviles */
+@media (max-width: 768px) {
+    .main {
+        width: 100% !important;
+        margin-left: 0 !important;
+    }
+    
+    .min-h-full {
+        min-height: calc(100vh - 250px);
+    }
+}
+
+/* Mejoras visuales para el footer */
+footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+footer a:hover {
+    color: #60a5fa;
+}
+
+/* Toast notifications mejoradas */
+#toast {
+    z-index: 9999;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Sidebar mejorado */
+.sidebar-menu li a {
+    transition: all 0.2s ease-in-out;
+}
+
+.sidebar-menu li a:hover {
+    transform: translateX(4px);
+}
+
+/* Breadcrumb mejorado */
+.breadcrumb a {
+    transition: color 0.2s ease-in-out;
+}
+
+.breadcrumb a:hover {
+    color: #374151;
 }

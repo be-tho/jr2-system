@@ -1,147 +1,147 @@
-{{-- Componente Navbar Refactorizado - Solo Tailwind CSS --}}
+{{-- Componente Navbar Refactorizado - Diseño Minimalista con Fucsia --}}
 <div class="relative">
     {{-- Sidebar Principal --}}
-    <div class="fixed left-0 top-0 w-64 h-full bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 shadow-2xl transform transition-all duration-300 ease-in-out z-40" 
+    <div class="fixed left-0 top-0 w-64 h-full bg-white dark:bg-neutral-900 shadow-xl transform transition-all duration-300 ease-in-out z-40 border-r border-neutral-200 dark:border-neutral-700" 
          id="sidebar">
         
         {{-- Header del Sidebar --}}
-        <header class="p-6 border-b border-gray-700/50 dark:border-gray-600/30 bg-gray-800/80 dark:bg-gray-900/80 backdrop-blur-xl">
+        <header class="p-6 border-b border-neutral-200 dark:border-neutral-700 bg-primary-50 dark:bg-primary-950/20">
             <a href="/" class="flex items-center gap-x-3 group">
                 <div class="relative">
-                    <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-blue-500/25 transition-all duration-300">
+                    <div class="w-12 h-12 bg-primary-500 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-primary-500/25 transition-all duration-300">
                         <span class="text-xl font-bold text-white">JR</span>
                     </div>
-                    <div class="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-gray-900 dark:border-gray-950 animate-pulse"></div>
+                    <div class="absolute -top-1 -right-1 w-4 h-4 bg-accent-400 rounded-full border-2 border-white dark:border-neutral-900 animate-pulse"></div>
                 </div>
                 <div class="flex flex-col">
-                    <span class="text-xl font-bold text-white group-hover:text-blue-400 transition-colors duration-300">JR2 System</span>
-                    <span class="text-xs text-gray-400 dark:text-gray-500">Management Platform</span>
+                    <span class="text-xl font-bold text-neutral-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300">JR2 System</span>
+                    <span class="text-xs text-neutral-600 dark:text-neutral-400">Management Platform</span>
                 </div>
             </a>
         </header>
 
         {{-- Navegación Principal --}}
-            @auth()
-            <nav class="flex-1 px-4 py-6 overflow-y-auto">
-                <div class="space-y-2">
-                    {{-- Dashboard --}}
-                    <a href="/" 
-                       class="flex items-center gap-x-3 px-3 py-3 rounded-xl text-gray-300 dark:text-gray-400 hover:text-white hover:bg-gray-800/80 dark:hover:bg-gray-800/60 hover:translate-x-2 transition-all duration-300 relative overflow-hidden group cursor-pointer {{ Route::is('home.index') ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-white border-r-2 border-blue-500 shadow-lg shadow-blue-500/30' : '' }}"
-                       data-tooltip="Dashboard">
-                        <div class="w-10 h-10 rounded-lg {{ Route::is('home.index') ? 'bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg shadow-blue-500/40' : 'bg-gray-700 dark:bg-gray-600 group-hover:bg-gray-600 dark:group-hover:bg-gray-500' }} flex items-center justify-center transition-all duration-300">
-                            <i class="ri-dashboard-3-line text-lg"></i>
+        @auth()
+        <nav class="flex-1 px-4 py-6 overflow-y-auto">
+            <div class="space-y-2">
+                {{-- Dashboard --}}
+                <a href="/" 
+                   class="flex items-center gap-x-3 px-3 py-3 rounded-xl text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 hover:translate-x-2 transition-all duration-300 relative overflow-hidden group cursor-pointer {{ Route::is('home.index') ? 'bg-primary-50 dark:bg-primary-950/20 text-primary-600 dark:text-primary-400 border-r-2 border-primary-500 shadow-sm' : '' }}"
+                   data-tooltip="Dashboard">
+                    <div class="w-10 h-10 rounded-lg {{ Route::is('home.index') ? 'bg-primary-500 shadow-lg shadow-primary-500/20' : 'bg-neutral-100 dark:bg-neutral-800 group-hover:bg-primary-100 dark:group-hover:bg-primary-900/20' }} flex items-center justify-center transition-all duration-300">
+                        <i class="ri-dashboard-3-line text-lg {{ Route::is('home.index') ? 'text-white' : 'text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-400' }}"></i>
+                    </div>
+                    <span class="text-sm font-medium transition-all duration-300 {{ Route::is('home.index') ? 'font-semibold' : '' }}">Dashboard</span>
+                    <div class="absolute right-2 w-2 h-2 bg-primary-500 rounded-full {{ Route::is('home.index') ? 'opacity-100 scale-100' : 'opacity-0 scale-0' }} transition-all duration-300 group-hover:opacity-100 group-hover:scale-100"></div>
+                </a>
+
+                {{-- Cortes --}}
+                <a href="{{ route('cortes.index') }}" 
+                   class="flex items-center gap-x-3 px-3 py-3 rounded-xl text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 hover:translate-x-2 transition-all duration-300 relative overflow-hidden group cursor-pointer {{ Route::is('cortes.*') ? 'bg-primary-50 dark:bg-primary-950/20 text-primary-600 dark:text-primary-400 border-r-2 border-primary-500 shadow-sm' : '' }}"
+                   data-tooltip="Gestión de Cortes">
+                    <div class="w-10 h-10 rounded-lg {{ Route::is('cortes.*') ? 'bg-primary-500 shadow-lg shadow-primary-500/20' : 'bg-neutral-100 dark:bg-neutral-800 group-hover:bg-primary-100 dark:group-hover:bg-primary-900/20' }} flex items-center justify-center transition-all duration-300">
+                        <i class="ri-scissors-cut-line text-lg {{ Route::is('cortes.*') ? 'text-white' : 'text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-400' }}"></i>
+                    </div>
+                    <span class="text-sm font-medium transition-all duration-300 {{ Route::is('cortes.*') ? 'font-semibold' : '' }}">Cortes</span>
+                    <div class="absolute right-2 w-2 h-2 bg-primary-500 rounded-full {{ Route::is('cortes.*') ? 'opacity-100 scale-100' : 'opacity-0 scale-0' }} transition-all duration-300 group-hover:opacity-100 group-hover:scale-100"></div>
+                </a>
+
+                {{-- Artículos --}}
+                <a href="{{ route('articulos.index') }}" 
+                   class="flex items-center gap-x-3 px-3 py-3 rounded-xl text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 hover:translate-x-2 transition-all duration-300 relative overflow-hidden group cursor-pointer {{ Route::is('articulos.*') ? 'bg-primary-50 dark:bg-primary-950/20 text-primary-600 dark:text-primary-400 border-r-2 border-primary-500 shadow-sm' : '' }}"
+                   data-tooltip="Inventario de Artículos">
+                    <div class="w-10 h-10 rounded-lg {{ Route::is('articulos.*') ? 'bg-primary-500 shadow-lg shadow-primary-500/20' : 'bg-neutral-100 dark:bg-neutral-800 group-hover:bg-primary-100 dark:group-hover:bg-primary-900/20' }} flex items-center justify-center transition-all duration-300">
+                        <i class="ri-shirt-line text-lg {{ Route::is('articulos.*') ? 'text-white' : 'text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-400' }}"></i>
+                    </div>
+                    <span class="text-sm font-medium transition-all duration-300 {{ Route::is('articulos.*') ? 'font-semibold' : '' }}">Artículos</span>
+                    <div class="absolute right-2 w-2 h-2 bg-primary-500 rounded-full {{ Route::is('articulos.*') ? 'opacity-100 scale-100' : 'opacity-0 scale-0' }} transition-all duration-300 group-hover:opacity-100 group-hover:scale-100"></div>
+                </a>
+
+                {{-- Costureros --}}
+                <a href="#" 
+                   class="flex items-center gap-x-3 px-3 py-3 rounded-xl text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 hover:translate-x-2 transition-all duration-300 relative overflow-hidden group cursor-pointer"
+                   data-tooltip="Gestión de Costureros">
+                    <div class="w-10 h-10 rounded-lg bg-neutral-100 dark:bg-neutral-800 group-hover:bg-primary-100 dark:group-hover:bg-primary-900/20 flex items-center justify-center transition-all duration-300">
+                        <i class="ri-user-settings-line text-lg text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-400"></i>
+                    </div>
+                    <span class="text-sm font-medium transition-all duration-300">Costureros</span>
+                    <div class="absolute right-2 w-2 h-2 bg-primary-500 rounded-full opacity-0 scale-0 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100"></div>
+                </a>
+
+                {{-- Dólar --}}
+                <a href="{{ route('dolar.index') }}" 
+                   class="flex items-center gap-x-3 px-3 py-3 rounded-xl text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 hover:translate-x-2 transition-all duration-300 relative overflow-hidden group cursor-pointer {{ Route::is('dolar.*') ? 'bg-primary-50 dark:bg-primary-950/20 text-primary-600 dark:text-primary-400 border-r-2 border-primary-500 shadow-sm' : '' }}"
+                   data-tooltip="Cotización del Dólar">
+                    <div class="w-10 h-10 rounded-lg {{ Route::is('dolar.*') ? 'bg-primary-500 shadow-lg shadow-primary-500/20' : 'bg-neutral-100 dark:bg-neutral-800 group-hover:bg-primary-100 dark:group-hover:bg-primary-900/20' }} flex items-center justify-center transition-all duration-300">
+                        <i class="ri-money-dollar-circle-line text-lg {{ Route::is('dolar.*') ? 'text-white' : 'text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-400' }}"></i>
+                    </div>
+                    <span class="text-sm font-medium transition-all duration-300 {{ Route::is('dolar.*') ? 'font-semibold' : '' }}">Dólar</span>
+                    <div class="absolute right-2 w-2 h-2 bg-primary-500 rounded-full {{ Route::is('dolar.*') ? 'opacity-100 scale-100' : 'opacity-0 scale-0' }} transition-all duration-300 group-hover:opacity-100 group-hover:scale-100"></div>
+                </a>
+
+                {{-- Reportes --}}
+                <a href="{{ route('reportes.index') }}" 
+                   class="flex items-center gap-x-3 px-3 py-3 rounded-xl text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 hover:translate-x-2 transition-all duration-300 relative overflow-hidden group cursor-pointer {{ Route::is('reportes.*') ? 'bg-primary-50 dark:bg-primary-950/20 text-primary-600 dark:text-primary-400 border-r-2 border-primary-500 shadow-sm' : '' }}"
+                   data-tooltip="Reportes y Estadísticas">
+                    <div class="w-10 h-10 rounded-lg {{ Route::is('reportes.*') ? 'bg-primary-500 shadow-lg shadow-primary-500/20' : 'bg-neutral-100 dark:bg-neutral-800 group-hover:bg-primary-100 dark:group-hover:bg-primary-900/20' }} flex items-center justify-center transition-all duration-300">
+                        <i class="ri-bar-chart-2-line text-lg {{ Route::is('reportes.*') ? 'text-white' : 'text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-400' }}"></i>
+                    </div>
+                    <span class="text-sm font-medium transition-all duration-300 {{ Route::is('reportes.*') ? 'font-semibold' : '' }}">Reportes</span>
+                    <div class="absolute right-2 w-2 h-2 bg-primary-500 rounded-full {{ Route::is('reportes.*') ? 'opacity-100 scale-100' : 'opacity-0 scale-0' }} transition-all duration-300 group-hover:opacity-100 group-hover:scale-100"></div>
+                </a>
+
+                {{-- Cuenta --}}
+                <a href="{{ route('cuenta.index') }}" 
+                   class="flex items-center gap-x-3 px-3 py-3 rounded-xl text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 hover:translate-x-2 transition-all duration-300 relative overflow-hidden group cursor-pointer {{ Route::is('cuenta.*') ? 'bg-primary-50 dark:bg-primary-950/20 text-primary-600 dark:text-primary-400 border-r-2 border-primary-500 shadow-sm' : '' }}"
+                   data-tooltip="Mi Cuenta">
+                    <div class="w-10 h-10 rounded-lg {{ Route::is('cuenta.*') ? 'bg-primary-500 shadow-lg shadow-primary-500/20' : 'bg-neutral-100 dark:bg-neutral-800 group-hover:bg-primary-100 dark:group-hover:bg-primary-900/20' }} flex items-center justify-center transition-all duration-300">
+                        <i class="ri-user-line text-lg {{ Route::is('cuenta.*') ? 'text-white' : 'text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-400' }}"></i>
+                    </div>
+                    <span class="text-sm font-medium transition-all duration-300 {{ Route::is('cuenta.*') ? 'font-semibold' : '' }}">Cuenta</span>
+                    <div class="absolute right-2 w-2 h-2 bg-primary-500 rounded-full {{ Route::is('cuenta.*') ? 'opacity-100 scale-100' : 'opacity-0 scale-0' }} transition-all duration-300 group-hover:opacity-100 group-hover:scale-100"></div>
+                </a>
+            </div>
+
+            {{-- Separador --}}
+            <div class="my-6 border-t border-neutral-200 dark:border-neutral-700"></div>
+
+            {{-- Información del Usuario --}}
+            <div class="px-2">
+                <div class="bg-neutral-50 dark:bg-neutral-800/50 rounded-lg p-3 border border-neutral-200 dark:border-neutral-700">
+                    <div class="flex items-center gap-x-3">
+                        <div class="relative">
+                            <img src="{{ asset('./src/assets/images/' . (auth()->user()->profile_image ?? 'usuario.jpg')) }}" 
+                                 alt="Usuario" 
+                                 class="w-10 h-10 rounded-full object-cover border-2 border-neutral-300 dark:border-neutral-600 shadow-lg">
+                            <div class="absolute -bottom-1 -right-1 w-3 h-3 bg-accent-400 rounded-full border-2 border-white dark:border-neutral-800 animate-pulse"></div>
                         </div>
-                        <span class="text-sm font-medium transition-all duration-300 {{ Route::is('home.index') ? 'font-semibold' : '' }}">Dashboard</span>
-                        <div class="absolute right-2 w-2 h-2 bg-blue-500 rounded-full {{ Route::is('home.index') ? 'opacity-100 scale-100' : 'opacity-0 scale-0' }} transition-all duration-300 group-hover:opacity-100 group-hover:scale-100"></div>
-                    </a>
-
-                    {{-- Cortes --}}
-                    <a href="{{ route('cortes.index') }}" 
-                       class="flex items-center gap-x-3 px-3 py-3 rounded-xl text-gray-300 dark:text-gray-400 hover:text-white hover:bg-gray-800/80 dark:hover:bg-gray-800/60 hover:translate-x-2 transition-all duration-300 relative overflow-hidden group cursor-pointer {{ Route::is('cortes.*') ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-white border-r-2 border-blue-500 shadow-lg shadow-blue-500/30' : '' }}"
-                       data-tooltip="Gestión de Cortes">
-                        <div class="w-10 h-10 rounded-lg {{ Route::is('cortes.*') ? 'bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg shadow-blue-500/40' : 'bg-gray-700 dark:bg-gray-600 group-hover:bg-gray-600 dark:group-hover:bg-gray-500' }} flex items-center justify-center transition-all duration-300">
-                            <i class="ri-scissors-cut-line text-lg"></i>
+                        <div class="flex-1 min-w-0">
+                            <a href="{{ route('cuenta.index') }}" class="block hover:opacity-80 transition-opacity duration-200">
+                                <p class="text-sm font-medium text-neutral-900 dark:text-white truncate">{{ auth()->user()->name }}</p>
+                                <p class="text-xs text-neutral-500 dark:text-neutral-400">Administrador</p>
+                            </a>
                         </div>
-                        <span class="text-sm font-medium transition-all duration-300 {{ Route::is('cortes.*') ? 'font-semibold' : '' }}">Cortes</span>
-                        <div class="absolute right-2 w-2 h-2 bg-blue-500 rounded-full {{ Route::is('cortes.*') ? 'opacity-100 scale-100' : 'opacity-0 scale-0' }} transition-all duration-300 group-hover:opacity-100 group-hover:scale-100"></div>
-                    </a>
-
-                    {{-- Artículos --}}
-                    <a href="{{ route('articulos.index') }}" 
-                       class="flex items-center gap-x-3 px-3 py-3 rounded-xl text-gray-300 dark:text-gray-400 hover:text-white hover:bg-gray-800/80 dark:hover:bg-gray-800/60 hover:translate-x-2 transition-all duration-300 relative overflow-hidden group cursor-pointer {{ Route::is('articulos.*') ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-white border-r-2 border-blue-500 shadow-lg shadow-blue-500/30' : '' }}"
-                       data-tooltip="Inventario de Artículos">
-                        <div class="w-10 h-10 rounded-lg {{ Route::is('articulos.*') ? 'bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg shadow-blue-500/40' : 'bg-gray-700 dark:bg-gray-600 group-hover:bg-gray-600 dark:group-hover:bg-gray-500' }} flex items-center justify-center transition-all duration-300">
-                            <i class="ri-shirt-line text-lg"></i>
-                        </div>
-                        <span class="text-sm font-medium transition-all duration-300 {{ Route::is('articulos.*') ? 'font-semibold' : '' }}">Artículos</span>
-                        <div class="absolute right-2 w-2 h-2 bg-blue-500 rounded-full {{ Route::is('articulos.*') ? 'opacity-100 scale-100' : 'opacity-0 scale-0' }} transition-all duration-300 group-hover:opacity-100 group-hover:scale-100"></div>
-                    </a>
-
-                    {{-- Costureros --}}
-                    <a href="#" 
-                       class="flex items-center gap-x-3 px-3 py-3 rounded-xl text-gray-300 dark:text-gray-400 hover:text-white hover:bg-gray-800/80 dark:hover:bg-gray-800/60 hover:translate-x-2 transition-all duration-300 relative overflow-hidden group cursor-pointer"
-                       data-tooltip="Gestión de Costureros">
-                        <div class="w-10 h-10 rounded-lg bg-gray-700 dark:bg-gray-600 group-hover:bg-gray-600 dark:group-hover:bg-gray-500 flex items-center justify-center transition-all duration-300">
-                            <i class="ri-user-settings-line text-lg"></i>
-                        </div>
-                        <span class="text-sm font-medium transition-all duration-300">Costureros</span>
-                        <div class="absolute right-2 w-2 h-2 bg-blue-500 rounded-full opacity-0 scale-0 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100"></div>
-                    </a>
-
-                    {{-- Dólar --}}
-                    <a href="{{ route('dolar.index') }}" 
-                       class="flex items-center gap-x-3 px-3 py-3 rounded-xl text-gray-300 dark:text-gray-400 hover:text-white hover:bg-gray-800/80 dark:hover:bg-gray-800/60 hover:translate-x-2 transition-all duration-300 relative overflow-hidden group cursor-pointer {{ Route::is('dolar.*') ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-white border-r-2 border-blue-500 shadow-lg shadow-blue-500/30' : '' }}"
-                       data-tooltip="Cotización del Dólar">
-                        <div class="w-10 h-10 rounded-lg {{ Route::is('dolar.*') ? 'bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg shadow-blue-500/40' : 'bg-gray-700 dark:bg-gray-600 group-hover:bg-gray-600 dark:group-hover:bg-gray-500' }} flex items-center justify-center transition-all duration-300">
-                            <i class="ri-money-dollar-circle-line text-lg"></i>
-                        </div>
-                        <span class="text-sm font-medium transition-all duration-300 {{ Route::is('dolar.*') ? 'font-semibold' : '' }}">Dólar</span>
-                        <div class="absolute right-2 w-2 h-2 bg-blue-500 rounded-full {{ Route::is('dolar.*') ? 'opacity-100 scale-100' : 'opacity-0 scale-0' }} transition-all duration-300 group-hover:opacity-100 group-hover:scale-100"></div>
-                    </a>
-
-                    {{-- Reportes --}}
-                    <a href="{{ route('reportes.index') }}" 
-                       class="flex items-center gap-x-3 px-3 py-3 rounded-xl text-gray-300 dark:text-gray-400 hover:text-white hover:bg-gray-800/80 dark:hover:bg-gray-800/60 hover:translate-x-2 transition-all duration-300 relative overflow-hidden group cursor-pointer {{ Route::is('reportes.*') ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-white border-r-2 border-blue-500 shadow-lg shadow-blue-500/30' : '' }}"
-                       data-tooltip="Reportes y Estadísticas">
-                        <div class="w-10 h-10 rounded-lg {{ Route::is('reportes.*') ? 'bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg shadow-blue-500/40' : 'bg-gray-700 dark:bg-gray-600 group-hover:bg-gray-600 dark:group-hover:bg-gray-500' }} flex items-center justify-center transition-all duration-300">
-                            <i class="ri-bar-chart-2-line text-lg"></i>
-                        </div>
-                        <span class="text-sm font-medium transition-all duration-300 {{ Route::is('reportes.*') ? 'font-semibold' : '' }}">Reportes</span>
-                        <div class="absolute right-2 w-2 h-2 bg-blue-500 rounded-full {{ Route::is('reportes.*') ? 'opacity-100 scale-100' : 'opacity-0 scale-0' }} transition-all duration-300 group-hover:opacity-100 group-hover:scale-100"></div>
-                    </a>
-
-                    {{-- Cuenta --}}
-                    <a href="{{ route('cuenta.index') }}" 
-                       class="flex items-center gap-x-3 px-3 py-3 rounded-xl text-gray-300 dark:text-gray-400 hover:text-white hover:bg-gray-800/80 dark:hover:bg-gray-800/60 hover:translate-x-2 transition-all duration-300 relative overflow-hidden group cursor-pointer {{ Route::is('cuenta.*') ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-white border-r-2 border-blue-500 shadow-lg shadow-blue-500/30' : '' }}"
-                       data-tooltip="Mi Cuenta">
-                        <div class="w-10 h-10 rounded-lg {{ Route::is('cuenta.*') ? 'bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg shadow-blue-500/40' : 'bg-gray-700 dark:bg-gray-600 group-hover:bg-gray-600 dark:group-hover:bg-gray-500' }} flex items-center justify-center transition-all duration-300">
-                            <i class="ri-user-line text-lg"></i>
-                        </div>
-                        <span class="text-sm font-medium transition-all duration-300 {{ Route::is('cuenta.*') ? 'font-semibold' : '' }}">Cuenta</span>
-                        <div class="absolute right-2 w-2 h-2 bg-blue-500 rounded-full {{ Route::is('cuenta.*') ? 'opacity-100 scale-100' : 'opacity-0 scale-0' }} transition-all duration-300 group-hover:opacity-100 group-hover:scale-100"></div>
-                    </a>
-                </div>
-
-                {{-- Separador --}}
-                <div class="my-6 border-t border-gray-700/50 dark:border-gray-600/30"></div>
-
-                {{-- Información del Usuario --}}
-                <div class="px-2">
-                    <div class="bg-gray-800/50 dark:bg-gray-700/50 rounded-lg p-3 border border-gray-700/30 dark:border-gray-600/30 backdrop-blur-sm">
-                        <div class="flex items-center gap-x-3">
-                            <div class="relative">
-                                <img src="{{ asset('./src/assets/images/' . (auth()->user()->profile_image ?? 'usuario.jpg')) }}" 
-                                     alt="Usuario" 
-                                     class="w-10 h-10 rounded-full object-cover border-2 border-gray-600 dark:border-gray-500 shadow-lg">
-                                <div class="absolute -bottom-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-gray-800 dark:border-gray-700 animate-pulse"></div>
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <a href="{{ route('cuenta.index') }}" class="block hover:opacity-80 transition-opacity duration-200">
-                                    <p class="text-sm font-medium text-white truncate">{{ auth()->user()->name }}</p>
-                                    <p class="text-xs text-gray-400 dark:text-gray-500">Administrador</p>
-                                </a>
-                            </div>
-                            <div class="flex-shrink-0">
-                                <form action="{{ route('logout') }}" method="post" class="m-0">
-                                    @csrf
-                                    <button type="submit" 
-                                            class="text-gray-400 hover:text-red-400 dark:hover:text-red-300 transition-colors duration-200 p-1 rounded hover:bg-gray-700/50 dark:hover:bg-gray-600/50"
-                                            data-tooltip="Cerrar sesión">
-                                        <i class="ri-logout-box-r-line text-lg"></i>
-                                    </button>
-                                </form>
-                            </div>
+                        <div class="flex-shrink-0">
+                            <form action="{{ route('logout') }}" method="post" class="m-0">
+                                @csrf
+                                <button type="submit" 
+                                        class="text-neutral-400 hover:text-red-500 dark:hover:text-red-400 transition-colors duration-200 p-1 rounded hover:bg-neutral-100 dark:hover:bg-neutral-700"
+                                        data-tooltip="Cerrar sesión">
+                                    <i class="ri-logout-box-r-line text-lg"></i>
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
-                </nav>
-            @endauth
+            </div>
+        </nav>
+        @endauth
 
         {{-- Footer del Sidebar --}}
-        <footer class="p-4 border-t border-gray-700/50 dark:border-gray-600/30 bg-gray-800/30 dark:bg-gray-900/30">
+        <footer class="p-4 border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/30">
             <div class="text-center">
-                <p class="text-xs text-gray-500 dark:text-gray-600">© 2024 JR2 System</p>
-                <p class="text-xs text-gray-600 dark:text-gray-700 mt-1">v2.0.0</p>
+                <p class="text-xs text-neutral-500 dark:text-neutral-400">© 2024 JR2 System</p>
+                <p class="text-xs text-neutral-600 dark:text-neutral-500 mt-1">v2.0.0</p>
             </div>
         </footer>
     </div>
@@ -150,14 +150,14 @@
     <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-30 lg:hidden hidden transition-opacity duration-300" id="sidebar-overlay"></div>
 
     {{-- Botón Toggle para móviles --}}
-    <button class="fixed top-4 left-4 z-50 lg:hidden bg-gradient-to-r from-gray-900 to-gray-800 dark:from-gray-800 dark:to-gray-700 text-white p-2 rounded-lg shadow-lg hover:from-gray-800 hover:to-gray-700 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 border border-gray-700/30 dark:border-gray-600/30 backdrop-blur-sm"
+    <button class="fixed top-4 left-4 z-50 lg:hidden bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white p-2 rounded-lg shadow-lg hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-all duration-200 border border-neutral-200 dark:border-neutral-700"
             id="mobile-toggle"
             aria-label="Toggle sidebar">
         <i class="ri-menu-line text-xl"></i>
     </button>
 
     {{-- Tooltip Component --}}
-    <div class="fixed z-50 px-3 py-2 text-xs text-white bg-gradient-to-r from-gray-900 to-gray-800 dark:from-gray-800 dark:to-gray-700 rounded-lg shadow-xl border border-gray-700/50 dark:border-gray-600/50 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-200 font-medium" id="tooltip"></div>
+    <div class="fixed z-50 px-3 py-2 text-xs text-white bg-neutral-900 dark:bg-neutral-800 rounded-lg shadow-xl border border-neutral-700/50 dark:border-neutral-600/50 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-200 font-medium" id="tooltip"></div>
 </div>
 
 {{-- JavaScript optimizado para funcionalidad del navbar --}}

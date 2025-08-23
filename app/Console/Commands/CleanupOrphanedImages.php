@@ -2,11 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Helpers\ImageHelper;
-use App\Models\Articulo;
-use App\Models\Corte;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use App\Models\User;
 
 class CleanupOrphanedImages extends Command
 {
@@ -15,84 +13,82 @@ class CleanupOrphanedImages extends Command
      *
      * @var string
      */
-    protected $signature = 'images:cleanup {--dry-run : Mostrar qué se eliminaría sin ejecutar}';
+    protected $signature = 'images:cleanup-profile {--dry-run : Mostrar qué se eliminaría sin ejecutar}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Limpiar imágenes huérfanas del sistema';
+    protected $description = 'Limpiar imágenes de perfil huérfanas del storage';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        $this->info('🔍 Iniciando limpieza de imágenes huérfanas...');
+        $isDryRun = $this->option('dry-run');
         
-        $dryRun = $this->option('dry-run');
-        
-        if ($dryRun) {
-            $this->warn('⚠️  MODO DRY-RUN: No se eliminarán archivos');
+        if ($isDryRun) {
+            $this->info('🔍 Modo de simulación - No se eliminarán archivos');
         }
-
-        // Limpiar imágenes de artículos
-        $this->cleanupArticuloImages($dryRun);
         
-        // Limpiar imágenes de cortes
-        $this->cleanupCorteImages($dryRun);
+        $this->info('🧹 Iniciando limpieza de imágenes de perfil huérfanas...');
         
-        $this->info('✅ Limpieza completada');
-    }
-
-    /**
-     * Limpiar imágenes huérfanas de artículos
-     */
-    private function cleanupArticuloImages(bool $dryRun): void
-    {
-        $this->info('📦 Limpiando imágenes de artículos...');
+        // Obtener todas las imágenes en el storage
+        $storageImages = Storage::disk('public')->files('profile-images');
+        $this->info('📁 Imágenes encontradas en storage: ' . count($storageImages));
         
-        // Obtener nombres de archivos válidos de la base de datos
-        $validFilenames = Articulo::whereNotNull('imagen')
-            ->where('imagen', '!=', 'default-articulo.png')
-            ->pluck('imagen')
+        // Obtener imágenes referenciadas en la base de datos
+        $dbImages = User::whereNotNull('profile_image')
+            ->where('profile_image', '!=', 'usuario.jpg')
+            ->pluck('profile_image')
             ->toArray();
         
-        // Agregar imagen por defecto
-        $validFilenames[] = 'default-articulo.png';
+        $this->info('💾 Imágenes referenciadas en BD: ' . count($dbImages));
         
-        $deletedCount = ImageHelper::cleanupOrphanedImages('src/assets/uploads/articulos', $validFilenames);
-        
-        if ($deletedCount > 0) {
-            $this->info("🗑️  Se eliminaron {$deletedCount} imágenes huérfanas de artículos");
-        } else {
-            $this->info('✨ No hay imágenes huérfanas de artículos');
+        // Encontrar imágenes huérfanas
+        $orphanedImages = [];
+        foreach ($storageImages as $storageImage) {
+            $filename = basename($storageImage);
+            if (!in_array($filename, $dbImages) && $filename !== 'usuario.jpg') {
+                $orphanedImages[] = $storageImage;
+            }
         }
-    }
-
-    /**
-     * Limpiar imágenes huérfanas de cortes
-     */
-    private function cleanupCorteImages(bool $dryRun): void
-    {
-        $this->info('✂️  Limpiando imágenes de cortes...');
         
-        // Obtener nombres de archivos válidos de la base de datos
-        $validFilenames = Corte::whereNotNull('imagen')
-            ->where('imagen', '!=', 'default-corte.jpg')
-            ->pluck('imagen')
-            ->toArray();
-        
-        // Agregar imagen por defecto
-        $validFilenames[] = 'default-corte.jpg';
-        
-        $deletedCount = ImageHelper::cleanupOrphanedImages('src/assets/uploads/cortes', $validFilenames);
-        
-        if ($deletedCount > 0) {
-            $this->info("🗑️  Se eliminaron {$deletedCount} imágenes huérfanas de cortes");
-        } else {
-            $this->info('✨ No hay imágenes huérfanas de cortes');
+        if (empty($orphanedImages)) {
+            $this->info('✅ No se encontraron imágenes huérfanas');
+            return 0;
         }
+        
+        $this->warn('⚠️  Imágenes huérfanas encontradas: ' . count($orphanedImages));
+        
+        foreach ($orphanedImages as $image) {
+            $this->line('  - ' . basename($image));
+        }
+        
+        if ($isDryRun) {
+            $this->info('🔍 Simulación completada. Ejecuta sin --dry-run para eliminar archivos.');
+            return 0;
+        }
+        
+        if ($this->confirm('¿Deseas eliminar estas imágenes huérfanas?')) {
+            $deletedCount = 0;
+            foreach ($orphanedImages as $image) {
+                try {
+                    Storage::disk('public')->delete($image);
+                    $deletedCount++;
+                    $this->line('🗑️  Eliminada: ' . basename($image));
+                } catch (\Exception $e) {
+                    $this->error('❌ Error al eliminar ' . basename($image) . ': ' . $e->getMessage());
+                }
+            }
+            
+            $this->info("✅ Limpieza completada. Se eliminaron {$deletedCount} imágenes.");
+        } else {
+            $this->info('❌ Operación cancelada por el usuario.');
+        }
+        
+        return 0;
     }
 }

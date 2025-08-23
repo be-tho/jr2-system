@@ -91,9 +91,9 @@
                         <div class="flex items-start gap-6">
                             <!-- Imagen actual -->
                             <div class="relative">
-                                <img src="{{ asset('./src/assets/images/' . ($user->profile_image ?? 'usuario.jpg')) }}" 
-                                     alt="Foto de perfil actual" 
-                                     class="w-32 h-32 rounded-full object-cover border-4 border-neutral-200 dark:border-neutral-600 shadow-lg">
+                                <img src="{{ \App\Helpers\ImageHelper::getProfileImageUrl($user->profile_image) }}" 
+                                     alt="{{ \App\Helpers\ImageHelper::getProfileImageAlt($user->profile_image, $user->name) }}" 
+                                     class="w-32 h-32 rounded-full object-cover border-4 border-neutral-200 dark:border-neutral-600 shadow-lg {{ \App\Helpers\ImageHelper::getProfileImageClass($user->profile_image) }}">
                                 <div class="absolute -bottom-1 -right-1 w-8 h-8 bg-primary-500 rounded-full border-2 border-white dark:border-neutral-800 flex items-center justify-center">
                                     <i class="ri-camera-line text-sm text-white"></i>
                                 </div>
@@ -158,14 +158,70 @@ document.addEventListener('DOMContentLoaded', function() {
     imageInput.addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {
+            // Validar tipo de archivo
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+            if (!validTypes.includes(file.type)) {
+                alert('Por favor selecciona un archivo de imagen válido (JPEG, PNG, JPG, GIF o WEBP)');
+                this.value = '';
+                imagePreview.classList.add('hidden');
+                return;
+            }
+            
+            // Validar tamaño (2MB máximo)
+            const maxSize = 2 * 1024 * 1024; // 2MB en bytes
+            if (file.size > maxSize) {
+                alert('La imagen no puede ser mayor a 2MB');
+                this.value = '';
+                imagePreview.classList.add('hidden');
+                return;
+            }
+            
+            // Mostrar vista previa
             const reader = new FileReader();
             reader.onload = function(e) {
                 previewImg.src = e.target.result;
                 imagePreview.classList.remove('hidden');
             };
             reader.readAsDataURL(file);
+            
+            // Mostrar información del archivo
+            console.log('Archivo seleccionado:', {
+                nombre: file.name,
+                tipo: file.type,
+                tamaño: (file.size / 1024 / 1024).toFixed(2) + ' MB'
+            });
         } else {
             imagePreview.classList.add('hidden');
+        }
+    });
+    
+    // Validación del formulario
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const imageFile = imageInput.files[0];
+        
+        if (imageFile) {
+            // Validaciones adicionales antes de enviar
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+            const maxSize = 2 * 1024 * 1024;
+            
+            if (!validTypes.includes(imageFile.type)) {
+                e.preventDefault();
+                alert('Por favor selecciona un archivo de imagen válido');
+                return false;
+            }
+            
+            if (imageFile.size > maxSize) {
+                e.preventDefault();
+                alert('La imagen no puede ser mayor a 2MB');
+                return false;
+            }
+        }
+        
+        // Mostrar indicador de carga
+        const submitBtn = this.querySelector('button[type="submit"]');
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="ri-loader-4-line animate-spin mr-2"></i>Guardando...';
         }
     });
 });

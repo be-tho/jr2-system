@@ -110,9 +110,10 @@
                 <div class="bg-neutral-50 dark:bg-neutral-800/50 rounded-lg p-3 border border-neutral-200 dark:border-neutral-700">
                     <div class="flex items-center gap-x-3">
                         <div class="relative">
-                            <img src="{{ asset('./src/assets/images/' . (auth()->user()->profile_image ?? 'usuario.jpg')) }}" 
-                                 alt="Usuario" 
-                                 class="w-10 h-10 rounded-full object-cover border-2 border-neutral-300 dark:border-neutral-600 shadow-lg">
+                            <img id="navbar-profile-image"
+                                 src="{{ \App\Helpers\ImageHelper::getProfileImageUrl(auth()->user()->profile_image) }}" 
+                                 alt="{{ \App\Helpers\ImageHelper::getProfileImageAlt(auth()->user()->profile_image, auth()->user()->name) }}" 
+                                 class="w-10 h-10 rounded-full object-cover border-2 border-neutral-300 dark:border-neutral-600 shadow-lg {{ \App\Helpers\ImageHelper::getProfileImageClass(auth()->user()->profile_image) }}">
                             <div class="absolute -bottom-1 -right-1 w-3 h-3 bg-accent-400 rounded-full border-2 border-white dark:border-neutral-800 animate-pulse"></div>
                         </div>
                         <div class="flex-1 min-w-0">
@@ -302,10 +303,39 @@ class NavbarManager {
     removeHoverEffect(item) {
         item.style.transform = 'translateX(0) scale(1)';
     }
+    
+    // Función para actualizar la imagen de perfil
+    updateProfileImage(newImageUrl, newImageAlt = null) {
+        const profileImage = document.getElementById('navbar-profile-image');
+        if (profileImage) {
+            profileImage.src = newImageUrl;
+            if (newImageAlt) {
+                profileImage.alt = newImageAlt;
+            }
+            
+            // Agregar efecto de transición
+            profileImage.style.opacity = '0.7';
+            setTimeout(() => {
+                profileImage.style.opacity = '1';
+            }, 200);
+        }
+    }
+    
+    // Función para actualizar la imagen desde el helper
+    updateProfileImageFromHelper(profileImage, userName) {
+        if (typeof window.ImageHelper !== 'undefined') {
+            const newUrl = window.ImageHelper.getProfileImageUrl(profileImage);
+            const newAlt = window.ImageHelper.getProfileImageAlt(profileImage, userName);
+            this.updateProfileImage(newUrl, newAlt);
+        }
+    }
 }
 
 // Inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
-    new NavbarManager();
+    window.navbarManager = new NavbarManager();
 });
+
+// Hacer disponible globalmente para otras páginas
+window.NavbarManager = NavbarManager;
 </script>

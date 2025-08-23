@@ -219,4 +219,40 @@ class ImageHelper
 
         return $deletedCount;
     }
+
+    /**
+     * Obtener la URL de la imagen de perfil del usuario
+     */
+    public static function getProfileImageUrl($filename = null)
+    {
+        if (!$filename || $filename === 'usuario.jpg') {
+            return asset('src/assets/images/usuario.jpg');
+        }
+        
+        return asset('storage/profile-images/' . $filename);
+    }
+    
+    /**
+     * Obtener la clase CSS para la imagen de perfil
+     */
+    public static function getProfileImageClass($filename = null)
+    {
+        if (!$filename || $filename === 'usuario.jpg') {
+            return 'default-profile';
+        }
+        
+        return 'user-profile';
+    }
+    
+    /**
+     * Obtener el texto alternativo para la imagen de perfil
+     */
+    public static function getProfileImageAlt($filename = null, $userName = 'Usuario')
+    {
+        if (!$filename || $filename === 'usuario.jpg') {
+            return 'Imagen de perfil por defecto';
+        }
+        
+        return 'Foto de perfil de ' . $userName;
+    }
 }

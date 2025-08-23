@@ -21,7 +21,14 @@
         @if(session('success'))
             <div class="mb-6 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-200 px-4 py-3 rounded-lg flex items-center gap-3">
                 <i class="ri-check-circle-line text-xl text-green-600 dark:text-green-400"></i>
-                <span>{{ session('success') }}</span>
+                <div>
+                    <span class="font-medium">{{ session('success') }}</span>
+                    @if(str_contains(session('success'), 'imagen'))
+                        <p class="text-sm text-green-700 dark:text-green-300 mt-1">
+                            La nueva imagen se mostrará inmediatamente. Si no ves los cambios, recarga la página.
+                        </p>
+                    @endif
+                </div>
             </div>
         @endif
 
@@ -46,9 +53,9 @@
                     <div class="flex items-start gap-6">
                         <!-- Imagen de perfil -->
                         <div class="relative">
-                            <img src="{{ asset('./src/assets/images/' . ($user->profile_image ?? 'usuario.jpg')) }}" 
-                                 alt="Foto de perfil" 
-                                 class="w-32 h-32 rounded-full object-cover border-4 border-neutral-200 dark:border-neutral-600 shadow-lg">
+                            <img src="{{ \App\Helpers\ImageHelper::getProfileImageUrl($user->profile_image) }}" 
+                                 alt="{{ \App\Helpers\ImageHelper::getProfileImageAlt($user->profile_image, $user->name) }}" 
+                                 class="w-32 h-32 rounded-full object-cover border-4 border-neutral-200 dark:border-neutral-600 shadow-lg {{ \App\Helpers\ImageHelper::getProfileImageClass($user->profile_image) }}">
                             <div class="absolute -bottom-1 -right-1 w-8 h-8 bg-accent-500 rounded-full border-2 border-white dark:border-neutral-800 flex items-center justify-center">
                                 <i class="ri-camera-line text-sm text-white"></i>
                             </div>

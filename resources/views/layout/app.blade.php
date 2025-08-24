@@ -78,10 +78,10 @@
     <div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2"></div>
 
     <!-- Loading Overlay -->
-    <div id="loading-overlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+    <div id="loading-overlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
         <div class="bg-white dark:bg-neutral-800 rounded-lg p-6 shadow-xl border border-neutral-200 dark:border-neutral-700">
             <div class="flex items-center space-x-3">
-                <div class="w-6 h-6 border-2 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
+                <div class="spinner spinner-md"></div>
                 <span class="text-neutral-900 dark:text-white font-medium">Cargando...</span>
             </div>
         </div>
@@ -138,10 +138,10 @@
                 };
                 
                 const colors = {
-                    success: 'bg-green-500 dark:bg-green-600',
-                    error: 'bg-red-500 dark:bg-red-600',
+                    success: 'bg-success-500 dark:bg-success-600',
+                    error: 'bg-danger-500 dark:bg-danger-600',
                     warning: 'bg-accent-500 dark:bg-accent-600',
-                    info: 'bg-primary-500 dark:bg-primary-600'
+                    info: 'bg-info-500 dark:bg-info-600'
                 };
 
                 toast.className = `max-w-sm w-full bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg p-4 opacity-0 translate-x-full transition-all duration-300 transform`;

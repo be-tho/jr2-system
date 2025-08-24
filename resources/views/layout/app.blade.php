@@ -33,14 +33,14 @@
         @include('components.navbar')
 
         <!-- Main Content -->
-        <main class="flex-1 ml-0 lg:ml-64 transition-all duration-300">
+        <main class="flex-1 ml-0 lg:ml-64 mt-16 lg:mt-0 transition-all duration-300">
             <div class="min-h-full p-4 lg:p-8">
                 @yield('content')
             </div>
         </main>
 
         <!-- Footer -->
-        <footer class="bg-white dark:bg-neutral-800 border-t border-neutral-200 dark:border-neutral-700 mt-auto transition-colors duration-300">
+        <footer class="bg-white dark:bg-neutral-800 border-t border-neutral-200 dark:border-neutral-700 mt-auto transition-colors duration-300 ml-0 lg:ml-64">
             <div class="max-w-7xl mx-auto py-6 px-4 lg:px-8">
                 <div class="flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0">
                     <div class="flex items-center space-x-4">

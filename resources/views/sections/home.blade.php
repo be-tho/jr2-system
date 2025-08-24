@@ -100,7 +100,7 @@
                                 </div>
                                 <div>
                                     <p class="text-sm font-medium text-neutral-900 dark:text-white">{{ $corte->nombre }}</p>
-                                    <p class="text-xs text-neutral-500 dark:text-neutral-400">{{ $corte->created_at->format('d/m/Y') }}</p>
+                                    <p class="text-xs text-neutral-500 dark:text-neutral-400">{{ $corte->formatted_created_at }}</p>
                                 </div>
                             </div>
                             <a href="{{ route('cortes.show', $corte) }}" class="text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300 text-sm">

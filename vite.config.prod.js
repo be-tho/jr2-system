@@ -48,32 +48,6 @@ export default defineConfig({
     css: {
         // Optimizaciones de CSS para producción
         devSourcemap: false,
-        postcss: {
-            plugins: [
-                require('tailwindcss'),
-                require('autoprefixer'),
-                require('cssnano')({
-                    preset: ['default', {
-                        discardComments: {
-                            removeAll: true,
-                        },
-                        normalizeWhitespace: true,
-                        colormin: true,
-                        minifyFontValues: true,
-                        minifySelectors: true,
-                        mergeLonghand: true,
-                        mergeRules: true,
-                        normalizeUrl: true,
-                        orderedValues: true,
-                        reduceIdents: true,
-                        reduceInitial: true,
-                        reduceTransforms: true,
-                        uniqueSelectors: true,
-                        zindex: true,
-                    }]
-                }),
-            ],
-        },
     },
     // Optimizaciones adicionales
     define: {

@@ -48,12 +48,5 @@ export default defineConfig({
     css: {
         // Optimizaciones de CSS
         devSourcemap: true,
-        postcss: {
-            plugins: [
-                require('tailwindcss'),
-                require('autoprefixer'),
-                process.env.NODE_ENV === 'production' && require('cssnano'),
-            ].filter(Boolean),
-        },
     },
 });

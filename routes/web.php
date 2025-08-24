@@ -1,12 +1,14 @@
 <?php
 
 use App\Http\Controllers\ArticuloController;
+use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\CorteController;
 use App\Http\Controllers\CuentaController;
 use App\Http\Controllers\DolarController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ReporteController;
+use App\Http\Controllers\TemporadaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -67,6 +69,30 @@ Route::middleware('auth')->group(function () {
         Route::get('/{articulo}/edit', [ArticuloController::class, 'edit'])->name('edit');
         Route::put('/{articulo}', [ArticuloController::class, 'update'])->name('update');
         Route::delete('/{articulo}', [ArticuloController::class, 'delete'])->name('delete');
+    });
+    
+    // ========================================================================
+    // CATEGORIAS MANAGEMENT
+    // ========================================================================
+    Route::prefix('categorias')->name('categorias.')->group(function () {
+        Route::get('/', [CategoriaController::class, 'index'])->name('index');
+        Route::get('/create', [CategoriaController::class, 'create'])->name('create');
+        Route::post('/', [CategoriaController::class, 'store'])->name('store');
+        Route::get('/{categoria}/edit', [CategoriaController::class, 'edit'])->name('edit');
+        Route::put('/{categoria}', [CategoriaController::class, 'update'])->name('update');
+        Route::delete('/{categoria}', [CategoriaController::class, 'destroy'])->name('destroy');
+    });
+    
+    // ========================================================================
+    // TEMPORADAS MANAGEMENT
+    // ========================================================================
+    Route::prefix('temporadas')->name('temporadas.')->group(function () {
+        Route::get('/', [TemporadaController::class, 'index'])->name('index');
+        Route::get('/create', [TemporadaController::class, 'create'])->name('create');
+        Route::post('/', [TemporadaController::class, 'store'])->name('store');
+        Route::get('/{temporada}/edit', [TemporadaController::class, 'edit'])->name('edit');
+        Route::put('/{temporada}', [TemporadaController::class, 'update'])->name('update');
+        Route::delete('/{temporada}', [TemporadaController::class, 'destroy'])->name('destroy');
     });
     
     // ========================================================================

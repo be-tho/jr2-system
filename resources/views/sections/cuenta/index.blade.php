@@ -74,11 +74,11 @@
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">Miembro desde</label>
-                                    <p class="text-neutral-900 dark:text-white font-medium text-lg">{{ $user->created_at->format('d/m/Y') }}</p>
+                                    <p class="text-neutral-900 dark:text-white font-medium text-lg">{{ $user->formatted_created_at }}</p>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">Última actualización</label>
-                                    <p class="text-neutral-900 dark:text-white font-medium text-lg">{{ $user->updated_at->format('d/m/Y H:i') }}</p>
+                                    <p class="text-neutral-900 dark:text-white font-medium text-lg">{{ $user->formatted_updated_at }}</p>
                                 </div>
                             </div>
                             

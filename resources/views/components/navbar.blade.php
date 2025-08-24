@@ -57,6 +57,28 @@
                     <div class="absolute right-2 w-2 h-2 bg-primary-500 rounded-full {{ Route::is('articulos.*') ? 'opacity-100 scale-100' : 'opacity-0 scale-0' }} transition-all duration-300 group-hover:opacity-100 group-hover:scale-100"></div>
                 </a>
 
+                {{-- Categorías --}}
+                <a href="{{ route('categorias.index') }}" 
+                   class="flex items-center gap-x-3 px-3 py-3 rounded-xl text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 hover:translate-x-2 transition-all duration-300 relative overflow-hidden group cursor-pointer {{ Route::is('categorias.*') ? 'bg-primary-50 dark:bg-primary-950/20 text-primary-600 dark:text-primary-400 border-r-2 border-primary-500 shadow-sm' : '' }}"
+                   data-tooltip="Gestión de Categorías">
+                    <div class="w-10 h-10 rounded-lg {{ Route::is('categorias.*') ? 'bg-primary-500 shadow-lg shadow-primary-500/20' : 'bg-neutral-100 dark:bg-neutral-800 group-hover:bg-primary-100 dark:group-hover:bg-primary-900/20' }} flex items-center justify-center transition-all duration-300">
+                        <i class="ri-price-tag-3-line text-lg {{ Route::is('categorias.*') ? 'text-white' : 'text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-400' }}"></i>
+                    </div>
+                    <span class="text-sm font-medium transition-all duration-300 {{ Route::is('categorias.*') ? 'font-semibold' : '' }}">Categorías</span>
+                    <div class="absolute right-2 w-2 h-2 bg-primary-500 rounded-full {{ Route::is('categorias.*') ? 'opacity-100 scale-100' : 'opacity-0 scale-0' }} transition-all duration-300 group-hover:opacity-100 group-hover:scale-100"></div>
+                </a>
+
+                {{-- Temporadas --}}
+                <a href="{{ route('temporadas.index') }}" 
+                   class="flex items-center gap-x-3 px-3 py-3 rounded-xl text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 hover:translate-x-2 transition-all duration-300 relative overflow-hidden group cursor-pointer {{ Route::is('temporadas.*') ? 'bg-primary-50 dark:bg-primary-950/20 text-primary-600 dark:text-primary-400 border-r-2 border-primary-500 shadow-sm' : '' }}"
+                   data-tooltip="Gestión de Temporadas">
+                    <div class="w-10 h-10 rounded-lg {{ Route::is('temporadas.*') ? 'bg-primary-500 shadow-lg shadow-primary-500/20' : 'bg-neutral-100 dark:bg-neutral-800 group-hover:bg-primary-100 dark:group-hover:bg-primary-900/20' }} flex items-center justify-center transition-all duration-300">
+                        <i class="ri-calendar-line text-lg {{ Route::is('temporadas.*') ? 'text-white' : 'text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-400' }}"></i>
+                    </div>
+                    <span class="text-sm font-medium transition-all duration-300 {{ Route::is('temporadas.*') ? 'font-semibold' : '' }}">Temporadas</span>
+                    <div class="absolute right-2 w-2 h-2 bg-primary-500 rounded-full {{ Route::is('temporadas.*') ? 'opacity-100 scale-100' : 'opacity-0 scale-0' }} transition-all duration-300 group-hover:opacity-100 group-hover:scale-100"></div>
+                </a>
+
                 {{-- Costureros --}}
                 <a href="#" 
                    class="flex items-center gap-x-3 px-3 py-3 rounded-xl text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 hover:translate-x-2 transition-all duration-300 relative overflow-hidden group cursor-pointer"

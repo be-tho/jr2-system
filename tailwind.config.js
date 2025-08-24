@@ -201,9 +201,7 @@ export default {
     },
   },
   plugins: [
-    require('@tailwindcss/forms'),
-    require('@tailwindcss/typography'),
-    require('@tailwindcss/aspect-ratio'),
+    // Los plugins se cargarán automáticamente desde postcss.config.js
   ],
   // Configuración para producción
   ...(process.env.NODE_ENV === 'production' && {

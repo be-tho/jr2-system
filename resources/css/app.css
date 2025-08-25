@@ -1,12 +1,15 @@
 /* Importar variables CSS globales */
 @import './variables.css';
 
+/* Importar fuentes */
+@import url('https://fonts.bunny.net/css?family=inter:400,500,600,700');
+
+/* Importar componentes específicos */
+@import './components.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Importar fuentes */
-@import url('https://fonts.bunny.net/css?family=inter:400,500,600,700');
 
 /* Variables CSS personalizadas */
 :root {
@@ -310,7 +313,4 @@
         border-color: #fff;
     }
 }
-
-/* Importar componentes específicos */
-@import './components.css';
 

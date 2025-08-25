@@ -255,10 +255,20 @@
             // Agregar indicadores de carga a los formularios
             const forms = document.querySelectorAll('form');
             forms.forEach(form => {
-                form.addEventListener('submit', function() {
-                    window.showLoading();
+                form.addEventListener('submit', function(e) {
+                    // Solo mostrar loading para formularios que no requieren confirmación
+                    const onsubmitValue = form.getAttribute('onsubmit');
+                    
+                    // Si el formulario no tiene confirmación, mostrar loading inmediatamente
+                    if (!onsubmitValue || !onsubmitValue.includes('confirm(')) {
+                        window.showLoading();
+                    }
+                    // Para formularios con confirmación, no hacer nada aquí
+                    // El loading se manejará después de la confirmación
                 });
             });
+
+            // Los formularios con confirmación ahora son manejados por los componentes delete-button y delete-modal
         });
 </script>
 

@@ -132,16 +132,16 @@
 
                 <!-- Botones de acción -->
                 <div class="flex gap-3">
-                    <button type="submit" class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-6 py-3">
+                    <x-buttons.primary type="submit">
                         <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                         Buscar
-                    </button>
+                    </x-buttons.primary>
                     
-                    <a href="{{ route('articulos.index') }}" class="text-neutral-700 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-600 focus:ring-4 focus:outline-none focus:ring-neutral-300 font-medium rounded-lg text-sm px-6 py-3">
+                    <x-buttons.secondary href="{{ route('articulos.index') }}">
                         Limpiar filtros
-                    </a>
+                    </x-buttons.secondary>
                 </div>
             </form>
         </div>
@@ -170,12 +170,12 @@
         <!-- Header con título y botón crear -->
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-4xl font-bold text-neutral-800 dark:text-white">Artículos</h1>
-            <a href="{{ route('articulos.create') }}" class="text-white bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+            <x-buttons.primary href="{{ route('articulos.create') }}">
                 <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                 </svg>
                 Crear artículo nuevo
-            </a>
+            </x-buttons.primary>
         </div>
 
         <!-- Estadísticas de artículos -->
@@ -274,21 +274,35 @@
 
                         <!-- Acciones -->
                         <div class="flex gap-2 pt-2">
-                            <a href="{{ route('articulos.show', $articulo) }}" 
-                               class="flex-1 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium py-2 px-4 rounded-lg text-center transition-colors duration-200">
+                            <x-buttons.primary href="{{ route('articulos.show', $articulo) }}" size="sm" class="flex-1">
                                 <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                 </svg>
                                 Ver
-                            </a>
+                            </x-buttons.primary>
                             
-                            <a href="{{ route('articulos.edit', $articulo) }}" 
-                               class="bg-neutral-600 hover:bg-neutral-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors duration-200">
+                            <x-buttons.outline href="{{ route('articulos.edit', $articulo) }}" size="sm">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                 </svg>
-                            </a>
+                            </x-buttons.outline>
+
+                            <x-delete-modal 
+                                :route="route('articulos.delete', $articulo)"
+                                triggerText="Eliminar Artículo"
+                                modalTitle="Eliminar Artículo"
+                                modalMessage="¿Estás seguro de que quieres eliminar este artículo?"
+                                modalDescription="Esta acción eliminará permanentemente el artículo y no se puede deshacer."
+                                confirmText="Sí, eliminar artículo"
+                                cancelText="Cancelar"
+                                size="sm"
+                                variant="danger"
+                                icon="ri-delete-bin-line"
+                                fullWidth="false"
+                                itemName="artículo"
+                                modalId="deleteModal{{ $articulo->id }}"
+                            />
                         </div>
                     </div>
                 </div>
@@ -317,9 +331,9 @@
                 </p>
                 @if($filters['search'] || $filters['categoria_id'] || $filters['temporada_id'])
                     <div class="mt-6">
-                        <a href="{{ route('articulos.index') }}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700">
+                        <x-buttons.primary href="{{ route('articulos.index') }}">
                             Limpiar filtros
-                        </a>
+                        </x-buttons.primary>
                     </div>
                 @endif
             </div>

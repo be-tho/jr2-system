@@ -33,13 +33,12 @@
                     <p class="text-neutral-600 dark:text-neutral-400">Gestiona las temporadas de productos del sistema</p>
                 </div>
                 <div class="mt-4 sm:mt-0">
-                    <a href="{{ route('temporadas.create') }}" 
-                       class="inline-flex items-center px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                    <x-buttons.primary href="{{ route('temporadas.create') }}">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                         </svg>
                         Nueva Temporada
-                    </a>
+                    </x-buttons.primary>
                 </div>
             </div>
         </div>
@@ -91,26 +90,27 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <div class="flex items-center justify-end space-x-2">
-                                        <a href="{{ route('temporadas.edit', $temporada) }}" 
-                                           class="text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300 transition-colors duration-200"
-                                           title="Editar">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <x-buttons.outline href="{{ route('temporadas.edit', $temporada) }}" size="sm">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                             </svg>
-                                        </a>
+                                            Editar
+                                        </x-buttons.outline>
                                         
-                                        <form action="{{ route('temporadas.destroy', $temporada) }}" method="POST" class="inline" 
-                                              onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta temporada?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" 
-                                                    class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 transition-colors duration-200"
-                                                    title="Eliminar">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                                </svg>
-                                            </button>
-                                        </form>
+                                        <x-delete-modal 
+                                            :route="route('temporadas.destroy', $temporada)"
+                                            triggerText="Eliminar"
+                                            modalTitle="Eliminar Temporada"
+                                            modalMessage="¿Estás seguro de que quieres eliminar esta temporada?"
+                                            confirmText="Sí, eliminar temporada"
+                                            cancelText="Cancelar"
+                                            size="sm"
+                                            variant="danger"
+                                            icon="ri-delete-bin-line"
+                                            fullWidth="false"
+                                            itemName="temporada"
+                                            modalId="deleteModal{{ $temporada->id }}"
+                                        />
                                     </div>
                                 </td>
                             </tr>

@@ -218,15 +218,20 @@
                         Editar Corte
                     </a>
                     
-                    <form action="{{ route('cortes.delete', $corte) }}" method="POST" class="w-full" onsubmit="return confirm('¿Estás seguro de que quieres eliminar este corte?')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" 
-                                class="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center group">
-                            <i class="ri-delete-bin-line mr-2 group-hover:scale-110 transition-transform duration-200"></i>
-                            Eliminar Corte
-                        </button>
-                    </form>
+                    <x-delete-modal 
+                        :route="route('cortes.delete', $corte)"
+                        triggerText="Eliminar Corte"
+                        modalTitle="Eliminar Corte"
+                        modalMessage="¿Estás seguro de que quieres eliminar este corte?"
+                        modalDescription="Esta acción eliminará permanentemente el corte y no se puede deshacer."
+                        confirmText="Sí, eliminar corte"
+                        cancelText="Cancelar"
+                        size="md"
+                        variant="danger"
+                        icon="ri-delete-bin-line"
+                        fullWidth="true"
+                        itemName="corte"
+                    />
                 </div>
             </div>
         </div>

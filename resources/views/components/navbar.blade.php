@@ -362,6 +362,9 @@ class NavbarManager {
         this.setupHoverEffects();
         this.setupTouchGestures();
         this.setupMobileOptimizations();
+        
+        // Forzar cierre del sidebar en móviles al cargar la página
+        this.forceMobileSidebarClosed();
     }
 
     setupEventListeners() {
@@ -391,10 +394,25 @@ class NavbarManager {
                 }
             });
         });
+        
+        // Cerrar sidebar cuando se navegue a una nueva página
+        document.addEventListener('click', (e) => {
+            const link = e.target.closest('a');
+            if (link && link.href && link.href !== window.location.href && window.innerWidth < 1024) {
+                setTimeout(() => this.closeSidebar(), 100);
+            }
+        });
 
         // Manejar tecla Escape para cerrar
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && this.isOpen) {
+                this.closeSidebar();
+            }
+        });
+        
+        // Cerrar sidebar cuando se use el botón atrás del navegador
+        window.addEventListener('popstate', () => {
+            if (window.innerWidth < 1024 && this.isOpen) {
                 this.closeSidebar();
             }
         });
@@ -410,8 +428,13 @@ class NavbarManager {
             resizeObserver.observe(this.sidebar);
         }
         
-        // Inicializar sidebar en móviles como oculto
+        // Inicializar sidebar correctamente según el tamaño de pantalla
         this.handleResize();
+        
+        // Agregar listener para cambios de orientación en móviles
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => this.handleResize(), 100);
+        });
     }
 
     setupTooltips() {
@@ -485,19 +508,29 @@ class NavbarManager {
             this.overlay.classList.add('hidden');
         }
         this.isOpen = false;
+        
+        // Asegurar que el botón toggle vuelva a su estado normal
+        this.updateToggleIcon();
     }
 
     handleResize() {
         if (window.innerWidth >= 1024) {
+            // En desktop, siempre mostrar el sidebar
             this.closeSidebar();
             if (this.sidebar) {
                 this.sidebar.classList.remove('-translate-x-full');
                 this.sidebar.classList.add('translate-x-0');
             }
         } else {
-            if (this.sidebar && !this.isOpen) {
+            // En móvil, asegurar que esté cerrado por defecto
+            this.isOpen = false;
+            if (this.sidebar) {
                 this.sidebar.classList.add('-translate-x-full');
                 this.sidebar.classList.remove('translate-x-0');
+            }
+            // Ocultar overlay en móvil
+            if (this.overlay) {
+                this.overlay.classList.add('hidden');
             }
         }
     }
@@ -655,6 +688,21 @@ class NavbarManager {
             this.updateProfileImage(newUrl, newAlt);
         }
     }
+    
+    // Forzar cierre del sidebar en móviles
+    forceMobileSidebarClosed() {
+        if (window.innerWidth < 1024) {
+            this.isOpen = false;
+            if (this.sidebar) {
+                this.sidebar.classList.add('-translate-x-full');
+                this.sidebar.classList.remove('translate-x-0');
+            }
+            if (this.overlay) {
+                this.overlay.classList.add('hidden');
+            }
+            this.updateToggleIcon();
+        }
+    }
 }
 
 // Inicializar cuando el DOM esté listo
@@ -715,10 +763,16 @@ window.toggleMobileSection = function(sectionName) {
 
 /* Optimizaciones para dispositivos móviles */
 @media (max-width: 1024px) {
-    /* Mejorar rendimiento de scroll en sidebar */
+    /* Asegurar que el sidebar esté oculto por defecto en móvil */
     #sidebar {
+        transform: translateX(-100%) !important;
         -webkit-overflow-scrolling: touch;
         overscroll-behavior: contain;
+    }
+    
+    /* Solo mostrar cuando esté activo */
+    #sidebar.translate-x-0 {
+        transform: translateX(0) !important;
     }
     
     /* Prevenir zoom accidental en inputs */

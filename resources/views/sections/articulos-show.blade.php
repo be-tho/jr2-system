@@ -198,6 +198,21 @@
                             Editar Artículo
                         </a>
                         
+                        <x-delete-modal 
+                            :route="route('articulos.delete', $articulo)"
+                            triggerText="Eliminar Artículo"
+                            modalTitle="Eliminar Artículo"
+                            modalMessage="¿Estás seguro de que quieres eliminar este artículo?"
+                            modalDescription="Esta acción eliminará permanentemente el artículo y no se puede deshacer."
+                            confirmText="Sí, eliminar artículo"
+                            cancelText="Cancelar"
+                            size="md"
+                            variant="danger"
+                            icon="ri-delete-bin-line"
+                            fullWidth="true"
+                            itemName="artículo"
+                        />
+                        
                         <button onclick="window.print()" 
                                 class="w-full bg-neutral-600 hover:bg-neutral-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

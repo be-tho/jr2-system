@@ -13,12 +13,34 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $users = User::create([
+        // Crear usuario administrador
+        User::create([
             'id' => 1,
             'name' => 'Admin',
             'email' => 'beto@gmail.com',
             'password' => bcrypt('admin'),
+            'role' => 'admin',
             'image' => 'https://randomuser.me/api/portraits/thumb/women/13.jpg',
+        ]);
+
+        // Crear usuario de ejemplo con rol normal
+        User::create([
+            'id' => 2,
+            'name' => 'Katy Villarroel',
+            'email' => 'katy@jr2.com',
+            'password' => bcrypt('cuenca218'),
+            'role' => 'user',
+            'image' => 'https://randomuser.me/api/portraits/thumb/men/1.jpg',
+            'created_at' => now(),
+        ]);
+        User::create([
+            'id' => 3,
+            'name' => 'Judith Villarroel',
+            'email' => 'judith@jr2.com',
+            'password' => bcrypt('cuenca218'),
+            'role' => 'user',
+            'image' => 'https://randomuser.me/api/portraits/thumb/men/1.jpg',
+            'created_at' => now(),
         ]);
     }
 }

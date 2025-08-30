@@ -92,7 +92,7 @@ class StatsRepository
             ->selectRaw('
                 DATE_FORMAT(fecha, "%Y-%m") as mes,
                 COUNT(*) as cantidad,
-                SUM(cantidad) as total_articulos
+                SUM(cantidad_total) as total_articulos
             ')
             ->where('fecha', '>=', now()->subMonths(6))
             ->groupBy('mes')

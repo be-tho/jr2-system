@@ -18,7 +18,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- Linkear el css de build -->
-    <link rel="stylesheet" href="{{ asset('build/assets/app-DmvM8rlz.css') }}">
+    <link rel="stylesheet" href="{{ asset('build/assets/app-D-fDCyjs.css ') }}">
     
     <!-- Theme Script -->
     <script>

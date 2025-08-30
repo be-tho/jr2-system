@@ -115,27 +115,20 @@ class CorteController extends Controller
         }
     }
 
-    public function show($id)
+    public function show(Corte $corte)
     {
-        $corte = Corte::find($id);
         return view('sections.cortes-show', compact('corte'));
     }
 
-    public function edit($id)
+    public function edit(Corte $corte)
     {
-        $corte = Corte::find($id);
         return view('sections.cortes-edit-form', compact('corte'));
     }
 
-    public function update(CorteRequest $request, $id)
+    public function update(CorteRequest $request, Corte $corte)
     {
         try {
-            Log::info('Actualizando corte', ['corte_id' => $id, 'request' => $request->except(['imagen'])]);
-            
-            $corte = Corte::find($id);
-            if (!$corte) {
-                throw new \Exception('Corte no encontrado');
-            }
+            Log::info('Actualizando corte', ['corte_id' => $corte->id, 'request' => $request->except(['imagen'])]);
             
             $imageFilename = $corte->imagen; // Mantener imagen actual por defecto
             
@@ -180,7 +173,7 @@ class CorteController extends Controller
             
         } catch (\Exception $e) {
             Log::error('Error al actualizar corte', [
-                'corte_id' => $id,
+                'corte_id' => $corte->id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
                 'request' => $request->except(['imagen'])
@@ -190,15 +183,10 @@ class CorteController extends Controller
         }
     }
 
-    public function delete($id)
+    public function delete(Corte $corte)
     {
         try {
-            Log::info('Eliminando corte', ['corte_id' => $id]);
-            
-            $corte = Corte::find($id);
-            if (!$corte) {
-                throw new \Exception('Corte no encontrado');
-            }
+            Log::info('Eliminando corte', ['corte_id' => $corte->id]);
             
             // Eliminar imagen si no es la imagen por defecto
             if($corte->imagen !== self::DEFAULT_IMAGE) {
@@ -207,12 +195,12 @@ class CorteController extends Controller
             
             $corte->delete();
             
-            Log::info('Corte eliminado exitosamente', ['corte_id' => $id]);
+            Log::info('Corte eliminado exitosamente', ['corte_id' => $corte->id]);
             return to_route('cortes.index')->with('success', 'Corte eliminado correctamente');
             
         } catch (\Exception $e) {
             Log::error('Error al eliminar corte', [
-                'corte_id' => $id,
+                'corte_id' => $corte->id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);

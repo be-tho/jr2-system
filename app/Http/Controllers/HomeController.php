@@ -34,6 +34,11 @@ class HomeController extends Controller
         // Obtener cortes recientes (últimos 5)
         $cortes = $this->corteRepository->getPaginatedWithFilters([], 5);
         
+        // Obtener artículos populares (con más stock)
+        $articulosPopulares = \App\Models\Articulo::orderBy('stock', 'desc')
+            ->limit(5)
+            ->get();
+        
         // Obtener estadísticas de rendimiento
         $performanceStats = $this->statsRepository->getPerformanceStats();
         
@@ -44,6 +49,7 @@ class HomeController extends Controller
             'dashboardStats',
             'generalStats', 
             'cortes',
+            'articulosPopulares',
             'performanceStats',
             'growthStats',
             'totalCortes',

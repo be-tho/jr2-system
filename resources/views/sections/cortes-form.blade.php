@@ -55,7 +55,7 @@
                             type="number" 
                             id="numero_corte" 
                             name="numero_corte" 
-                            value="{{ old('numero_corte', $corte->numero_corte ?? '') }}"
+                            value="{{ old('numero_corte', isset($corte) ? $corte->numero_corte : '') }}"
                             class="block w-full pl-10 pr-3 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200 @error('numero_corte') border-red-500 dark:border-red-400 @enderror"
                             placeholder="Ej: 001"
                             required
@@ -79,7 +79,7 @@
                             type="text" 
                             id="nombre" 
                             name="nombre" 
-                            value="{{ old('nombre', $corte->nombre ?? '') }}"
+                            value="{{ old('nombre', isset($corte) ? $corte->nombre : '') }}"
                             class="block w-full pl-10 pr-3 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200 @error('nombre') border-red-500 dark:border-red-400 @enderror"
                             placeholder="Ej: Pollera tajo"
                             required
@@ -103,7 +103,7 @@
                             type="text" 
                             id="colores" 
                             name="colores" 
-                            value="{{ old('colores', $corte->colores ?? '') }}"
+                            value="{{ old('colores', isset($corte) ? $corte->colores : '') }}"
                             class="block w-full pl-10 pr-3 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200 @error('colores') border-red-500 dark:border-red-400 @enderror"
                             placeholder="Ej: Azul, Rojo, Verde"
                             required
@@ -127,7 +127,7 @@
                             type="number" 
                             id="cantidad" 
                             name="cantidad" 
-                            value="{{ old('cantidad', $corte->cantidad ?? '') }}"
+                            value="{{ old('cantidad', isset($corte) ? $corte->cantidad : '') }}"
                             min="1"
                             class="block w-full pl-10 pr-3 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200 @error('cantidad') border-red-500 dark:border-red-400 @enderror"
                             placeholder="Cantidad a producir"
@@ -152,7 +152,7 @@
                             type="text" 
                             id="articulos" 
                             name="articulos" 
-                            value="{{ old('articulos', $corte->articulos ?? '') }}"
+                            value="{{ old('articulos', isset($corte) ? $corte->articulos : '') }}"
                             class="block w-full pl-10 pr-3 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200 @error('articulos') border-red-500 dark:border-red-400 @enderror"
                             placeholder="Ej: Polleras, Pantalones"
                             required
@@ -176,7 +176,7 @@
                             type="text" 
                             id="costureros" 
                             name="costureros" 
-                            value="{{ old('costureros', $corte->costureros ?? '') }}"
+                            value="{{ old('costureros', isset($corte) ? $corte->costureros : '') }}"
                             class="block w-full pl-10 pr-3 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200 @error('costureros') border-red-500 dark:border-red-400 @enderror"
                             placeholder="Ej: María, Juan"
                             required
@@ -203,9 +203,9 @@
                             required
                         >
                             <option value="">Selecciona un estado</option>
-                            <option value="0" {{ (old('estado', $corte->estado ?? '') == '0') ? 'selected' : '' }}>Cortado</option>
-                            <option value="1" {{ (old('estado', $corte->estado ?? '') == '1') ? 'selected' : '' }}>Costurando</option>
-                            <option value="2" {{ (old('estado', $corte->estado ?? '') == '2') ? 'selected' : '' }}>Recibido</option>
+                            <option value="0" {{ (old('estado', isset($corte) ? $corte->estado : '') == '0') ? 'selected' : '' }}>Cortado</option>
+                            <option value="1" {{ (old('estado', isset($corte) ? $corte->estado : '') == '1') ? 'selected' : '' }}>Costurando</option>
+                            <option value="2" {{ (old('estado', isset($corte) ? $corte->estado : '') == '2') ? 'selected' : '' }}>Recibido</option>
                         </select>
                     </div>
                     @error('estado')
@@ -247,7 +247,7 @@
                         rows="3"
                         class="block w-full px-3 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200 resize-vertical @error('descripcion') border-red-500 dark:border-red-400 @enderror"
                         placeholder="Describe las características del corte..."
-                    >{{ old('descripcion', $corte->descripcion ?? '') }}</textarea>
+                    >{{ old('descripcion', isset($corte) ? $corte->descripcion : '') }}</textarea>
                     @error('descripcion')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror

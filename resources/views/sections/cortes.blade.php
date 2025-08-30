@@ -133,12 +133,14 @@
         <!-- Header con título y botón crear -->
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-4xl font-bold text-neutral-900 dark:text-white">Cortes</h1>
-            <x-buttons.primary href="{{ route('cortes.create') }}">
-                <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                </svg>
-                Crear corte nuevo
-            </x-buttons.primary>
+            @if(auth()->user()->hasRole('administrador'))
+                <x-buttons.primary href="{{ route('cortes.create') }}">
+                    <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    Crear corte nuevo
+                </x-buttons.primary>
+            @endif
         </div>
 
         <!-- Estadísticas de cortes -->
@@ -251,28 +253,30 @@
                                             Ver
                                         </x-buttons.primary>
                                         
-                                        <x-buttons.outline href="{{ route('cortes.edit', $corte) }}" size="sm">
-                                            <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                                            </svg>
-                                            Editar
-                                        </x-buttons.outline>
-                                        
-                                        <x-delete-modal 
-                                            :route="route('cortes.delete', $corte)"
-                                            triggerText="Eliminar Corte"
-                                            modalTitle="Eliminar Corte"
-                                            modalMessage="¿Estás seguro de que quieres eliminar este corte?"
-                                            modalDescription="Esta acción eliminará permanentemente el corte y no se puede deshacer."
-                                            confirmText="Sí, eliminar corte"
-                                            cancelText="Cancelar"
-                                            size="sm"
-                                            variant="danger"
-                                            icon="ri-delete-bin-line"
-                                            fullWidth="false"
-                                            itemName="corte"
-                                            modalId="deleteModal{{ $corte->id }}"
-                                        />
+                                        @if(auth()->user()->hasRole('administrador'))
+                                            <x-buttons.outline href="{{ route('cortes.edit', $corte) }}" size="sm">
+                                                <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                                </svg>
+                                                Editar
+                                            </x-buttons.outline>
+                                            
+                                            <x-delete-modal 
+                                                :route="route('cortes.delete', $corte)"
+                                                triggerText="Eliminar Corte"
+                                                modalTitle="Eliminar Corte"
+                                                modalMessage="¿Estás seguro de que quieres eliminar este corte?"
+                                                modalDescription="Esta acción eliminará permanentemente el corte y no se puede deshacer."
+                                                confirmText="Sí, eliminar corte"
+                                                cancelText="Cancelar"
+                                                size="sm"
+                                                variant="danger"
+                                                icon="ri-delete-bin-line"
+                                                fullWidth="false"
+                                                itemName="corte"
+                                                modalId="deleteModal{{ $corte->id }}"
+                                            />
+                                        @endif
                                     </div>
                                 </td>
                             </tr>

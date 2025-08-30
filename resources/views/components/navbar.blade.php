@@ -122,6 +122,23 @@
                         <span class="text-sm font-medium {{ Route::is('reportes.*') ? 'font-semibold' : '' }}">Reportes</span>
                     </a>
 
+                    {{-- Sección Administración --}}
+                    @if(auth()->user()->hasRole('administrador'))
+                    <div class="pt-4 pb-2">
+                        <h3 class="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider px-3 mb-2">Administración</h3>
+                    </div>
+
+                {{-- Gestión de Usuarios --}}
+                <a href="{{ route('users.index') }}" 
+                       class="flex items-center gap-x-2 px-3 py-2.5 rounded-lg text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all duration-200 group cursor-pointer {{ Route::is('users.*') ? 'bg-primary-50 dark:bg-primary-950/20 text-primary-600 dark:text-primary-400 border-r-2 border-primary-500' : '' }}"
+                   data-tooltip="Gestión de Usuarios">
+                        <div class="w-8 h-8 rounded-lg {{ Route::is('users.*') ? 'bg-primary-500' : 'bg-neutral-100 dark:bg-neutral-800 group-hover:bg-primary-100 dark:group-hover:bg-primary-900/20' }} flex items-center justify-center transition-all duration-200">
+                            <i class="ri-team-line text-sm {{ Route::is('users.*') ? 'text-white' : 'text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-400' }}"></i>
+                        </div>
+                        <span class="text-sm font-medium {{ Route::is('users.*') ? 'font-semibold' : '' }}">Usuarios</span>
+                    </a>
+                    @endif
+
                     {{-- Sección Usuario --}}
                     <div class="pt-4 pb-2">
                         <h3 class="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider px-3 mb-2">Usuario</h3>
@@ -236,6 +253,30 @@
                             </a>
                         </div>
                     </div>
+
+                    {{-- Sección Administración Móvil --}}
+                    @if(auth()->user()->hasRole('administrador'))
+                    <div class="mobile-section" data-section="administracion">
+                        <button class="w-full flex items-center justify-between px-2 py-2 text-left rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors duration-200" 
+                                onclick="toggleMobileSection('administracion')">
+                            <div class="flex items-center gap-x-2">
+                                <div class="w-7 h-7 rounded-lg bg-red-100 dark:bg-red-900/20 flex items-center justify-center">
+                                    <i class="ri-settings-3-line text-xs text-red-600 dark:text-red-400"></i>
+                                </div>
+                                <span class="text-sm font-medium text-neutral-900 dark:text-white">Administración</span>
+                            </div>
+                            <i class="ri-arrow-down-s-line text-neutral-500 dark:text-neutral-400 transform transition-transform duration-200" 
+                               id="administracion-arrow"></i>
+                        </button>
+                        <div class="ml-4 mt-1 space-y-1 hidden" id="administracion-items">
+                            <a href="{{ route('users.index') }}" 
+                               class="flex items-center gap-x-2 px-2 py-1.5 rounded-md text-sm text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 {{ Route::is('users.*') ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/20' : '' }}">
+                                <i class="ri-team-line text-xs"></i>
+                                <span>Usuarios</span>
+                            </a>
+                        </div>
+                    </div>
+                    @endif
 
                     {{-- Cuenta Móvil --}}
                     <a href="{{ route('cuenta.index') }}" 

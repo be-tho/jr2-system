@@ -25,7 +25,7 @@ class CorteRepository extends BaseRepository
 
         // Aplicar búsqueda
         if (!empty($filters['search'])) {
-            $this->applySearch($query, $filters['search'], ['numero_corte', 'nombre']);
+            $this->applySearch($query, $filters['search'], ['numero_corte', 'descripcion', 'tipo_tela']);
         }
 
         // Aplicar filtros de estado
@@ -81,7 +81,8 @@ class CorteRepository extends BaseRepository
         $stats = DB::table('cortes')
             ->selectRaw('
                 COUNT(*) as total_cortes,
-                SUM(cantidad) as total_articulos,
+                SUM(cantidad_total) as total_articulos,
+                SUM(cantidad_encimadas) as total_encimadas,
                 COUNT(CASE WHEN estado = 0 THEN 1 END) as cortados,
                 COUNT(CASE WHEN estado = 1 THEN 1 END) as costurando,
                 COUNT(CASE WHEN estado = 2 THEN 1 END) as entregados,
@@ -92,6 +93,7 @@ class CorteRepository extends BaseRepository
         return [
             'total_cortes' => $stats->total_cortes ?? 0,
             'total_articulos' => $stats->total_articulos ?? 0,
+            'total_encimadas' => $stats->total_encimadas ?? 0,
             'cortados' => $stats->cortados ?? 0,
             'costurando' => $stats->costurando ?? 0,
             'entregados' => $stats->entregados ?? 0,
@@ -116,7 +118,7 @@ class CorteRepository extends BaseRepository
         
         $estados = $this->model
             ->select('estado')
-            ->selectRaw('COUNT(*) as cantidad, SUM(cantidad) as total_articulos')
+            ->selectRaw('COUNT(*) as cantidad, SUM(cantidad_total) as total_articulos')
             ->groupBy('estado')
             ->get();
 
@@ -145,7 +147,7 @@ class CorteRepository extends BaseRepository
             ->selectRaw('
                 DATE_FORMAT(fecha, "%Y-%m") as mes,
                 COUNT(*) as cantidad,
-                SUM(cantidad) as total_articulos
+                SUM(cantidad_total) as total_articulos
             ')
             ->groupBy('mes')
             ->orderBy('mes')
@@ -248,5 +250,29 @@ class CorteRepository extends BaseRepository
     public function numeroCorteExists(int $numeroCorte): bool
     {
         return $this->model->where('numero_corte', $numeroCorte)->exists();
+    }
+
+    /**
+     * Obtener tipos de tela únicos
+     */
+    public function getTiposTela(): Collection
+    {
+        return $this->model
+            ->select('tipo_tela')
+            ->distinct()
+            ->whereNotNull('tipo_tela')
+            ->orderBy('tipo_tela')
+            ->get();
+    }
+
+    /**
+     * Obtener cortes por tipo de tela
+     */
+    public function getByTipoTela(string $tipoTela): Collection
+    {
+        return $this->model
+            ->where('tipo_tela', $tipoTela)
+            ->orderBy('fecha', 'desc')
+            ->get();
     }
 }

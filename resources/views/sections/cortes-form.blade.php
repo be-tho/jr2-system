@@ -66,58 +66,34 @@
                     @enderror
                 </div>
 
-                {{-- Nombre del Corte --}}
+                {{-- Tipo de Tela --}}
                 <div>
-                    <label for="nombre" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                        Nombre del Corte <span class="text-red-500">*</span>
+                    <label for="tipo_tela" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                        Tipo de Tela <span class="text-red-500">*</span>
                     </label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <i class="ri-scissors-cut-line text-neutral-400 dark:text-neutral-500"></i>
+                            <i class="ri-scissors-line text-neutral-400 dark:text-neutral-500"></i>
                         </div>
                         <input 
                             type="text" 
-                            id="nombre" 
-                            name="nombre" 
-                            value="{{ old('nombre', isset($corte) ? $corte->nombre : '') }}"
-                            class="block w-full pl-10 pr-3 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200 @error('nombre') border-red-500 dark:border-red-400 @enderror"
-                            placeholder="Ej: Pollera tajo"
+                            id="tipo_tela" 
+                            name="tipo_tela" 
+                            value="{{ old('tipo_tela', isset($corte) ? $corte->tipo_tela : '') }}"
+                            class="block w-full pl-10 pr-3 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200 @error('tipo_tela') border-red-500 dark:border-red-400 @enderror"
+                            placeholder="Ej: Algodón, Poliéster, Lino"
                             required
                         >
                     </div>
-                    @error('nombre')
+                    @error('tipo_tela')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
                 </div>
 
-                {{-- Colores --}}
+                {{-- Cantidad Total --}}
                 <div>
-                    <label for="colores" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                        Colores <span class="text-red-500">*</span>
-                    </label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <i class="ri-palette-line text-neutral-400 dark:text-neutral-500"></i>
-                        </div>
-                        <input 
-                            type="text" 
-                            id="colores" 
-                            name="colores" 
-                            value="{{ old('colores', isset($corte) ? $corte->colores : '') }}"
-                            class="block w-full pl-10 pr-3 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200 @error('colores') border-red-500 dark:border-red-400 @enderror"
-                            placeholder="Ej: Azul, Rojo, Verde"
-                            required
-                        >
-                    </div>
-                    @error('colores')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                {{-- Cantidad --}}
-                <div>
-                    <label for="cantidad" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                        Cantidad <span class="text-red-500">*</span>
+                    <label for="cantidad_total" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                        Cantidad Total <span class="text-red-500">*</span>
                     </label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -125,16 +101,16 @@
                         </div>
                         <input 
                             type="number" 
-                            id="cantidad" 
-                            name="cantidad" 
-                            value="{{ old('cantidad', isset($corte) ? $corte->cantidad : '') }}"
+                            id="cantidad_total" 
+                            name="cantidad_total" 
+                            value="{{ old('cantidad_total', isset($corte) ? $corte->cantidad_total : '') }}"
                             min="1"
-                            class="block w-full pl-10 pr-3 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200 @error('cantidad') border-red-500 dark:border-red-400 @enderror"
-                            placeholder="Cantidad a producir"
+                            class="block w-full pl-10 pr-3 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200 @error('cantidad_total') border-red-500 dark:border-red-400 @enderror"
+                            placeholder="Ej: 100"
                             required
                         >
                     </div>
-                    @error('cantidad')
+                    @error('cantidad_total')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
                 </div>
@@ -205,7 +181,7 @@
                             <option value="">Selecciona un estado</option>
                             <option value="0" {{ (old('estado', isset($corte) ? $corte->estado : '') == '0') ? 'selected' : '' }}>Cortado</option>
                             <option value="1" {{ (old('estado', isset($corte) ? $corte->estado : '') == '1') ? 'selected' : '' }}>Costurando</option>
-                            <option value="2" {{ (old('estado', isset($corte) ? $corte->estado : '') == '2') ? 'selected' : '' }}>Recibido</option>
+                            <option value="2" {{ (old('estado', isset($corte) ? $corte->estado : '') == '2') ? 'selected' : '' }}>Entregado</option>
                         </select>
                     </div>
                     @error('estado')
@@ -239,7 +215,7 @@
                 {{-- Descripción --}}
                 <div class="md:col-span-2">
                     <label for="descripcion" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                        Descripción
+                        Descripción <span class="text-red-500">*</span>
                     </label>
                     <textarea 
                         id="descripcion" 
@@ -247,8 +223,47 @@
                         rows="3"
                         class="block w-full px-3 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200 resize-vertical @error('descripcion') border-red-500 dark:border-red-400 @enderror"
                         placeholder="Describe las características del corte..."
+                        required
                     >{{ old('descripcion', isset($corte) ? $corte->descripcion : '') }}</textarea>
                     @error('descripcion')
+                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                {{-- Colores JSON --}}
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                        Colores con Cantidades <span class="text-red-500">*</span>
+                    </label>
+                    <div id="colores-container" class="space-y-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="flex-1">
+                                <input 
+                                    type="text" 
+                                    name="colores[color][]" 
+                                    placeholder="Color (ej: rojo)"
+                                    class="block w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200"
+                                >
+                            </div>
+                            <div class="w-24">
+                                <input 
+                                    type="number" 
+                                    name="colores[cantidad][]" 
+                                    placeholder="Cantidad"
+                                    min="1"
+                                    class="block w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200"
+                                >
+                            </div>
+                            <button type="button" onclick="removeColor(this)" class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300">
+                                <i class="ri-delete-bin-line text-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="button" onclick="addColor()" class="mt-3 inline-flex items-center px-3 py-2 border border-primary-300 dark:border-primary-600 rounded-lg text-sm font-medium text-primary-700 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 hover:bg-primary-100 dark:hover:bg-primary-900/30 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200">
+                        <i class="ri-add-line mr-2"></i>
+                        Agregar Color
+                    </button>
+                    @error('colores')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
                 </div>
@@ -286,7 +301,7 @@
                             >
                         </div>
                         <p class="text-xs text-gray-500 dark:text-gray-400">
-                            Formatos permitidos: JPG, PNG, GIF. Tamaño máximo: 2MB
+                            Formatos permitidos: JPG, PNG, GIF. Tamaño máximo: 8MB
                         </p>
                         @error('imagen')
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -310,4 +325,81 @@
         </form>
     </div>
 </x-container-wrapp>
+
+<script>
+function addColor() {
+    const container = document.getElementById('colores-container');
+    const colorDiv = document.createElement('div');
+    colorDiv.className = 'flex items-center space-x-3';
+    colorDiv.innerHTML = `
+        <div class="flex-1">
+            <input 
+                type="text" 
+                name="colores[color][]" 
+                placeholder="Color (ej: rojo)"
+                class="block w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200"
+            >
+        </div>
+        <div class="w-24">
+            <input 
+                type="number" 
+                name="colores[cantidad][]" 
+                placeholder="Cantidad"
+                min="1"
+                class="block w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200"
+            >
+        </div>
+        <button type="button" onclick="removeColor(this)" class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300">
+            <i class="ri-delete-bin-line text-lg"></i>
+        </button>
+    `;
+    container.appendChild(colorDiv);
+}
+
+function removeColor(button) {
+    button.closest('div').remove();
+}
+
+// Cargar colores existentes si estamos editando
+@if(isset($corte) && $corte->colores)
+    document.addEventListener('DOMContentLoaded', function() {
+        const colores = @json($corte->colores);
+        const container = document.getElementById('colores-container');
+        
+        // Limpiar el primer color por defecto
+        container.innerHTML = '';
+        
+        // Agregar cada color existente
+        Object.entries(colores).forEach(([color, cantidad]) => {
+            const colorDiv = document.createElement('div');
+            colorDiv.className = 'flex items-center space-x-3';
+            colorDiv.innerHTML = `
+                <div class="flex-1">
+                    <input 
+                        type="text" 
+                        name="colores[color][]" 
+                        value="${color}"
+                        placeholder="Color (ej: rojo)"
+                        class="block w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200"
+                    >
+                </div>
+                <div class="w-24">
+                    <input 
+                        type="number" 
+                        name="colores[cantidad][]" 
+                        value="${cantidad}"
+                        placeholder="Cantidad"
+                        min="1"
+                        class="block w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200"
+                    >
+                </div>
+                <button type="button" onclick="removeColor(this)" class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300">
+                    <i class="ri-delete-bin-line text-lg"></i>
+                </button>
+            `;
+            container.appendChild(colorDiv);
+        });
+    });
+@endif
+</script>
 @endsection

@@ -11,9 +11,9 @@ class Corte extends Model
 
     protected $fillable = [
         'numero_corte',
-        'nombre',
+        'tipo_tela',
         'colores',
-        'cantidad',
+        'cantidad_total',
         'articulos',
         'descripcion',
         'costureros',
@@ -23,6 +23,13 @@ class Corte extends Model
         'fecha',
         'created_at',
         'updated_at'
+    ];
+
+    protected $casts = [
+        'colores' => 'array',
+        'fecha' => 'date',
+        'estado' => 'integer',
+        'cantidad_total' => 'integer',
     ];
 
     /**
@@ -39,5 +46,76 @@ class Corte extends Model
     public function getFormattedUpdatedAtAttribute()
     {
         return $this->updated_at ? $this->updated_at->format('d/m/Y H:i') : 'N/A';
+    }
+
+    /**
+     * Get the formatted fecha attribute
+     */
+    public function getFormattedFechaAttribute()
+    {
+        return $this->fecha ? $this->fecha->format('d/m/Y') : 'N/A';
+    }
+
+    /**
+     * Get the estado name
+     */
+    public function getEstadoNombreAttribute()
+    {
+        $estados = [
+            0 => 'Cortado',
+            1 => 'Costurando',
+            2 => 'Entregado'
+        ];
+        
+        return $estados[$this->estado] ?? 'Desconocido';
+    }
+
+    /**
+     * Get the total quantity from colors JSON
+     */
+    public function getCantidadTotalColoresAttribute()
+    {
+        if (!$this->colores) {
+            return 0;
+        }
+        
+        return array_sum($this->colores);
+    }
+
+    /**
+     * Get colors as formatted string
+     */
+    public function getColoresFormateadosAttribute()
+    {
+        if (!$this->colores) {
+            return 'Sin colores';
+        }
+        
+        $coloresFormateados = [];
+        foreach ($this->colores as $color => $cantidad) {
+            $coloresFormateados[] = ucfirst($color) . ': ' . $cantidad;
+        }
+        
+        return implode(', ', $coloresFormateados);
+    }
+
+    /**
+     * Set colors from array
+     */
+    public function setColoresAttribute($value)
+    {
+        if (is_string($value)) {
+            $this->attributes['colores'] = json_encode($value);
+        } else {
+            $this->attributes['colores'] = json_encode($value);
+        }
+    }
+
+    /**
+     * Get colors as array
+     */
+    public function getColoresAttribute($value)
+    {
+        return json_decode($value, true) ?? [];
     }
 }

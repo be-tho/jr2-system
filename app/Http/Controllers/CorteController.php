@@ -82,16 +82,19 @@ class CorteController extends Controller
                 $imageFilename = self::DEFAULT_IMAGE;
             }
 
+            // Procesar colores JSON del formulario
+            $colores = $this->processColoresFromForm($request->input('colores'));
+
             $corte = Corte::create([
                 'numero_corte' => $request->numero_corte,
-                'nombre' => $request->nombre,
-                'colores' => $request->colores,
-                'cantidad' => $request->cantidad,
+                'tipo_tela' => $request->tipo_tela,
+                'colores' => $colores,
+                'cantidad_total' => $request->cantidad_total,
                 'articulos' => $request->articulos,
-                'descripcion' => $request->descripcion ?? 'Sin descripcion', 
+                'descripcion' => $request->descripcion,
                 'costureros' => $request->costureros,
                 'imagen' => $imageFilename,
-                'imagen_alt' => $imageFilename,
+                'imagen_alt' => $request->imagen_alt ?? $imageFilename,
                 'fecha' => $request->fecha,
                 'estado' => 0,
                 'created_at' => now(),
@@ -99,7 +102,8 @@ class CorteController extends Controller
             
             Log::info('Corte creado exitosamente', [
                 'corte_id' => $corte->id,
-                'imagen' => $imageFilename
+                'imagen' => $imageFilename,
+                'colores' => $colores
             ]);
             
             return to_route('home.index')->with('success', 'Corte creado correctamente');
@@ -149,16 +153,19 @@ class CorteController extends Controller
                 }
             }
 
+            // Procesar colores JSON del formulario
+            $colores = $this->processColoresFromForm($request->input('colores'));
+
             $corte->update([
                 'numero_corte' => $request->numero_corte,
-                'nombre' => $request->nombre,
-                'colores' => $request->colores,
-                'cantidad' => $request->cantidad,
+                'tipo_tela' => $request->tipo_tela,
+                'colores' => $colores,
+                'cantidad_total' => $request->cantidad_total,
                 'articulos' => $request->articulos,
                 'descripcion' => $request->descripcion,
                 'costureros' => $request->costureros,
                 'imagen' => $imageFilename,
-                'imagen_alt' => $imageFilename,
+                'imagen_alt' => $request->imagen_alt ?? $imageFilename,
                 'estado' => $request->estado,
                 'fecha' => $request->fecha,
                 'updated_at' => now(),
@@ -166,7 +173,8 @@ class CorteController extends Controller
             
             Log::info('Corte actualizado exitosamente', [
                 'corte_id' => $corte->id,
-                'imagen' => $imageFilename
+                'imagen' => $imageFilename,
+                'colores' => $colores
             ]);
             
             return to_route('cortes.index')->with('success', 'Corte actualizado correctamente');
@@ -207,5 +215,29 @@ class CorteController extends Controller
             
             return to_route('cortes.index')->with('error', 'Error al eliminar el corte: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Procesar colores del formulario y convertirlos a formato JSON
+     */
+    private function processColoresFromForm($coloresData): array
+    {
+        $colores = [];
+        
+        if (is_array($coloresData) && isset($coloresData['color']) && isset($coloresData['cantidad'])) {
+            $colors = $coloresData['color'];
+            $cantidades = $coloresData['cantidad'];
+            
+            for ($i = 0; $i < count($colors); $i++) {
+                $color = trim($colors[$i] ?? '');
+                $cantidad = (int)($cantidades[$i] ?? 0);
+                
+                if (!empty($color) && $cantidad > 0) {
+                    $colores[$color] = $cantidad;
+                }
+            }
+        }
+        
+        return $colores;
     }
 }

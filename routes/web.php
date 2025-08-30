@@ -74,8 +74,8 @@ Route::middleware('auth')->group(function () {
         // ====================================================================
         Route::prefix('cortes')->name('cortes.')->group(function () {
             Route::get('/', [CorteController::class, 'index'])->name('index');
-            Route::get('/{corte}', [CorteController::class, 'show'])->name('show');
             Route::get('/create', [CorteController::class, 'create'])->name('create');
+            Route::get('/{corte}', [CorteController::class, 'show'])->name('show');
         });
         
         // ====================================================================
@@ -83,8 +83,8 @@ Route::middleware('auth')->group(function () {
         // ====================================================================
         Route::prefix('articulos')->name('articulos.')->group(function () {
             Route::get('/', [ArticuloController::class, 'index'])->name('index');
-            Route::get('/{articulo}', [ArticuloController::class, 'show'])->name('show');
             Route::get('/create', [ArticuloController::class, 'create'])->name('create');
+            Route::get('/{articulo}', [ArticuloController::class, 'show'])->name('show');
         });
         
         // ====================================================================

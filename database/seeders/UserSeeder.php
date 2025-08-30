@@ -19,7 +19,6 @@ class UserSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'beto@gmail.com',
             'password' => bcrypt('admin'),
-            'role' => 'admin',
             'image' => 'https://randomuser.me/api/portraits/thumb/women/13.jpg',
         ]);
 
@@ -29,7 +28,6 @@ class UserSeeder extends Seeder
             'name' => 'Katy Villarroel',
             'email' => 'katy@jr2.com',
             'password' => bcrypt('cuenca218'),
-            'role' => 'user',
             'image' => 'https://randomuser.me/api/portraits/thumb/men/1.jpg',
             'created_at' => now(),
         ]);
@@ -38,7 +36,6 @@ class UserSeeder extends Seeder
             'name' => 'Judith Villarroel',
             'email' => 'judith@jr2.com',
             'password' => bcrypt('cuenca218'),
-            'role' => 'user',
             'image' => 'https://randomuser.me/api/portraits/thumb/men/1.jpg',
             'created_at' => now(),
         ]);

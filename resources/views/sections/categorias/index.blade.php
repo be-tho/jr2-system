@@ -32,14 +32,16 @@
                     <h1 class="text-3xl font-bold text-neutral-900 dark:text-white mb-2">Categorías</h1>
                     <p class="text-neutral-600 dark:text-neutral-400">Gestiona las categorías de productos del sistema</p>
                 </div>
-                <div class="mt-4 sm:mt-0">
-                    <x-buttons.primary href="{{ route('categorias.create') }}">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                        Nueva Categoría
-                    </x-buttons.primary>
-                </div>
+                @if(auth()->user()->hasRole("administrador"))
+                    <div class="mt-4 sm:mt-0">
+                        <x-buttons.primary href="{{ route('categorias.create') }}">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            Nueva Categoría
+                        </x-buttons.primary>
+                    </div>
+                @endif
             </div>
         </div>
 
@@ -61,9 +63,11 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-300 uppercase tracking-wider">
                                 Fecha Creación
                             </th>
-                            <th class="px-6 py-3 text-right text-xs font-medium text-neutral-500 dark:text-neutral-300 uppercase tracking-wider">
-                                Acciones
-                            </th>
+                            @if(auth()->user()->hasRole("administrador"))
+                                <th class="px-6 py-3 text-right text-xs font-medium text-neutral-500 dark:text-neutral-300 uppercase tracking-wider">
+                                    Acciones
+                                </th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody class="bg-white dark:bg-neutral-800 divide-y divide-neutral-200 dark:divide-neutral-700">
@@ -88,34 +92,36 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-600 dark:text-neutral-400">
                                     {{ $categoria->formatted_created_at }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <div class="flex items-center justify-end space-x-2">
-                                        <x-buttons.outline href="{{ route('categorias.edit', $categoria) }}" size="sm">
-                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                                            </svg>
-                                            Editar
-                                        </x-buttons.outline>
-                                        <x-delete-modal 
-                                            :route="route('categorias.destroy', $categoria)"
-                                            triggerText="Eliminar"
-                                            modalTitle="Eliminar Categoría"
-                                            modalMessage="¿Estás seguro de que quieres eliminar esta categoría?"
-                                            confirmText="Sí, eliminar categoría"
-                                            cancelText="Cancelar"
-                                            size="sm"
-                                            variant="danger"
-                                            icon="ri-delete-bin-line"
-                                            fullWidth="false"
-                                            itemName="categoría"
-                                            modalId="deleteModal{{ $categoria->id }}"
-                                        />
-                                    </div>
-                                </td>
+                                @if(auth()->user()->hasRole("administrador"))
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <div class="flex items-center justify-end space-x-2">
+                                            <x-buttons.outline href="{{ route('categorias.edit', $categoria) }}" size="sm">
+                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                                </svg>
+                                                Editar
+                                            </x-buttons.outline>
+                                            <x-delete-modal 
+                                                :route="route('categorias.destroy', $categoria)"
+                                                triggerText="Eliminar"
+                                                modalTitle="Eliminar Categoría"
+                                                modalMessage="¿Estás seguro de que quieres eliminar esta categoría?"
+                                                confirmText="Sí, eliminar categoría"
+                                                cancelText="Cancelar"
+                                                size="sm"
+                                                variant="danger"
+                                                icon="ri-delete-bin-line"
+                                                fullWidth="false"
+                                                itemName="categoría"
+                                                modalId="deleteModal{{ $categoria->id }}"
+                                            />
+                                        </div>
+                                    </td>
+                                @endif
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-6 py-12 text-center">
+                                <td colspan="{{ auth()->user()->hasRole("administrador") ? '5' : '4' }}" class="px-6 py-12 text-center">
                                     <div class="text-neutral-500 dark:text-neutral-400">
                                         <svg class="mx-auto h-12 w-12 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>

@@ -36,48 +36,89 @@
         </div>
     </div>
 
-    {{-- Acciones rápidas --}}
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <a href="{{ route('cortes.create') }}" class="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 group">
-            <div class="px-6 py-4 text-center">
-                <div class="w-16 h-16 bg-primary-500 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <i class="ri-add-line text-2xl text-white"></i>
+        {{-- Acciones rápidas --}}
+    @if(auth()->user()->hasRole('administrador'))
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <a href="{{ route('cortes.create') }}" class="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 group">
+                <div class="px-6 py-4 text-center">
+                    <div class="w-16 h-16 bg-primary-500 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                        <i class="ri-add-line text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-neutral-900 dark:text-white mb-2">Nuevo Corte</h3>
+                    <p class="text-neutral-600 dark:text-neutral-400 text-sm">Crear un nuevo corte de tela</p>
                 </div>
-                <h3 class="text-lg font-semibold text-neutral-900 dark:text-white mb-2">Nuevo Corte</h3>
-                <p class="text-neutral-600 dark:text-neutral-400 text-sm">Crear un nuevo corte de tela</p>
-            </div>
-        </a>
+            </a>
 
-        <a href="{{ route('articulos.create') }}" class="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 group">
-            <div class="px-6 py-4 text-center">
-                <div class="w-16 h-16 bg-green-500 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <i class="ri-shirt-line text-2xl text-white"></i>
+            <a href="{{ route('articulos.create') }}" class="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 group">
+                <div class="px-6 py-4 text-center">
+                    <div class="w-16 h-16 bg-green-500 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                        <i class="ri-shirt-line text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-neutral-900 dark:text-white mb-2">Nuevo Artículo</h3>
+                    <p class="text-neutral-600 dark:text-neutral-400 text-sm">Agregar artículo al inventario</p>
                 </div>
-                <h3 class="text-lg font-semibold text-neutral-900 dark:text-white mb-2">Nuevo Artículo</h3>
-                <p class="text-neutral-600 dark:text-neutral-400 text-sm">Agregar artículo al inventario</p>
-            </div>
-        </a>
+            </a>
 
-        <a href="{{ route('dolar.index') }}" class="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 group">
-            <div class="px-6 py-4 text-center">
-                <div class="w-16 h-16 bg-accent-500 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <i class="ri-money-dollar-circle-line text-2xl text-white"></i>
+            <a href="{{ route('dolar.index') }}" class="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 group">
+                <div class="px-6 py-4 text-center">
+                    <div class="w-16 h-16 bg-accent-500 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                        <i class="ri-money-dollar-circle-line text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-neutral-900 dark:text-white mb-2">Cotización Dólar</h3>
+                    <p class="text-neutral-600 dark:text-neutral-400 text-sm">Ver cotización actual</p>
                 </div>
-                <h3 class="text-lg font-semibold text-neutral-900 dark:text-white mb-2">Cotización Dólar</h3>
-                <p class="text-neutral-600 dark:text-neutral-400 text-sm">Ver cotización actual</p>
-            </div>
-        </a>
+            </a>
 
-        <a href="{{ route('reportes.index') }}"  class="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 group">
-            <div class="px-6 py-4 text-center">
-                <div class="w-16 h-16 bg-secondary-500 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <i class="ri-bar-chart-line text-2xl text-white"></i>
+            <a href="{{ route('reportes.index') }}"  class="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 group">
+                <div class="px-6 py-4 text-center">
+                    <div class="w-16 h-16 bg-secondary-500 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                        <i class="ri-bar-chart-line text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-neutral-900 dark:text-white mb-2">Reportes</h3>
+                    <p class="text-neutral-600 dark:text-neutral-400 text-sm">Generar reportes del sistema</p>
                 </div>
-                <h3 class="text-lg font-semibold text-neutral-900 dark:text-white mb-2">Reportes</h3>
-                <p class="text-neutral-600 dark:text-neutral-400 text-sm">Generar reportes del sistema</p>
+            </a>
+        </div>
+    @else
+        {{-- Mensaje informativo para usuarios de solo lectura --}}
+        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
+            <div class="flex items-start space-x-3">
+                <div class="flex-shrink-0">
+                    <i class="ri-information-line text-blue-600 dark:text-blue-400 text-xl"></i>
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-lg font-medium text-blue-900 dark:text-blue-100 mb-2">
+                        Modo Solo Lectura
+                    </h3>
+                    <p class="text-blue-800 dark:text-blue-200 text-sm leading-relaxed">
+                        Como usuario con permisos de solo lectura, puedes ver toda la información del sistema, 
+                        incluyendo artículos, cortes, categorías y reportes. Para realizar cambios o crear 
+                        nuevo contenido, contacta a un administrador del sistema.
+                    </p>
+                    <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="text-center">
+                            <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mx-auto mb-2">
+                                <i class="ri-eye-line text-blue-600 dark:text-blue-400"></i>
+                            </div>
+                            <p class="text-xs text-blue-700 dark:text-blue-300">Ver Contenido</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mx-auto mb-2">
+                                <i class="ri-search-line text-blue-600 dark:text-blue-400"></i>
+                            </div>
+                            <p class="text-xs text-blue-700 dark:text-blue-300">Buscar y Filtrar</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mx-auto mb-2">
+                                <i class="ri-bar-chart-line text-blue-600 dark:text-blue-400"></i>
+                            </div>
+                            <p class="text-xs text-blue-700 dark:text-blue-300">Ver Reportes</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </a>
-    </div>
+        </div>
+    @endif
 
     {{-- Sección de estadísticas --}}
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -204,8 +245,12 @@
                     <div class="w-12 h-12 bg-secondary-100 dark:bg-secondary-900/20 rounded-lg flex items-center justify-center mx-auto mb-3">
                         <i class="ri-shield-check-line text-secondary-600 dark:text-secondary-400 text-xl"></i>
                     </div>
-                    <h4 class="font-medium text-neutral-900 dark:text-white mb-1">Estado</h4>
-                    <p class="text-sm text-green-600 dark:text-green-400">Activo</p>
+                    <h4 class="font-medium text-neutral-900 dark:text-white mb-1">Rol</h4>
+                    @if(auth()->user()->hasRole('administrador'))
+                        <p class="text-sm text-green-600 dark:text-green-400 font-medium">Administrador</p>
+                    @else
+                        <p class="text-sm text-blue-600 dark:text-blue-400 font-medium">Usuario</p>
+                    @endif
                 </div>
             </div>
         </div>

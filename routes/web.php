@@ -61,22 +61,78 @@ Route::middleware('auth')->group(function () {
     // ========================================================================
     Route::prefix('dashboard')->name('dashboard.')->group(function () {
         Route::get('/stats/realtime', [HomeController::class, 'getRealTimeStats'])->name('stats.realtime');
-        Route::post('/stats/clear-cache', [HomeController::class, 'clearStatsCache'])->name('stats.clear-cache');
     });
 
     // ========================================================================
-    // ADMIN ONLY ROUTES - Solo para administradores
+    // READ-ONLY ROUTES - Accesible para todos los usuarios autenticados (solo lectura)
     // ========================================================================
-    Route::middleware('admin')->group(function () {
+    Route::middleware('auth')->group(function () {
+        
+        // ====================================================================
+        // CORTES VIEW - Todos pueden ver
+        // ====================================================================
+        Route::prefix('cortes')->name('cortes.')->group(function () {
+            Route::get('/', [CorteController::class, 'index'])->name('index');
+            Route::get('/{corte}', [CorteController::class, 'show'])->name('show');
+            Route::get('/create', [CorteController::class, 'create'])->name('create');
+        });
+        
+        // ====================================================================
+        // ARTICULOS VIEW - Todos pueden ver
+        // ====================================================================
+        Route::prefix('articulos')->name('articulos.')->group(function () {
+            Route::get('/', [ArticuloController::class, 'index'])->name('index');
+            Route::get('/{articulo}', [ArticuloController::class, 'show'])->name('show');
+            Route::get('/create', [ArticuloController::class, 'create'])->name('create');
+        });
+        
+        // ====================================================================
+        // CATEGORIAS VIEW - Todos pueden ver
+        // ====================================================================
+        Route::prefix('categorias')->name('categorias.')->group(function () {
+            Route::get('/', [CategoriaController::class, 'index'])->name('index');
+            Route::get('/create', [CategoriaController::class, 'create'])->name('create');
+        });
+        
+        // ====================================================================
+        // TEMPORADAS VIEW - Todos pueden ver
+        // ====================================================================
+        Route::prefix('temporadas')->name('temporadas.')->group(function () {
+            Route::get('/', [TemporadaController::class, 'index'])->name('index');
+            Route::get('/create', [TemporadaController::class, 'create'])->name('create');
+        });
+        
+        // ====================================================================
+        // DOLAR EXCHANGE RATES VIEW - Todos pueden ver
+        // ====================================================================
+        Route::prefix('dolar')->name('dolar.')->group(function () {
+            Route::get('/', [DolarController::class, 'index'])->name('index');
+            Route::get('/api', [DolarController::class, 'api'])->name('api');
+        });
+        
+        // ====================================================================
+        // REPORTS VIEW - Todos pueden ver
+        // ====================================================================
+        Route::prefix('reportes')->name('reportes.')->group(function () {
+            Route::get('/', [ReporteController::class, 'index'])->name('index');
+            Route::get('/articulos', [ReporteController::class, 'articulos'])->name('articulos');
+            Route::get('/cortes', [ReporteController::class, 'cortes'])->name('cortes');
+            
+            // Rutas AJAX para estadísticas en tiempo real
+            Route::get('/stats/realtime', [ReporteController::class, 'getRealTimeStats'])->name('stats.realtime');
+        });
+    });
+
+    // ========================================================================
+    // ADMIN ONLY ROUTES - Solo para administradores (crear, editar, eliminar)
+    // ========================================================================
+    Route::middleware('role:administrador')->group(function () {
         
         // ====================================================================
         // CORTES MANAGEMENT - Solo administradores
         // ====================================================================
         Route::prefix('cortes')->name('cortes.')->group(function () {
-            Route::get('/', [CorteController::class, 'index'])->name('index');
-            Route::get('/create', [CorteController::class, 'create'])->name('create');
             Route::post('/', [CorteController::class, 'store'])->name('store');
-            Route::get('/{corte}', [CorteController::class, 'show'])->name('show');
             Route::get('/{corte}/edit', [CorteController::class, 'edit'])->name('edit');
             Route::put('/{corte}', [CorteController::class, 'update'])->name('update');
             Route::delete('/{corte}', [CorteController::class, 'delete'])->name('delete');
@@ -86,10 +142,7 @@ Route::middleware('auth')->group(function () {
         // ARTICULOS MANAGEMENT - Solo administradores
         // ====================================================================
         Route::prefix('articulos')->name('articulos.')->group(function () {
-            Route::get('/', [ArticuloController::class, 'index'])->name('index');
-            Route::get('/create', [ArticuloController::class, 'create'])->name('create');
             Route::post('/', [ArticuloController::class, 'store'])->name('store');
-            Route::get('/{articulo}', [ArticuloController::class, 'show'])->name('show');
             Route::get('/{articulo}/edit', [ArticuloController::class, 'edit'])->name('edit');
             Route::put('/{articulo}', [ArticuloController::class, 'update'])->name('update');
             Route::delete('/{articulo}', [ArticuloController::class, 'delete'])->name('delete');
@@ -99,8 +152,6 @@ Route::middleware('auth')->group(function () {
         // CATEGORIAS MANAGEMENT - Solo administradores
         // ====================================================================
         Route::prefix('categorias')->name('categorias.')->group(function () {
-            Route::get('/', [CategoriaController::class, 'index'])->name('index');
-            Route::get('/create', [CategoriaController::class, 'create'])->name('create');
             Route::post('/', [CategoriaController::class, 'store'])->name('store');
             Route::get('/{categoria}/edit', [CategoriaController::class, 'edit'])->name('edit');
             Route::put('/{categoria}', [CategoriaController::class, 'update'])->name('update');
@@ -111,8 +162,6 @@ Route::middleware('auth')->group(function () {
         // TEMPORADAS MANAGEMENT - Solo administradores
         // ====================================================================
         Route::prefix('temporadas')->name('temporadas.')->group(function () {
-            Route::get('/', [TemporadaController::class, 'index'])->name('index');
-            Route::get('/create', [TemporadaController::class, 'create'])->name('create');
             Route::post('/', [TemporadaController::class, 'store'])->name('store');
             Route::get('/{temporada}/edit', [TemporadaController::class, 'edit'])->name('edit');
             Route::put('/{temporada}', [TemporadaController::class, 'update'])->name('update');
@@ -120,24 +169,23 @@ Route::middleware('auth')->group(function () {
         });
         
         // ====================================================================
-        // DOLAR EXCHANGE RATES - Solo administradores
+        // DOLAR EXCHANGE RATES MANAGEMENT - Solo administradores
         // ====================================================================
         Route::prefix('dolar')->name('dolar.')->group(function () {
-            Route::get('/', [DolarController::class, 'index'])->name('index');
-            Route::get('/api', [DolarController::class, 'api'])->name('api');
             Route::post('/clear-cache', [DolarController::class, 'clearCache'])->name('clear-cache');
         });
         
         // ====================================================================
-        // REPORTS - Solo administradores
+        // DASHBOARD MANAGEMENT - Solo administradores
+        // ====================================================================
+        Route::prefix('dashboard')->name('dashboard.')->group(function () {
+            Route::post('/stats/clear-cache', [HomeController::class, 'clearStatsCache'])->name('stats.clear-cache');
+        });
+        
+        // ====================================================================
+        // REPORTS EXPORT - Solo administradores
         // ====================================================================
         Route::prefix('reportes')->name('reportes.')->group(function () {
-            Route::get('/', [ReporteController::class, 'index'])->name('index');
-            Route::get('/articulos', [ReporteController::class, 'articulos'])->name('articulos');
-            Route::get('/cortes', [ReporteController::class, 'cortes'])->name('cortes');
-            
-            // Rutas AJAX para estadísticas en tiempo real
-            Route::get('/stats/realtime', [ReporteController::class, 'getRealTimeStats'])->name('stats.realtime');
             Route::post('/export/articulos/pdf', [ReporteController::class, 'exportArticulosPDF'])->name('export.articulos.pdf');
             Route::post('/export/cortes/pdf', [ReporteController::class, 'exportCortesPDF'])->name('export.cortes.pdf');
         });

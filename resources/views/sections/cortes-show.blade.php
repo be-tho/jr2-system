@@ -11,7 +11,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <h1 class="text-3xl font-bold text-white mb-2">Corte N° {{ $corte->numero_corte }}</h1>
-                    <p class="text-primary-100 text-lg">{{ $corte->nombre }}</p>
+                    <p class="text-primary-100 text-lg">{{ $corte->tipo_tela }}</p>
                 </div>
                 <div class="flex items-center space-x-4">
                     {{-- Estado del corte --}}
@@ -68,22 +68,22 @@
                             <p class="text-2xl font-bold text-neutral-900 dark:text-white">{{ $corte->numero_corte }}</p>
                         </div>
 
-                        {{-- Nombre --}}
+                        {{-- Tipo de Tela --}}
                         <div class="bg-neutral-50 dark:bg-neutral-700/50 rounded-lg p-4">
                             <div class="flex items-center mb-2">
                                 <i class="ri-scissors-cut-line text-primary-500 mr-2"></i>
-                                <span class="text-sm font-medium text-neutral-600 dark:text-neutral-400">Nombre</span>
+                                <span class="text-sm font-medium text-neutral-600 dark:text-neutral-400">Tipo de Tela</span>
                             </div>
-                            <p class="text-xl font-semibold text-neutral-900 dark:text-white">{{ $corte->nombre }}</p>
+                            <p class="text-xl font-semibold text-neutral-900 dark:text-white">{{ $corte->tipo_tela }}</p>
                         </div>
 
-                        {{-- Cantidad --}}
+                        {{-- Cantidad Total --}}
                         <div class="bg-neutral-50 dark:bg-neutral-700/50 rounded-lg p-4">
                             <div class="flex items-center mb-2">
                                 <i class="ri-stack-line text-primary-500 mr-2"></i>
-                                <span class="text-sm font-medium text-neutral-600 dark:text-neutral-400">Cantidad</span>
+                                <span class="text-sm font-medium text-neutral-600 dark:text-neutral-400">Cantidad Total</span>
                             </div>
-                            <p class="text-2xl font-bold text-neutral-900 dark:text-white">{{ $corte->cantidad }}</p>
+                            <p class="text-2xl font-bold text-neutral-900 dark:text-white">{{ $corte->cantidad_total }}</p>
                             <p class="text-sm text-neutral-500 dark:text-neutral-400">unidades</p>
                         </div>
 
@@ -118,11 +118,15 @@
                                 <span class="text-sm font-medium text-neutral-600 dark:text-neutral-400">Colores</span>
                             </div>
                             <div class="space-y-2">
-                                @foreach(explode(',', $corte->colores) as $color)
-                                    <span class="inline-block bg-white dark:bg-neutral-700 px-3 py-1 rounded-full text-sm font-medium text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-600">
-                                        {{ trim($color) }}
-                                    </span>
-                                @endforeach
+                                @if(is_array($corte->colores))
+                                    @foreach($corte->colores as $color => $cantidad)
+                                        <span class="inline-block bg-white dark:bg-neutral-700 px-3 py-1 rounded-full text-sm font-medium text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-600">
+                                            {{ ucfirst($color) }}: {{ $cantidad }}
+                                        </span>
+                                    @endforeach
+                                @else
+                                    <span class="text-neutral-500 dark:text-neutral-400">Sin colores especificados</span>
+                                @endif
                             </div>
                         </div>
 
@@ -189,7 +193,7 @@
                 <div class="p-6">
                     <div class="relative group cursor-pointer" onclick="openImageModal()">
                         <img src="{{ \App\Helpers\ImageHelper::getCorteImageUrl($corte->imagen) }}" 
-                             alt="{{ \App\Helpers\ImageHelper::getDefaultImageAlt($corte->imagen, 'default-corte.svg', $corte->nombre, 'corte') }}" 
+                             alt="{{ \App\Helpers\ImageHelper::getDefaultImageAlt($corte->imagen, 'default-corte.svg', $corte->tipo_tela, 'corte') }}" 
                              class="w-full h-64 object-cover rounded-lg border border-neutral-200 dark:border-neutral-600 transition-transform duration-300 group-hover:scale-105 {{ \App\Helpers\ImageHelper::getDefaultImageClass($corte->imagen, 'default-corte.svg') }}">
                         <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 rounded-lg flex items-center justify-center">
                             <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -242,7 +246,7 @@
 <div id="imageModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="relative max-w-4xl max-h-full">
         <img src="{{ \App\Helpers\ImageHelper::getCorteImageUrl($corte->imagen) }}" 
-             alt="{{ \App\Helpers\ImageHelper::getDefaultImageAlt($corte->imagen, 'default-corte.svg', $corte->nombre, 'corte') }}" 
+             alt="{{ \App\Helpers\ImageHelper::getDefaultImageAlt($corte->imagen, 'default-corte.svg', $corte->tipo_tela, 'corte') }}" 
              class="w-full h-auto max-h-[90vh] object-contain rounded-lg shadow-2xl {{ \App\Helpers\ImageHelper::getDefaultImageClass($corte->imagen, 'default-corte.svg') }}">
         
         {{-- Botón cerrar --}}

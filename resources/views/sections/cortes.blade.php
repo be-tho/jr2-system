@@ -45,7 +45,7 @@
                             name="search"
                             id="search"
                             class="block w-full p-3 ps-10 text-sm text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-800 focus:ring-primary-500 focus:border-primary-500"
-                            placeholder="Buscar por número de corte o nombre"
+                            placeholder="Buscar por número de corte o tipo de tela"
                             value="{{ request()->search }}"
                         />
                     </div>
@@ -158,7 +158,10 @@
                                     Corte
                                 </th>
                                 <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
-                                    Tela
+                                    Tipo de Tela
+                                </th>
+                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
+                                    Cantidad
                                 </th>
                                 <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
                                     Estado
@@ -195,14 +198,22 @@
                                     </div>
                                 </td>
 
-                                <!-- Nombre de la tela -->
+                                <!-- Tipo de Tela -->
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-neutral-900 dark:text-white">
-                                        {{ $corte->nombre }}
+                                        {{ $corte->tipo_tela }}
                                     </div>
                                 </td>
 
-
+                                <!-- Cantidad Total -->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-neutral-900 dark:text-white">
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300">
+                                            <i class="ri-stack-line mr-1"></i>
+                                            {{ $corte->cantidad_total }} unidades
+                                        </span>
+                                    </div>
+                                </td>
 
                                 <!-- Estado -->
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -239,8 +250,6 @@
                                         {{ \Carbon\Carbon::parse($corte->fecha)->locale('es')->isoFormat('dddd') }}
                                     </div>
                                 </td>
-
-
 
                                 <!-- Acciones -->
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">

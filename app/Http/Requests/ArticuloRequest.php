@@ -28,7 +28,7 @@ class ArticuloRequest extends FormRequest
             'precio' => ['required', 'numeric'],
             'categoria_id' => ['required', 'numeric', 'not_in:0'],
             'temporada_id' => ['required', 'numeric', 'not_in:0'],
-            'imagen' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:8048',
+            'imagen' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:20480',
             'stock' => ['required', 'numeric'],
             'codigo' => ['required', 'min:3'],
         ];

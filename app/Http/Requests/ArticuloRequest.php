@@ -28,7 +28,7 @@ class ArticuloRequest extends FormRequest
             'precio' => ['required', 'numeric'],
             'categoria_id' => ['required', 'numeric', 'not_in:0'],
             'temporada_id' => ['required', 'numeric', 'not_in:0'],
-            'imagen' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:8048',
+            'imagen' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp,heic,heif', 'max:51200'], // 50MB
             'stock' => ['required', 'numeric'],
             'codigo' => ['required', 'min:3'],
         ];
@@ -50,7 +50,8 @@ class ArticuloRequest extends FormRequest
             'temporada_id.numeric' => 'El campo temporada debe ser numérico',
             'temporada_id.not_in' => 'Seleccione una temporada',
             'imagen.image' => 'El archivo debe ser una imagen',
-            'imagen.mimes' => 'El archivo debe ser una imagen de tipo: jpeg, png, jpg, gif, svg, webp',
+            'imagen.mimes' => 'El archivo debe ser una imagen de tipo: jpeg, png, jpg, gif, svg, webp, heic, heif',
+            'imagen.max' => 'La imagen no debe superar los 50MB',
             'stock.required' => 'El campo stock es requerido',
             'stock.numeric' => 'El campo stock debe ser numérico',
             'codigo.required' => 'El campo código es requerido',

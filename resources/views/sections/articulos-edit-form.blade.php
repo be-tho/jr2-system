@@ -245,9 +245,17 @@
                             class="block w-full pl-10 pr-3 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200 @error('imagen') border-red-500 dark:border-red-400 @enderror"
                         >
                     </div>
-                    <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
-                        Formatos permitidos: JPG, PNG, GIF. Tamaño máximo: 2MB
-                    </p>
+                    <div class="space-y-2 mt-1">
+                        <p class="text-xs text-neutral-500 dark:text-neutral-400">
+                            <strong>Formatos soportados:</strong> JPG, PNG, GIF, WEBP, HEIC (iPhone)
+                        </p>
+                        <p class="text-xs text-neutral-500 dark:text-neutral-400">
+                            <strong>Tamaño máximo:</strong> 50MB (se optimizará automáticamente)
+                        </p>
+                        <p class="text-xs text-primary-600 dark:text-primary-400">
+                            <i class="ri-information-line"></i> Las imágenes se optimizarán automáticamente para mejor rendimiento
+                        </p>
+                    </div>
                     @error('imagen')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror

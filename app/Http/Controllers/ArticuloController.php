@@ -24,7 +24,9 @@ class ArticuloController extends Controller
         'width' => 500,
         'height' => 600,
         'quality' => 80,
-        'format' => 'jpeg'
+        'format' => 'jpeg',
+        'mobile_optimize' => true,
+        'target_file_size' => 2048, // 2MB objetivo
     ];
 
     public function __construct(ArticuloRepository $articuloRepository)
@@ -99,7 +101,7 @@ class ArticuloController extends Controller
                 // Validar imagen antes de procesar
                 $this->validateImage($request->file('imagen'));
                 
-                // Procesar y guardar imagen
+                // Procesar y guardar imagen con optimización móvil
                 $imageFilename = $this->processAndSaveImage(
                     $request->file('imagen'), 
                     self::IMAGE_DIRECTORY, 
@@ -168,7 +170,7 @@ class ArticuloController extends Controller
                 // Validar nueva imagen
                 $this->validateImage($request->file('imagen'));
                 
-                // Procesar y guardar nueva imagen
+                // Procesar y guardar nueva imagen con optimización móvil
                 $imageFilename = $this->processAndSaveImage(
                     $request->file('imagen'), 
                     self::IMAGE_DIRECTORY, 

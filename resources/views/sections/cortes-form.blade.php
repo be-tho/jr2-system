@@ -300,9 +300,17 @@
                                 class="block w-full pl-10 pr-3 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200 @error('imagen') border-red-500 dark:border-red-400 @enderror file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 dark:file:bg-primary-900/20 dark:file:text-primary-400"
                             >
                         </div>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">
-                            Formatos permitidos: JPG, PNG, GIF. Tamaño máximo: 8MB
-                        </p>
+                        <div class="space-y-2">
+                            <p class="text-xs text-gray-500 dark:text-gray-400">
+                                <strong>Formatos soportados:</strong> JPG, PNG, GIF, WEBP, HEIC (iPhone)
+                            </p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">
+                                <strong>Tamaño máximo:</strong> 50MB (se optimizará automáticamente)
+                            </p>
+                            <p class="text-xs text-primary-600 dark:text-primary-400">
+                                <i class="ri-information-line"></i> Las imágenes se optimizarán automáticamente para mejor rendimiento
+                            </p>
+                        </div>
                         @error('imagen')
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                         @enderror
@@ -327,6 +335,17 @@
 </x-container-wrapp>
 
 <script>
+// Detectar cambios en el tamaño de la ventana (útil para tablets)
+window.addEventListener('resize', function() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    
+    if (width < 768) {
+        console.log('Dispositivo móvil detectado por tamaño de pantalla');
+    }
+});
+
+// Funciones para manejo de colores
 function addColor() {
     const container = document.getElementById('colores-container');
     const colorDiv = document.createElement('div');

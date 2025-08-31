@@ -20,9 +20,6 @@
     <!-- Linkear el css de build -->
     <link rel="stylesheet" href="{{ asset('build/assets/app-D-fDCyjs.css ') }}">
     
-    <!-- CSS de optimización móvil -->
-    <link rel="stylesheet" href="{{ asset('css/mobile-optimization.css') }}">
-    
     <!-- Theme Script -->
     <script>
         // Verificar tema guardado o usar preferencia del sistema

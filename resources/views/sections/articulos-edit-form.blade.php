@@ -242,25 +242,11 @@
                             id="imagen" 
                             name="imagen" 
                             accept="image/*"
-                            capture="environment"
                             class="block w-full pl-10 pr-3 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200 @error('imagen') border-red-500 dark:border-red-400 @enderror"
                         >
                     </div>
-                    
-                    {{-- Botones de selección rápida para móviles --}}
-                    <div class="mobile-camera-buttons">
-                        <button type="button" onclick="selectFromCamera()" class="camera-btn">
-                            <i class="ri-camera-line"></i>
-                            Cámara
-                        </button>
-                        <button type="button" onclick="selectFromGallery()" class="gallery-btn">
-                            <i class="ri-image-line"></i>
-                            Galería
-                        </button>
-                    </div>
-                    
                     <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
-                        Formatos permitidos: JPG, PNG, GIF, WEBP. Tamaño máximo: 20MB
+                        Formatos permitidos: JPG, PNG, GIF. Tamaño máximo: 2MB
                     </p>
                     @error('imagen')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -287,97 +273,4 @@
         </form>
     </div>
 </div>
-
-<script>
-// Funciones para manejo de imágenes móviles
-function selectFromCamera() {
-    const input = document.getElementById('imagen');
-    input.setAttribute('capture', 'environment');
-    input.click();
-}
-
-function selectFromGallery() {
-    const input = document.getElementById('imagen');
-    input.removeAttribute('capture');
-    input.click();
-}
-
-// Compresión automática de imágenes en el frontend
-function compressImage(file) {
-    return new Promise((resolve) => {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        const img = new Image();
-        
-        img.onload = function() {
-            // Calcular nuevas dimensiones manteniendo proporción
-            const maxWidth = 4000;
-            const maxHeight = 4000;
-            let { width, height } = img;
-            
-            if (width > maxWidth) {
-                height = (height * maxWidth) / width;
-                width = maxWidth;
-            }
-            
-            if (height > maxHeight) {
-                width = (width * maxHeight) / height;
-                height = maxHeight;
-            }
-            
-            canvas.width = width;
-            canvas.height = height;
-            
-            // Dibujar imagen redimensionada
-            ctx.drawImage(img, 0, 0, width, height);
-            
-            // Convertir a blob con compresión
-            canvas.toBlob((blob) => {
-                // Crear nuevo archivo
-                const compressedFile = new File([blob], file.name, {
-                    type: 'image/jpeg',
-                    lastModified: Date.now()
-                });
-                resolve(compressedFile);
-            }, 'image/jpeg', 0.75); // Calidad 75%
-        };
-        
-        img.src = URL.createObjectURL(file);
-    });
-}
-
-// Manejar cambio de archivo
-document.getElementById('imagen').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    
-    // Si el archivo es muy grande, comprimir automáticamente
-    if (file.size > 10 * 1024 * 1024) { // Más de 10MB
-        compressImage(file).then(compressedFile => {
-            // Crear un nuevo FileList con el archivo comprimido
-            const dataTransfer = new DataTransfer();
-            dataTransfer.items.add(compressedFile);
-            e.target.files = dataTransfer.files;
-            
-            // Mostrar notificación
-            showNotification('Imagen comprimida automáticamente para optimizar el tamaño', 'info');
-        });
-    }
-});
-
-function showNotification(message, type = 'info') {
-    // Crear notificación temporal
-    const notification = document.createElement('div');
-    notification.className = `mobile-notification ${
-        type === 'info' ? 'bg-blue-500' : 'bg-green-500'
-    }`;
-    notification.textContent = message;
-    document.body.appendChild(notification);
-    
-    // Remover después de 3 segundos
-    setTimeout(() => {
-        notification.remove();
-    }, 3000);
-}
-</script>
 @endsection

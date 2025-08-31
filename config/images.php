@@ -55,22 +55,15 @@ return [
     ],
 
     'validation' => [
-        'max_size' => 20480, // 20MB en KB (aumentado para fotos de móviles)
+        'max_size' => 8192, // 8MB en KB
         'allowed_types' => ['jpeg', 'jpg', 'png', 'gif', 'webp'],
         'min_dimensions' => [
             'width' => 100,
             'height' => 100,
         ],
         'max_dimensions' => [
-            'width' => 8000, // Aumentado para fotos de alta resolución
-            'height' => 8000,
-        ],
-        'mobile_optimization' => [
-            'enabled' => true,
-            'max_size_before_compression' => 51200, // 50MB antes de comprimir
-            'target_quality' => 75, // Calidad objetivo después de compresión
-            'max_width' => 4000, // Ancho máximo después de compresión
-            'max_height' => 4000, // Alto máximo después de compresión
+            'width' => 4000,
+            'height' => 4000,
         ],
     ],
 

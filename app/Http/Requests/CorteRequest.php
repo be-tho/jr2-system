@@ -33,7 +33,7 @@ class CorteRequest extends FormRequest
             'articulos' => ['required', 'string', 'min:3'],
             'descripcion' => ['required', 'string', 'min:3'],
             'costureros' => ['required', 'string', 'min:3'],
-            'imagen' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:20480'],
+            'imagen' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:8192'],
             'fecha' => ['required', 'date'],
             'estado' => ['required', 'in:0,1,2'],
         ];

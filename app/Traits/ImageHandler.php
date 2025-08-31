@@ -24,8 +24,6 @@ trait ImageHandler
         }
 
         try {
-            $config = config('images.validation');
-            
             $defaultOptions = [
                 'width' => 450,
                 'height' => 600,
@@ -51,44 +49,13 @@ trait ImageHandler
             $manager = new ImageManager(new Driver());
             $img = $manager->read($image->getRealPath());
 
-            // Aplicar compresión automática para imágenes grandes
-            $originalSize = $image->getSize();
-            $imageInfo = getimagesize($image->getRealPath());
-            $originalWidth = $imageInfo[0];
-            $originalHeight = $imageInfo[1];
-            
-            // Si la imagen es muy grande, aplicar compresión más agresiva
-            if ($config['mobile_optimization']['enabled'] && 
-                ($originalSize > ($config['max_size'] * 1024) || 
-                 $originalWidth > $config['mobile_optimization']['max_width'] || 
-                 $originalHeight > $config['mobile_optimization']['max_height'])) {
-                
-                // Redimensionar a límites de móvil si es necesario
-                if ($originalWidth > $config['mobile_optimization']['max_width'] || 
-                    $originalHeight > $config['mobile_optimization']['max_height']) {
-                    $img = $img->resize($config['mobile_optimization']['max_width'], $config['mobile_optimization']['max_height'], function ($constraint) {
-                        $constraint->aspectRatio();
-                        $constraint->upsize();
-                    });
-                }
-                
-                // Usar calidad más baja para comprimir
-                $options['quality'] = $config['mobile_optimization']['target_quality'];
-                
-                Log::info('Aplicando compresión automática para imagen móvil', [
-                    'original_size' => $originalSize,
-                    'original_dimensions' => $originalWidth . 'x' . $originalHeight,
-                    'target_quality' => $options['quality']
-                ]);
+            // Redimensionar manteniendo proporción
+            if ($options['maintain_aspect_ratio']) {
+                $img = $img->resize($options['width'], $options['height'], function ($constraint) {
+                    $constraint->aspectRatio();
+                });
             } else {
-                // Redimensionar manteniendo proporción según opciones normales
-                if ($options['maintain_aspect_ratio']) {
-                    $img = $img->resize($options['width'], $options['height'], function ($constraint) {
-                        $constraint->aspectRatio();
-                    });
-                } else {
-                    $img = $img->resize($options['width'], $options['height']);
-                }
+                $img = $img->resize($options['width'], $options['height']);
             }
 
             // Guardar imagen
@@ -110,9 +77,7 @@ trait ImageHandler
             Log::info('Imagen procesada y guardada exitosamente', [
                 'original_name' => $image->getClientOriginalName(),
                 'saved_path' => $filepath,
-                'original_size' => $originalSize,
-                'final_size' => filesize($filepath),
-                'compression_ratio' => round((1 - filesize($filepath) / $originalSize) * 100, 2) . '%',
+                'size' => $image->getSize(),
                 'mime_type' => $image->getMimeType()
             ]);
 
@@ -199,25 +164,18 @@ trait ImageHandler
      */
     protected function validateImage($image, array $options = []): bool
     {
-        $config = config('images.validation');
-        
         $defaultOptions = [
-            'max_size' => $config['max_size'],
-            'allowed_types' => $config['allowed_types'],
-            'min_dimensions' => $config['min_dimensions'],
-            'max_dimensions' => $config['max_dimensions'],
-            'mobile_optimization' => $config['mobile_optimization']
+            'max_size' => 8192, // 8MB
+            'allowed_types' => ['jpeg', 'jpg', 'png', 'gif', 'webp'],
+            'min_dimensions' => ['width' => 100, 'height' => 100],
+            'max_dimensions' => ['width' => 4000, 'height' => 4000]
         ];
 
         $options = array_merge($defaultOptions, $options);
 
-        // Validar tamaño con límite más permisivo para móviles
-        $maxSize = $options['mobile_optimization']['enabled'] 
-            ? $options['mobile_optimization']['max_size_before_compression'] 
-            : $options['max_size'];
-            
-        if ($image->getSize() > ($maxSize * 1024)) {
-            throw new \Exception('La imagen no debe superar los ' . ($maxSize / 1024) . 'MB');
+        // Validar tamaño
+        if ($image->getSize() > ($options['max_size'] * 1024)) {
+            throw new \Exception('La imagen no debe superar los ' . $options['max_size'] . 'KB');
         }
 
         // Validar tipo
@@ -226,7 +184,7 @@ trait ImageHandler
             throw new \Exception('Tipo de archivo no permitido. Tipos válidos: ' . implode(', ', $options['allowed_types']));
         }
 
-        // Validar dimensiones con límites más permisivos para móviles
+        // Validar dimensiones
         $imageInfo = getimagesize($image->getRealPath());
         if ($imageInfo) {
             $width = $imageInfo[0];
@@ -236,16 +194,8 @@ trait ImageHandler
                 throw new \Exception('La imagen debe tener al menos ' . $options['min_dimensions']['width'] . 'x' . $options['min_dimensions']['height'] . ' píxeles');
             }
 
-            // Usar límites más permisivos para móviles
-            $maxWidth = $options['mobile_optimization']['enabled'] 
-                ? $options['mobile_optimization']['max_width'] 
-                : $options['max_dimensions']['width'];
-            $maxHeight = $options['mobile_optimization']['enabled'] 
-                ? $options['mobile_optimization']['max_height'] 
-                : $options['max_dimensions']['height'];
-
-            if ($width > $maxWidth || $height > $maxHeight) {
-                throw new \Exception('La imagen no debe superar ' . $maxWidth . 'x' . $maxHeight . ' píxeles');
+            if ($width > $options['max_dimensions']['width'] || $height > $options['max_dimensions']['height']) {
+                throw new \Exception('La imagen no debe superar ' . $options['max_dimensions']['width'] . 'x' . $options['max_dimensions']['height'] . ' píxeles');
             }
         }
 

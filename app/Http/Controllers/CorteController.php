@@ -219,6 +219,7 @@ class CorteController extends Controller
 
     /**
      * Procesar colores del formulario y convertirlos a formato JSON
+     * Mantiene todas las entradas individuales sin combinar duplicados
      */
     private function processColoresFromForm($coloresData): array
     {
@@ -233,7 +234,11 @@ class CorteController extends Controller
                 $cantidad = (int)($cantidades[$i] ?? 0);
                 
                 if (!empty($color) && $cantidad > 0) {
-                    $colores[$color] = $cantidad;
+                    // Mantener cada entrada individual con un índice único
+                    $colores[] = [
+                        'color' => $color,
+                        'cantidad' => $cantidad
+                    ];
                 }
             }
         }

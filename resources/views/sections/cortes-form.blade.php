@@ -370,35 +370,71 @@ function removeColor(button) {
         container.innerHTML = '';
         
         // Agregar cada color existente
-        Object.entries(colores).forEach(([color, cantidad]) => {
-            const colorDiv = document.createElement('div');
-            colorDiv.className = 'flex items-center space-x-3';
-            colorDiv.innerHTML = `
-                <div class="flex-1">
-                    <input 
-                        type="text" 
-                        name="colores[color][]" 
-                        value="${color}"
-                        placeholder="Color (ej: rojo)"
-                        class="block w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200"
-                    >
-                </div>
-                <div class="w-24">
-                    <input 
-                        type="number" 
-                        name="colores[cantidad][]" 
-                        value="${cantidad}"
-                        placeholder="Cantidad"
-                        min="1"
-                        class="block w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200"
-                    >
-                </div>
-                <button type="button" onclick="removeColor(this)" class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300">
-                    <i class="ri-delete-bin-line text-lg"></i>
-                </button>
-            `;
-            container.appendChild(colorDiv);
-        });
+        if (Array.isArray(colores)) {
+            // Nueva estructura: array de objetos
+            colores.forEach((colorData) => {
+                if (colorData && typeof colorData === 'object' && colorData.color && colorData.cantidad) {
+                    const colorDiv = document.createElement('div');
+                    colorDiv.className = 'flex items-center space-x-3';
+                    colorDiv.innerHTML = `
+                        <div class="flex-1">
+                            <input 
+                                type="text" 
+                                name="colores[color][]" 
+                                value="${colorData.color}"
+                                placeholder="Color (ej: rojo)"
+                                class="block w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200"
+                            >
+                        </div>
+                        <div class="w-24">
+                            <input 
+                                type="number" 
+                                name="colores[cantidad][]" 
+                                value="${colorData.cantidad}"
+                                placeholder="Cantidad"
+                                min="1"
+                                class="block w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200"
+                            >
+                        </div>
+                        <button type="button" onclick="removeColor(this)" class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300">
+                            <i class="ri-delete-bin-line text-lg"></i>
+                        </button>
+                    `;
+                    container.appendChild(colorDiv);
+                }
+            });
+        } else if (typeof colores === 'object' && colores !== null) {
+            // Estructura anterior: objeto simple (para compatibilidad)
+            Object.entries(colores).forEach(([color, cantidad]) => {
+                const colorDiv = document.createElement('div');
+                colorDiv.className = 'flex items-center space-x-3';
+                colorDiv.innerHTML = `
+                    <div class="flex-1">
+                        <input 
+                            type="text" 
+                            name="colores[color][]" 
+                            value="${color}"
+                            placeholder="Color (ej: rojo)"
+                            class="block w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200"
+                        >
+                    </div>
+                    <div class="w-24">
+                        <input 
+                            type="number" 
+                            name="colores[cantidad][]" 
+                            value="${cantidad}"
+                            placeholder="Cantidad"
+                            min="1"
+                            class="block w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200"
+                        >
+                    </div>
+                    <button type="button" onclick="removeColor(this)" class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300">
+                        <i class="ri-delete-bin-line text-lg"></i>
+                    </button>
+                `;
+                container.appendChild(colorDiv);
+            });
+        }
     });
 @endif
 </script>

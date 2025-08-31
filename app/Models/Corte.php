@@ -79,7 +79,17 @@ class Corte extends Model
             return 0;
         }
         
-        return array_sum($this->colores);
+        $total = 0;
+        foreach ($this->colores as $colorData) {
+            if (is_array($colorData) && isset($colorData['cantidad'])) {
+                $total += $colorData['cantidad'];
+            } elseif (is_numeric($colorData)) {
+                // Compatibilidad con formato anterior
+                $total += $colorData;
+            }
+        }
+        
+        return $total;
     }
 
     /**
@@ -92,11 +102,42 @@ class Corte extends Model
         }
         
         $coloresFormateados = [];
-        foreach ($this->colores as $color => $cantidad) {
-            $coloresFormateados[] = ucfirst($color) . ': ' . $cantidad;
+        foreach ($this->colores as $colorData) {
+            if (is_array($colorData) && isset($colorData['color']) && isset($colorData['cantidad'])) {
+                $coloresFormateados[] = ucfirst($colorData['color']) . ': ' . $colorData['cantidad'];
+            } elseif (is_string($colorData)) {
+                // Compatibilidad con formato anterior
+                $coloresFormateados[] = ucfirst($colorData);
+            }
         }
         
         return implode(', ', $coloresFormateados);
+    }
+
+    /**
+     * Get colors as simple array for backward compatibility
+     */
+    public function getColoresSimplesAttribute()
+    {
+        if (!$this->colores) {
+            return [];
+        }
+        
+        $coloresSimples = [];
+        foreach ($this->colores as $colorData) {
+            if (is_array($colorData) && isset($colorData['color']) && isset($colorData['cantidad'])) {
+                $color = $colorData['color'];
+                $cantidad = $colorData['cantidad'];
+                
+                if (isset($coloresSimples[$color])) {
+                    $coloresSimples[$color] += $cantidad;
+                } else {
+                    $coloresSimples[$color] = $cantidad;
+                }
+            }
+        }
+        
+        return $coloresSimples;
     }
 
     /**

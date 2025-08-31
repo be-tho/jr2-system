@@ -76,7 +76,26 @@ class MigrateCortesDataSeeder extends Seeder
 
         // Si ya es un JSON válido, devolverlo
         if ($this->isValidJson($coloresString)) {
-            return json_decode($coloresString, true) ?? [];
+            $parsedColors = json_decode($coloresString, true) ?? [];
+            
+            // Convertir formato anterior (objeto) a nuevo formato (array de objetos)
+            if (is_array($parsedColors) && !empty($parsedColors)) {
+                // Si es un objeto simple (formato anterior), convertirlo a array de objetos
+                if (array_keys($parsedColors) !== range(0, count($parsedColors) - 1)) {
+                    $newColors = [];
+                    foreach ($parsedColors as $color => $cantidad) {
+                        $newColors[] = [
+                            'color' => $color,
+                            'cantidad' => $cantidad
+                        ];
+                    }
+                    return $newColors;
+                }
+                // Si ya es un array de objetos, devolverlo tal como está
+                return $parsedColors;
+            }
+            
+            return [];
         }
 
         // Parsear formato "color: cantidad, color2: cantidad2"
@@ -88,7 +107,10 @@ class MigrateCortesDataSeeder extends Seeder
                     $color = trim($parts[0]);
                     $cantidad = (int) trim($parts[1]);
                     if ($color && $cantidad > 0) {
-                        $colores[$color] = $cantidad;
+                        $colores[] = [
+                            'color' => $color,
+                            'cantidad' => $cantidad
+                        ];
                     }
                 }
             }
@@ -98,7 +120,10 @@ class MigrateCortesDataSeeder extends Seeder
             foreach ($coloresList as $color) {
                 $color = trim($color);
                 if ($color) {
-                    $colores[$color] = 1;
+                    $colores[] = [
+                        'color' => $color,
+                        'cantidad' => 1
+                    ];
                 }
             }
         }

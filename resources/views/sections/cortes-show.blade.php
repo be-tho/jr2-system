@@ -119,10 +119,17 @@
                             </div>
                             <div class="space-y-2">
                                 @if(is_array($corte->colores))
-                                    @foreach($corte->colores as $color => $cantidad)
-                                        <span class="inline-block bg-white dark:bg-neutral-700 px-3 py-1 rounded-full text-sm font-medium text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-600">
-                                            {{ ucfirst($color) }}: {{ $cantidad }}
-                                        </span>
+                                    @foreach($corte->colores as $colorData)
+                                        @if(is_array($colorData) && isset($colorData['color']) && isset($colorData['cantidad']))
+                                            <span class="inline-block bg-white dark:bg-neutral-700 px-3 py-1 rounded-full text-sm font-medium text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-600">
+                                                {{ ucfirst($colorData['color']) }}: {{ $colorData['cantidad'] }}
+                                            </span>
+                                        @elseif(is_string($colorData))
+                                            {{-- Compatibilidad con formato anterior --}}
+                                            <span class="inline-block bg-white dark:bg-neutral-700 px-3 py-1 rounded-full text-sm font-medium text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-600">
+                                                {{ ucfirst($colorData) }}
+                                            </span>
+                                        @endif
                                     @endforeach
                                 @else
                                     <span class="text-neutral-500 dark:text-neutral-400">Sin colores especificados</span>

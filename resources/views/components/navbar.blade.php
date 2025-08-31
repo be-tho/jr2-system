@@ -53,13 +53,13 @@
                     </a>
 
                     {{-- Costureros --}}
-                    <a href="#" 
-                       class="flex items-center gap-x-2 px-3 py-2.5 rounded-lg text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all duration-200 group cursor-pointer"
+                    <a href="{{ route('costureros.index') }}" 
+                       class="flex items-center gap-x-2 px-3 py-2.5 rounded-lg text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all duration-200 group cursor-pointer {{ Route::is('costureros.*') ? 'bg-primary-50 dark:bg-primary-950/20 text-primary-600 dark:text-primary-400 border-r-2 border-primary-500' : '' }}"
                        data-tooltip="Gestión de Costureros">
-                        <div class="w-8 h-8 rounded-lg bg-neutral-100 dark:bg-neutral-800 group-hover:bg-primary-100 dark:group-hover:bg-primary-900/20 flex items-center justify-center transition-all duration-200">
-                            <i class="ri-user-settings-line text-sm text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-400"></i>
+                        <div class="w-8 h-8 rounded-lg {{ Route::is('costureros.*') ? 'bg-primary-500' : 'bg-neutral-100 dark:bg-neutral-800 group-hover:bg-primary-100 dark:group-hover:bg-primary-900/20' }} flex items-center justify-center transition-all duration-200">
+                            <i class="ri-user-settings-line text-sm {{ Route::is('costureros.*') ? 'text-white' : 'text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-400' }}"></i>
                         </div>
-                        <span class="text-sm font-medium">Costureros</span>
+                        <span class="text-sm font-medium {{ Route::is('costureros.*') ? 'font-semibold' : '' }}">Costureros</span>
                     </a>
 
                     {{-- Sección Inventario --}}
@@ -187,8 +187,8 @@
                                 <i class="ri-scissors-cut-line text-xs"></i>
                                 <span>Cortes</span>
                             </a>
-                            <a href="#" 
-                               class="flex items-center gap-x-2 px-2 py-1.5 rounded-md text-sm text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200">
+                            <a href="{{ route('costureros.index') }}" 
+                               class="flex items-center gap-x-2 px-2 py-1.5 rounded-md text-sm text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 {{ Route::is('costureros.*') ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/20' : '' }}">
                                 <i class="ri-user-settings-line text-xs"></i>
                                 <span>Costureros</span>
                             </a>

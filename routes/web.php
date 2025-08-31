@@ -3,6 +3,7 @@
 use App\Http\Controllers\ArticuloController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\CorteController;
+use App\Http\Controllers\CostureroController;
 use App\Http\Controllers\CuentaController;
 use App\Http\Controllers\DolarController;
 use App\Http\Controllers\HomeController;
@@ -104,6 +105,16 @@ Route::middleware('auth')->group(function () {
         });
         
         // ====================================================================
+        // COSTUREROS VIEW - Todos pueden ver
+        // ====================================================================
+        Route::prefix('costureros')->name('costureros.')->group(function () {
+            Route::get('/', [CostureroController::class, 'index'])->name('index');
+            Route::get('/create', [CostureroController::class, 'create'])->name('create');
+            Route::get('/{costurero}', [CostureroController::class, 'show'])->name('show');
+            Route::get('/{costurero}/edit', [CostureroController::class, 'edit'])->name('edit');
+        });
+        
+        // ====================================================================
         // DOLAR EXCHANGE RATES VIEW - Todos pueden ver
         // ====================================================================
         Route::prefix('dolar')->name('dolar.')->group(function () {
@@ -167,6 +178,15 @@ Route::middleware('auth')->group(function () {
             Route::get('/{temporada}/edit', [TemporadaController::class, 'edit'])->name('edit');
             Route::put('/{temporada}', [TemporadaController::class, 'update'])->name('update');
             Route::delete('/{temporada}', [TemporadaController::class, 'destroy'])->name('destroy');
+        });
+        
+        // ====================================================================
+        // COSTUREROS MANAGEMENT - Solo administradores
+        // ====================================================================
+        Route::prefix('costureros')->name('costureros.')->group(function () {
+            Route::post('/', [CostureroController::class, 'store'])->name('store');
+            Route::put('/{costurero}', [CostureroController::class, 'update'])->name('update');
+            Route::delete('/{costurero}', [CostureroController::class, 'destroy'])->name('destroy');
         });
         
         // ====================================================================

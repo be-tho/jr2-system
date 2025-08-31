@@ -91,6 +91,21 @@ trait ImageHandler
         // Determinar calidad inicial basada en el tamaño original
         $quality = $this->calculateOptimalQuality($originalSize, $targetSize);
         
+        // Verificar permisos del directorio antes de procesar
+        $fullPath = public_path($directory);
+        if (!is_dir($fullPath)) {
+            if (!mkdir($fullPath, 0755, true)) {
+                throw new \Exception("No se pudo crear el directorio: $fullPath");
+            }
+        }
+        
+        if (!is_writable($fullPath)) {
+            // Intentar cambiar permisos
+            if (!chmod($fullPath, 0755)) {
+                throw new \Exception("El directorio no es escribible y no se pudieron cambiar los permisos: $fullPath");
+            }
+        }
+        
         // Procesar imagen con Intervention Image
         $manager = new ImageManager(new Driver());
         
@@ -212,6 +227,20 @@ trait ImageHandler
     protected function saveWithTargetSize($img, string $directory, array $options, int $targetSize, int $initialQuality): string
     {
         $fullPath = public_path($directory);
+        
+        // Verificar permisos del directorio
+        if (!is_dir($fullPath)) {
+            if (!mkdir($fullPath, 0755, true)) {
+                throw new \Exception("No se pudo crear el directorio: $fullPath");
+            }
+        }
+        
+        if (!is_writable($fullPath)) {
+            if (!chmod($fullPath, 0755)) {
+                throw new \Exception("El directorio no es escribible: $fullPath");
+            }
+        }
+        
         $filename = $options['filename_prefix'] . uniqid() . '.webp';
         $filepath = $fullPath . '/' . $filename;
         
@@ -222,25 +251,39 @@ trait ImageHandler
         do {
             $attempt++;
             
-            // Guardar con calidad actual
-            $img->toWebp($quality)->save($filepath);
-            
-            $fileSize = filesize($filepath);
-            
-            // Si el tamaño es aceptable, terminar
-            if ($fileSize <= $targetSize) {
-                break;
-            }
-            
-            // Reducir calidad para el siguiente intento
-            $quality = max(30, $quality - 15);
-            
-            // Si ya intentamos demasiado, usar JPEG como fallback
-            if ($attempt >= $maxAttempts) {
-                $filename = $options['filename_prefix'] . uniqid() . '.jpg';
-                $filepath = $fullPath . '/' . $filename;
-                $img->toJpeg($quality)->save($filepath);
-                break;
+            try {
+                // Guardar con calidad actual
+                $img->toWebp($quality)->save($filepath);
+                
+                $fileSize = filesize($filepath);
+                
+                // Si el tamaño es aceptable, terminar
+                if ($fileSize <= $targetSize) {
+                    break;
+                }
+                
+                // Reducir calidad para el siguiente intento
+                $quality = max(30, $quality - 15);
+                
+                // Si ya intentamos demasiado, usar JPEG como fallback
+                if ($attempt >= $maxAttempts) {
+                    $filename = $options['filename_prefix'] . uniqid() . '.jpg';
+                    $filepath = $fullPath . '/' . $filename;
+                    $img->toJpeg($quality)->save($filepath);
+                    break;
+                }
+                
+            } catch (\Exception $e) {
+                // Si hay error al guardar WebP, intentar con JPEG
+                if ($attempt >= $maxAttempts) {
+                    $filename = $options['filename_prefix'] . uniqid() . '.jpg';
+                    $filepath = $fullPath . '/' . $filename;
+                    $img->toJpeg($quality)->save($filepath);
+                    break;
+                }
+                
+                // Reducir calidad y continuar
+                $quality = max(30, $quality - 15);
             }
             
         } while ($attempt < $maxAttempts);

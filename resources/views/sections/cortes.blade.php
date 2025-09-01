@@ -148,8 +148,122 @@
 
         <!-- Grid de cortes -->
         @if($cortes->count() > 0)
-            <!-- Tabla de cortes -->
-            <div class="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl shadow-sm overflow-hidden">
+            <!-- Vista de tarjetas para móvil (visible solo en móvil) -->
+            <div class="block lg:hidden space-y-4 mb-6">
+                @foreach($cortes as $corte)
+                    <div class="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl shadow-sm p-4">
+                        <!-- Header de la tarjeta -->
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-12 h-12 bg-primary-600 rounded-lg flex items-center justify-center">
+                                    <span class="text-lg font-bold text-white">{{ $corte->numero_corte }}</span>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-neutral-900 dark:text-white">
+                                        Corte #{{ $corte->numero_corte }}
+                                    </h3>
+                                    @if($corte->descripcion)
+                                        <p class="text-sm text-neutral-500 dark:text-neutral-400">
+                                            {{ Str::limit($corte->descripcion, 40) }}
+                                        </p>
+                                    @endif
+                                </div>
+                            </div>
+                            <!-- Estado -->
+                            <div class="text-right">
+                                @if($corte->estado == 0)
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-300">
+                                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        Cortado
+                                    </span>
+                                @elseif($corte->estado == 1)
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-accent-100 dark:bg-accent-900/20 text-accent-800 dark:text-accent-300">
+                                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        Costurando
+                                    </span>
+                                @elseif($corte->estado == 2)
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300">
+                                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        Entregado
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Detalles de la tarjeta -->
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <p class="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1">Tipo de Tela</p>
+                                <p class="text-sm font-medium text-neutral-900 dark:text-white">{{ $corte->tipo_tela }}</p>
+                            </div>
+                            <div>
+                                <p class="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1">Cantidad</p>
+                                <p class="text-sm font-medium text-neutral-900 dark:text-white">{{ $corte->cantidad_total }} unidades</p>
+                            </div>
+                            <div>
+                                <p class="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1">Fecha</p>
+                                <p class="text-sm font-medium text-neutral-900 dark:text-white">
+                                    {{ \Carbon\Carbon::parse($corte->fecha)->locale('es')->isoFormat('D/M/Y') }}
+                                </p>
+                                <p class="text-xs text-neutral-500 dark:text-neutral-400">
+                                    {{ \Carbon\Carbon::parse($corte->fecha)->locale('es')->isoFormat('dddd') }}
+                                </p>
+                            </div>
+                            <div>
+                                <p class="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1">ID</p>
+                                <p class="text-sm font-medium text-neutral-900 dark:text-white">#{{ $corte->id }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Acciones de la tarjeta -->
+                        <div class="flex flex-col space-y-2">
+                            <x-buttons.primary href="{{ route('cortes.show', $corte) }}" class="w-full justify-center">
+                                <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                                Ver Detalles
+                            </x-buttons.primary>
+                            
+                            @if(auth()->user()->hasRole('administrador'))
+                                <div class="grid grid-cols-2 gap-2">
+                                    <x-buttons.outline href="{{ route('cortes.edit', $corte) }}" class="w-full justify-center">
+                                        <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                        </svg>
+                                        Editar
+                                    </x-buttons.outline>
+                                    
+                                    <x-delete-modal 
+                                        :route="route('cortes.delete', $corte)"
+                                        triggerText="Eliminar"
+                                        modalTitle="Eliminar Corte"
+                                        modalMessage="¿Estás seguro de que quieres eliminar este corte?"
+                                        modalDescription="Esta acción eliminará permanentemente el corte y no se puede deshacer."
+                                        confirmText="Sí, eliminar corte"
+                                        cancelText="Cancelar"
+                                        class="w-full justify-center"
+                                        variant="danger"
+                                        icon="ri-delete-bin-line"
+                                        fullWidth="false"
+                                        itemName="corte"
+                                        modalId="deleteModal{{ $corte->id }}"
+                                    />
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            <!-- Tabla de cortes para desktop (oculta en móvil) -->
+            <div class="hidden lg:block bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl shadow-sm overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-neutral-200 dark:divide-neutral-700">
                         <thead class="bg-neutral-50 dark:bg-neutral-700">

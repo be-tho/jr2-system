@@ -113,7 +113,7 @@
                                 </div>
                                 
                                 <div class="text-sm text-neutral-600 dark:text-neutral-400 space-y-2">
-                                    <p><i class="ri-information-line text-primary-500 mr-1"></i> Formatos soportados: JPEG, PNG, JPG, GIF, WEBP</p>
+                                    <p><i class="ri-information-line text-primary-500 mr-1"></i> Formatos soportados: JPEG, PNG, JPG, GIF, WEBP, HEIC, HEIF</p>
                                     <p><i class="ri-information-line text-primary-500 mr-1"></i> Tamaño máximo: 2MB</p>
                                     <p><i class="ri-information-line text-primary-500 mr-1"></i> Resolución recomendada: 400x400 píxeles</p>
                                 </div>
@@ -155,34 +155,38 @@ document.addEventListener('DOMContentLoaded', function() {
     const imagePreview = document.getElementById('image-preview');
     const previewImg = document.getElementById('preview-img');
     
+    // Configuración de validación (debe coincidir con el backend)
+    const config = {
+        maxSize: 2 * 1024 * 1024, // 2MB en bytes
+        validTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/heic', 'image/heif'],
+        minDimensions: { width: 50, height: 50 },
+        maxDimensions: { width: 8000, height: 8000 }
+    };
+    
     imageInput.addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {
             // Validar tipo de archivo
-            const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-            if (!validTypes.includes(file.type)) {
-                alert('Por favor selecciona un archivo de imagen válido (JPEG, PNG, JPG, GIF o WEBP)');
+            if (!config.validTypes.includes(file.type)) {
+                showError('Por favor selecciona un archivo de imagen válido (JPEG, PNG, JPG, GIF, WEBP, HEIC)');
                 this.value = '';
                 imagePreview.classList.add('hidden');
                 return;
             }
             
-            // Validar tamaño (2MB máximo)
-            const maxSize = 2 * 1024 * 1024; // 2MB en bytes
-            if (file.size > maxSize) {
-                alert('La imagen no puede ser mayor a 2MB');
+            // Validar tamaño
+            if (file.size > config.maxSize) {
+                showError('La imagen no puede ser mayor a 2MB');
                 this.value = '';
                 imagePreview.classList.add('hidden');
                 return;
             }
+            
+            // Validar dimensiones si es posible
+            validateImageDimensions(file);
             
             // Mostrar vista previa
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                previewImg.src = e.target.result;
-                imagePreview.classList.remove('hidden');
-            };
-            reader.readAsDataURL(file);
+            showImagePreview(file);
             
             // Mostrar información del archivo
             console.log('Archivo seleccionado:', {
@@ -195,24 +199,90 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    // Función para validar dimensiones de la imagen
+    function validateImageDimensions(file) {
+        const img = new Image();
+        const url = URL.createObjectURL(file);
+        
+        img.onload = function() {
+            URL.revokeObjectURL(url);
+            
+            if (img.width < config.minDimensions.width || img.height < config.minDimensions.height) {
+                showError(`La imagen debe tener al menos ${config.minDimensions.width}x${config.minDimensions.height} píxeles`);
+                imageInput.value = '';
+                imagePreview.classList.add('hidden');
+                return;
+            }
+            
+            if (img.width > config.maxDimensions.width || img.height > config.maxDimensions.height) {
+                showError(`La imagen no debe superar ${config.maxDimensions.width}x${config.maxDimensions.height} píxeles`);
+                imageInput.value = '';
+                imagePreview.classList.add('hidden');
+                return;
+            }
+        };
+        
+        img.onerror = function() {
+            URL.revokeObjectURL(url);
+            console.warn('No se pudieron validar las dimensiones de la imagen');
+        };
+        
+        img.src = url;
+    }
+    
+    // Función para mostrar vista previa de la imagen
+    function showImagePreview(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            previewImg.src = e.target.result;
+            imagePreview.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+    }
+    
+    // Función para mostrar errores
+    function showError(message) {
+        // Crear o actualizar mensaje de error
+        let errorDiv = document.getElementById('image-error');
+        if (!errorDiv) {
+            errorDiv = document.createElement('div');
+            errorDiv.id = 'image-error';
+            errorDiv.className = 'mt-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg';
+            imageInput.parentNode.appendChild(errorDiv);
+        }
+        
+        errorDiv.innerHTML = `
+            <div class="flex items-center">
+                <svg class="w-5 h-5 text-red-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L10.586 10l-1.293 1.293a1 1 0 101.414 1.414L12 11.414l1.293 1.293a1 1 0 001.414-1.414L13.414 10l1.293-1.293a1 1 0 00-1.414-1.414L12 8.586l-1.293-1.293a1 1 0 00-1.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                <p class="text-sm text-red-800 dark:text-red-200">${message}</p>
+            </div>
+        `;
+        
+        // Ocultar mensaje de error después de 5 segundos
+        setTimeout(() => {
+            if (errorDiv) {
+                errorDiv.remove();
+            }
+        }, 5000);
+    }
+    
     // Validación del formulario
     document.querySelector('form').addEventListener('submit', function(e) {
         const imageFile = imageInput.files[0];
         
         if (imageFile) {
             // Validaciones adicionales antes de enviar
-            const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-            const maxSize = 2 * 1024 * 1024;
-            
-            if (!validTypes.includes(imageFile.type)) {
+            if (!config.validTypes.includes(imageFile.type)) {
                 e.preventDefault();
-                alert('Por favor selecciona un archivo de imagen válido');
+                showError('Por favor selecciona un archivo de imagen válido');
                 return false;
             }
             
-            if (imageFile.size > maxSize) {
+            if (imageFile.size > config.maxSize) {
                 e.preventDefault();
-                alert('La imagen no puede ser mayor a 2MB');
+                showError('La imagen no puede ser mayor a 2MB');
                 return false;
             }
         }
@@ -222,6 +292,14 @@ document.addEventListener('DOMContentLoaded', function() {
         if (submitBtn) {
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="ri-loader-4-line animate-spin mr-2"></i>Guardando...';
+        }
+    });
+    
+    // Limpiar mensaje de error cuando se cambia la imagen
+    imageInput.addEventListener('input', function() {
+        const errorDiv = document.getElementById('image-error');
+        if (errorDiv) {
+            errorDiv.remove();
         }
     });
 });

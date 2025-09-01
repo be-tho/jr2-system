@@ -229,7 +229,7 @@ class ImageHelper
             return asset('src/assets/images/usuario.jpg');
         }
         
-        return asset('storage/profile-images/' . $filename);
+        return asset('src/assets/uploads/profile-images/' . $filename);
     }
     
     /**

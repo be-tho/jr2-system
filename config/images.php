@@ -72,6 +72,42 @@ return [
         ],
     ],
 
+    'profile' => [
+        'directory' => 'src/assets/uploads/profile-images',
+        'default_image' => 'usuario.jpg',
+        'options' => [
+            'width' => 300,
+            'height' => 300,
+            'quality' => 90,
+            'format' => 'jpeg',
+            'maintain_aspect_ratio' => true,
+            'mobile_optimize' => true,
+            'target_file_size' => 1024, // 1MB objetivo
+        ],
+        'thumbnails' => [
+            'enabled' => true,
+            'width' => 100,
+            'height' => 100,
+            'quality' => 85,
+        ],
+        'mobile' => [
+            'enabled' => true,
+            'auto_optimize' => true,
+            'max_upload_size' => 2048, // 2MB
+            'target_file_size' => 1024, // 1MB objetivo después de optimización
+            'compression_levels' => [
+                'high' => 70,
+                'medium' => 80,
+                'low' => 90,
+            ],
+            'resize_strategy' => 'smart',
+            'formats' => [
+                'preferred' => 'jpeg',
+                'fallback' => 'webp',
+            ],
+        ],
+    ],
+
     'validation' => [
         'max_size' => 51200, // 50MB en KB (aumentado para móviles)
         'allowed_types' => ['jpeg', 'jpg', 'png', 'gif', 'webp', 'heic', 'heif'],

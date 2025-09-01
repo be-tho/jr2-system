@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateProfileRequest;
 use App\Http\Requests\ChangePasswordRequest;
+use App\Traits\ImageHandler;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -11,6 +12,12 @@ use Illuminate\Support\Facades\Storage;
 
 class CuentaController extends Controller
 {
+    use ImageHandler;
+
+    // Configuración de imágenes para perfil
+    private const IMAGE_DIRECTORY = 'src/assets/uploads/profile-images';
+    private const DEFAULT_IMAGE = 'usuario.jpg';
+
     /**
      * Mostrar la página principal de cuenta
      */
@@ -41,28 +48,40 @@ class CuentaController extends Controller
         // Manejar subida de imagen de perfil
         if ($request->hasFile('profile_image')) {
             try {
+                // Validar la imagen usando el trait ImageHandler
+                $this->validateImage($request->file('profile_image'), [
+                    'max_size' => config('images.profile.mobile.max_upload_size'),
+                    'min_dimensions' => config('images.validation.min_dimensions'),
+                    'max_dimensions' => config('images.validation.max_dimensions')
+                ]);
+                
                 // Eliminar imagen anterior si existe y no es la imagen por defecto
-                if ($user->profile_image && $user->profile_image !== 'usuario.jpg') {
-                    Storage::disk('public')->delete('profile-images/' . $user->profile_image);
+                if ($user->profile_image && $user->profile_image !== self::DEFAULT_IMAGE) {
+                    $this->deleteImage($user->profile_image, self::IMAGE_DIRECTORY, self::DEFAULT_IMAGE);
                 }
                 
-                $image = $request->file('profile_image');
-                $filename = time() . '_' . $image->getClientOriginalName();
+                // Procesar y guardar la imagen usando el trait ImageHandler
+                $imageFilename = $this->processAndSaveImage(
+                    $request->file('profile_image'),
+                    self::IMAGE_DIRECTORY,
+                    config('images.profile.options')
+                );
                 
-                // Guardar en el directorio correcto del storage
-                $image->storeAs('public/profile-images', $filename);
-                
-                // Actualizar el campo en la base de datos
-                $data['profile_image'] = $filename;
-                
-                \Log::info('Imagen de perfil actualizada para usuario: ' . $user->email . ' - Archivo: ' . $filename);
+                if ($imageFilename) {
+                    // Actualizar el campo en la base de datos
+                    $data['profile_image'] = $imageFilename;
+                    
+                    \Log::info('Imagen de perfil actualizada para usuario: ' . $user->email . ' - Archivo: ' . $imageFilename);
+                } else {
+                    throw new \Exception('No se pudo procesar la imagen');
+                }
                 
             } catch (\Exception $e) {
                 \Log::error('Error al subir imagen de perfil: ' . $e->getMessage());
                 
                 return back()
                     ->withInput($request->except('profile_image'))
-                    ->withErrors(['profile_image' => 'Error al subir la imagen. Por favor, intenta nuevamente.']);
+                    ->withErrors(['profile_image' => 'Error al procesar la imagen: ' . $e->getMessage()]);
             }
         }
         
@@ -132,6 +151,4 @@ class CuentaController extends Controller
                 ->withErrors(['password' => 'Ocurrió un error al actualizar la contraseña. Por favor, intenta nuevamente. Si el problema persiste, contacta al administrador.']);
         }
     }
-
-
 }

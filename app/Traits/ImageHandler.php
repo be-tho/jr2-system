@@ -91,21 +91,6 @@ trait ImageHandler
         // Determinar calidad inicial basada en el tamaño original
         $quality = $this->calculateOptimalQuality($originalSize, $targetSize);
         
-        // Verificar permisos del directorio antes de procesar
-        $fullPath = public_path($directory);
-        if (!is_dir($fullPath)) {
-            if (!mkdir($fullPath, 0755, true)) {
-                throw new \Exception("No se pudo crear el directorio: $fullPath");
-            }
-        }
-        
-        if (!is_writable($fullPath)) {
-            // Intentar cambiar permisos
-            if (!chmod($fullPath, 0755)) {
-                throw new \Exception("El directorio no es escribible y no se pudieron cambiar los permisos: $fullPath");
-            }
-        }
-        
         // Procesar imagen con Intervention Image
         $manager = new ImageManager(new Driver());
         
@@ -139,19 +124,80 @@ trait ImageHandler
         $manager = new ImageManager(new Driver());
         $img = $manager->read($image->getRealPath());
 
-        // Redimensionar manteniendo proporción
-        if ($options['maintain_aspect_ratio']) {
-            $img = $img->resize($options['width'], $options['height'], function ($constraint) {
-                $constraint->aspectRatio();
-            });
+        // Para imágenes de perfil, usar fit() para centrar y recortar desde el centro
+        if (strpos($directory, 'profile-images') !== false) {
+            $originalWidth = $img->width();
+            $originalHeight = $img->height();
+            $targetWidth = $options['width'];
+            $targetHeight = $options['height'];
+
+            // Si la imagen es más pequeña que el objetivo, no agrandar
+            if ($originalWidth <= $targetWidth && $originalHeight <= $targetHeight) {
+                // Crear un canvas del tamaño objetivo con fondo blanco
+                $canvas = $img->create($targetWidth, $targetHeight, '#FFFFFF');
+                
+                // Calcular posición para centrar la imagen
+                $x = ($targetWidth - $originalWidth) / 2;
+                $y = ($targetHeight - $originalHeight) / 2;
+                
+                // Colocar la imagen original en el centro del canvas
+                $img = $canvas->place($img, $x, $y);
+            } else {
+                // Si la imagen es más grande, redimensionar y recortar desde el centro
+                $img = $this->cropFromCenter($img, $targetWidth, $targetHeight);
+            }
         } else {
-            $img = $img->resize($options['width'], $options['height']);
+            // Para otras imágenes, redimensionar manteniendo proporción
+            if ($options['maintain_aspect_ratio']) {
+                $img = $img->resize($options['width'], $options['height'], function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize(); // No agrandar si la imagen es más pequeña
+                });
+            } else {
+                $img = $img->resize($options['width'], $options['height']);
+            }
         }
 
         // Guardar imagen
         $this->saveImage($img, $filepath, $options);
 
         return $filename;
+    }
+
+    /**
+     * Recortar imagen desde el centro
+     */
+    protected function cropFromCenter($img, int $targetWidth, int $targetHeight): \Intervention\Image\Image
+    {
+        $originalWidth = $img->width();
+        $originalHeight = $img->height();
+
+        // Calcular la relación de aspecto
+        $targetRatio = $targetWidth / $targetHeight;
+        $originalRatio = $originalWidth / $originalHeight;
+
+        if ($targetRatio > $originalRatio) {
+            // La imagen objetivo es más ancha, ajustar por ancho para llenar todo el espacio
+            $newWidth = $targetWidth;
+            $newHeight = (int) ($originalHeight * $targetWidth / $originalWidth);
+        } else {
+            // La imagen objetivo es más alta, ajustar por altura para llenar todo el espacio
+            $newHeight = $targetHeight;
+            $newWidth = (int) ($originalWidth * $targetHeight / $originalHeight);
+        }
+
+        // Redimensionar manteniendo proporción
+        $img = $img->resize($newWidth, $newHeight, function ($constraint) {
+            $constraint->aspectRatio();
+            $constraint->upsize();
+        });
+
+        // Calcular coordenadas para recortar desde el centro
+        $cropX = max(0, ($newWidth - $targetWidth) / 2);
+        $cropY = max(0, ($newHeight - $targetHeight) / 2);
+
+        // Recortar al tamaño objetivo
+        return $img->crop($targetWidth, $targetHeight, $cropX, $cropY);
     }
 
     /**
@@ -227,20 +273,6 @@ trait ImageHandler
     protected function saveWithTargetSize($img, string $directory, array $options, int $targetSize, int $initialQuality): string
     {
         $fullPath = public_path($directory);
-        
-        // Verificar permisos del directorio
-        if (!is_dir($fullPath)) {
-            if (!mkdir($fullPath, 0755, true)) {
-                throw new \Exception("No se pudo crear el directorio: $fullPath");
-            }
-        }
-        
-        if (!is_writable($fullPath)) {
-            if (!chmod($fullPath, 0755)) {
-                throw new \Exception("El directorio no es escribible: $fullPath");
-            }
-        }
-        
         $filename = $options['filename_prefix'] . uniqid() . '.webp';
         $filepath = $fullPath . '/' . $filename;
         
@@ -273,8 +305,7 @@ trait ImageHandler
                     break;
                 }
                 
-            } catch (\Exception $e) {
-                // Si hay error al guardar WebP, intentar con JPEG
+            } catch (\Exception $e) {// Si hay error al guardar WebP, intentar con JPEG
                 if ($attempt >= $maxAttempts) {
                     $filename = $options['filename_prefix'] . uniqid() . '.jpg';
                     $filepath = $fullPath . '/' . $filename;

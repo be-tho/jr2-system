@@ -1,23 +1,49 @@
-{{-- Componente Navbar Optimizado - Diseño Compacto --}}
+{{-- Componente Navbar Optimizado - Diseño Compacto y Colapsable --}}
 <div class="relative">
     {{-- Sidebar Principal --}}
-    <div class="fixed left-0 top-0 w-64 h-full bg-white dark:bg-neutral-900 shadow-xl transform -translate-x-full lg:translate-x-0 transition-all duration-300 ease-in-out z-40 border-r border-neutral-200 dark:border-neutral-700" 
-         id="sidebar">
+    <div class="fixed left-0 top-0 h-full bg-white dark:bg-neutral-900 shadow-xl transform -translate-x-full lg:translate-x-0 transition-all duration-300 ease-in-out z-40 border-r border-neutral-200 dark:border-neutral-700" 
+         id="sidebar" data-expanded="true">
         
         {{-- Header del Sidebar - Compacto --}}
         <header class="p-4 border-b border-neutral-200 dark:border-neutral-700 bg-primary-50 dark:bg-primary-950/20">
-            <a href="/" class="flex items-center gap-x-2 group">
-                <div class="relative">
-                    <div class="w-10 h-10 bg-primary-500 rounded-lg flex items-center justify-center shadow-md group-hover:shadow-primary-500/25 transition-all duration-300">
-                        <span class="text-lg font-bold text-white">JR</span>
+            <div class="flex items-center justify-between">
+                <a href="/" class="flex items-center gap-x-2 group">
+                    <div class="relative">
+                        <div class="w-10 h-10 bg-primary-500 rounded-lg flex items-center justify-center shadow-md group-hover:shadow-primary-500/25 transition-all duration-300">
+                            <span class="text-lg font-bold text-white">JR</span>
+                        </div>
+                        <div class="absolute -top-0.5 -right-0.5 w-3 h-3 bg-accent-400 rounded-full border-2 border-white dark:border-neutral-900 animate-pulse"></div>
                     </div>
-                    <div class="absolute -top-0.5 -right-0.5 w-3 h-3 bg-accent-400 rounded-full border-2 border-white dark:border-neutral-900 animate-pulse"></div>
+                    <div class="flex flex-col sidebar-text" data-text="true">
+                        <span class="text-lg font-bold text-neutral-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300">JR2 System</span>
+                        <span class="text-xs text-neutral-600 dark:text-neutral-400">Management Platform</span>
+                    </div>
+                </a>
+                
+                {{-- Botón para colapsar/expandir sidebar --}}
+                <button id="sidebar-toggle" class="hidden lg:flex p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-200" 
+                        data-tooltip="Colapsar sidebar">
+                    <i class="ri-sidebar-fold-line text-lg text-neutral-600 dark:text-neutral-400"></i>
+                </button>
+            </div>
+            
+            {{-- Búsqueda rápida --}}
+            <div class="mt-3 sidebar-search" data-search="true">
+                <div class="relative">
+                    <input type="text" 
+                           id="nav-search" 
+                           placeholder="Buscar..." 
+                           class="w-full px-3 py-2 pl-9 text-sm bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200"
+                           autocomplete="off">
+                    <i class="ri-search-line absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 text-sm"></i>
+                    <button id="clear-search" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 hidden">
+                        <i class="ri-close-line text-sm"></i>
+                    </button>
                 </div>
-                <div class="flex flex-col">
-                    <span class="text-lg font-bold text-neutral-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300">JR2 System</span>
-                    <span class="text-xs text-neutral-600 dark:text-neutral-400">Management Platform</span>
+                <div id="search-results" class="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg z-50 hidden max-h-60 overflow-y-auto">
+                    <!-- Resultados de búsqueda se llenan dinámicamente -->
                 </div>
-            </a>
+            </div>
         </header>
 
         {{-- Navegación Principal --}}
@@ -26,132 +52,142 @@
             {{-- Vista Desktop --}}
             <div class="hidden lg:block px-3 py-4 h-full overflow-y-auto">
                 <div class="space-y-1">
-                {{-- Dashboard --}}
-                <a href="/" 
-                       class="flex items-center gap-x-2 px-3 py-2.5 rounded-lg text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all duration-200 relative group cursor-pointer {{ Route::is('home.index') ? 'bg-primary-50 dark:bg-primary-950/20 text-primary-600 dark:text-primary-400 border-r-2 border-primary-500' : '' }}"
-                   data-tooltip="Dashboard">
+                    {{-- Dashboard --}}
+                    <a href="/" 
+                       class="nav-item flex items-center gap-x-2 px-3 py-2.5 rounded-lg text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all duration-200 relative group cursor-pointer {{ Route::is('home.index') ? 'bg-primary-50 dark:bg-primary-950/20 text-primary-600 dark:text-primary-400 border-r-2 border-primary-500' : '' }}"
+                       data-tooltip="Dashboard">
                         <div class="w-8 h-8 rounded-lg {{ Route::is('home.index') ? 'bg-primary-500' : 'bg-neutral-100 dark:bg-neutral-800 group-hover:bg-primary-100 dark:group-hover:bg-primary-900/20' }} flex items-center justify-center transition-all duration-200">
                             <i class="ri-dashboard-3-line text-sm {{ Route::is('home.index') ? 'text-white' : 'text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-400' }}"></i>
                         </div>
-                        <span class="text-sm font-medium {{ Route::is('home.index') ? 'font-semibold' : '' }}">Dashboard</span>
+                        <span class="nav-text text-sm font-medium {{ Route::is('home.index') ? 'font-semibold' : '' }}">Dashboard</span>
                     </a>
 
-                    {{-- Sección Producción --}}
-                    <div class="pt-4 pb-2">
-                        <h3 class="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider px-3 mb-2">Producción</h3>
-                    </div>
-
-                    {{-- Desktop Menu Items --}}
-                {{-- Cortes --}}
-                <a href="{{ route('cortes.index') }}" 
-                       class="flex items-center gap-x-2 px-3 py-2.5 rounded-lg text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all duration-200 group cursor-pointer {{ Route::is('cortes.*') ? 'bg-primary-50 dark:bg-primary-950/20 text-primary-600 dark:text-primary-400 border-r-2 border-primary-500' : '' }}"
-                   data-tooltip="Gestión de Cortes">
-                        <div class="w-8 h-8 rounded-lg {{ Route::is('cortes.*') ? 'bg-primary-500' : 'bg-neutral-100 dark:bg-neutral-800 group-hover:bg-primary-100 dark:group-hover:bg-primary-900/20' }} flex items-center justify-center transition-all duration-200">
-                            <i class="ri-scissors-cut-line text-sm {{ Route::is('cortes.*') ? 'text-white' : 'text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-400' }}"></i>
+                    {{-- Sección Producción Colapsable --}}
+                    <div class="nav-section" data-section="produccion">
+                        <button class="nav-section-toggle w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors duration-200" 
+                                onclick="toggleNavSection('produccion')">
+                            <div class="flex items-center gap-x-2">
+                                <div class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
+                                    <i class="ri-scissors-cut-line text-sm text-blue-600 dark:text-blue-400"></i>
+                                </div>
+                                <span class="nav-text text-sm font-medium text-neutral-900 dark:text-white">Producción</span>
+                            </div>
+                            <i class="nav-arrow ri-arrow-down-s-line text-neutral-500 dark:text-neutral-400 transform transition-transform duration-200" 
+                               id="produccion-arrow"></i>
+                        </button>
+                        <div class="nav-section-items ml-4 mt-1 space-y-1 hidden" id="produccion-items">
+                            <a href="{{ route('cortes.index') }}" 
+                               class="nav-item flex items-center gap-x-2 px-3 py-2 rounded-md text-sm text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-colors duration-200 {{ Route::is('cortes.*') ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/20' : '' }}"
+                               data-tooltip="Gestión de Cortes">
+                                <i class="ri-scissors-cut-line text-sm"></i>
+                                <span class="nav-text">Cortes</span>
+                            </a>
+                            <a href="{{ route('costureros.index') }}" 
+                               class="nav-item flex items-center gap-x-2 px-3 py-2 rounded-md text-sm text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-colors duration-200 {{ Route::is('costureros.*') ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/20' : '' }}"
+                               data-tooltip="Gestión de Costureros">
+                                <i class="ri-user-settings-line text-sm"></i>
+                                <span class="nav-text">Costureros</span>
+                            </a>
                         </div>
-                        <span class="text-sm font-medium {{ Route::is('cortes.*') ? 'font-semibold' : '' }}">Cortes</span>
-                    </a>
+                    </div>
 
-                    {{-- Costureros --}}
-                    <a href="{{ route('costureros.index') }}" 
-                       class="flex items-center gap-x-2 px-3 py-2.5 rounded-lg text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all duration-200 group cursor-pointer {{ Route::is('costureros.*') ? 'bg-primary-50 dark:bg-primary-950/20 text-primary-600 dark:text-primary-400 border-r-2 border-primary-500' : '' }}"
-                       data-tooltip="Gestión de Costureros">
-                        <div class="w-8 h-8 rounded-lg {{ Route::is('costureros.*') ? 'bg-primary-500' : 'bg-neutral-100 dark:bg-neutral-800 group-hover:bg-primary-100 dark:group-hover:bg-primary-900/20' }} flex items-center justify-center transition-all duration-200">
-                            <i class="ri-user-settings-line text-sm {{ Route::is('costureros.*') ? 'text-white' : 'text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-400' }}"></i>
+                    {{-- Sección Inventario Colapsable --}}
+                    <div class="nav-section" data-section="inventario">
+                        <button class="nav-section-toggle w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors duration-200" 
+                                onclick="toggleNavSection('inventario')">
+                            <div class="flex items-center gap-x-2">
+                                <div class="w-8 h-8 rounded-lg bg-green-100 dark:bg-green-900/20 flex items-center justify-center">
+                                    <i class="ri-shirt-line text-sm text-green-600 dark:text-green-400"></i>
+                                </div>
+                                <span class="nav-text text-sm font-medium text-neutral-900 dark:text-white">Inventario</span>
+                            </div>
+                            <i class="nav-arrow ri-arrow-down-s-line text-neutral-500 dark:text-neutral-400 transform transition-transform duration-200" 
+                               id="inventario-arrow"></i>
+                        </button>
+                        <div class="nav-section-items ml-4 mt-1 space-y-1 hidden" id="inventario-items">
+                            <a href="{{ route('articulos.index') }}" 
+                               class="nav-item flex items-center gap-x-2 px-3 py-2 rounded-md text-sm text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-colors duration-200 {{ Route::is('articulos.*') ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/20' : '' }}"
+                               data-tooltip="Inventario de Artículos">
+                                <i class="ri-shirt-line text-sm"></i>
+                                <span class="nav-text">Artículos</span>
+                            </a>
+                            <a href="{{ route('categorias.index') }}" 
+                               class="nav-item flex items-center gap-x-2 px-3 py-2 rounded-md text-sm text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-colors duration-200 {{ Route::is('categorias.*') ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/20' : '' }}"
+                               data-tooltip="Gestión de Categorías">
+                                <i class="ri-price-tag-3-line text-sm"></i>
+                                <span class="nav-text">Categorías</span>
+                            </a>
+                            <a href="{{ route('temporadas.index') }}" 
+                               class="nav-item flex items-center gap-x-2 px-3 py-2 rounded-md text-sm text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-colors duration-200 {{ Route::is('temporadas.*') ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/20' : '' }}"
+                               data-tooltip="Gestión de Temporadas">
+                                <i class="ri-calendar-line text-sm"></i>
+                                <span class="nav-text">Temporadas</span>
+                            </a>
                         </div>
-                        <span class="text-sm font-medium {{ Route::is('costureros.*') ? 'font-semibold' : '' }}">Costureros</span>
-                    </a>
-
-                    {{-- Sección Inventario --}}
-                    <div class="pt-4 pb-2">
-                        <h3 class="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider px-3 mb-2">Inventario</h3>
                     </div>
 
-                {{-- Artículos --}}
-                <a href="{{ route('articulos.index') }}" 
-                       class="flex items-center gap-x-2 px-3 py-2.5 rounded-lg text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all duration-200 group cursor-pointer {{ Route::is('articulos.*') ? 'bg-primary-50 dark:bg-primary-950/20 text-primary-600 dark:text-primary-400 border-r-2 border-primary-500' : '' }}"
-                   data-tooltip="Inventario de Artículos">
-                        <div class="w-8 h-8 rounded-lg {{ Route::is('articulos.*') ? 'bg-primary-500' : 'bg-neutral-100 dark:bg-neutral-800 group-hover:bg-primary-100 dark:group-hover:bg-primary-900/20' }} flex items-center justify-center transition-all duration-200">
-                            <i class="ri-shirt-line text-sm {{ Route::is('articulos.*') ? 'text-white' : 'text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-400' }}"></i>
-                    </div>
-                        <span class="text-sm font-medium {{ Route::is('articulos.*') ? 'font-semibold' : '' }}">Artículos</span>
-                </a>
-
-                {{-- Categorías --}}
-                <a href="{{ route('categorias.index') }}" 
-                       class="flex items-center gap-x-2 px-3 py-2.5 rounded-lg text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all duration-200 group cursor-pointer {{ Route::is('categorias.*') ? 'bg-primary-50 dark:bg-primary-950/20 text-primary-600 dark:text-primary-400 border-r-2 border-primary-500' : '' }}"
-                   data-tooltip="Gestión de Categorías">
-                        <div class="w-8 h-8 rounded-lg {{ Route::is('categorias.*') ? 'bg-primary-500' : 'bg-neutral-100 dark:bg-neutral-800 group-hover:bg-primary-100 dark:group-hover:bg-primary-900/20' }} flex items-center justify-center transition-all duration-200">
-                            <i class="ri-price-tag-3-line text-sm {{ Route::is('categorias.*') ? 'text-white' : 'text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-400' }}"></i>
-                    </div>
-                        <span class="text-sm font-medium {{ Route::is('categorias.*') ? 'font-semibold' : '' }}">Categorías</span>
-                </a>
-
-                {{-- Temporadas --}}
-                <a href="{{ route('temporadas.index') }}" 
-                       class="flex items-center gap-x-2 px-3 py-2.5 rounded-lg text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all duration-200 group cursor-pointer {{ Route::is('temporadas.*') ? 'bg-primary-50 dark:bg-primary-950/20 text-primary-600 dark:text-primary-400 border-r-2 border-primary-500' : '' }}"
-                   data-tooltip="Gestión de Temporadas">
-                        <div class="w-8 h-8 rounded-lg {{ Route::is('temporadas.*') ? 'bg-primary-500' : 'bg-neutral-100 dark:bg-neutral-800 group-hover:bg-primary-100 dark:group-hover:bg-primary-900/20' }} flex items-center justify-center transition-all duration-200">
-                            <i class="ri-calendar-line text-sm {{ Route::is('temporadas.*') ? 'text-white' : 'text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-400' }}"></i>
-                    </div>
-                        <span class="text-sm font-medium {{ Route::is('temporadas.*') ? 'font-semibold' : '' }}">Temporadas</span>
-                    </a>
-
-                    {{-- Sección Análisis --}}
-                    <div class="pt-4 pb-2">
-                        <h3 class="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider px-3 mb-2">Análisis</h3>
-                    </div>
-
-                {{-- Dólar --}}
-                <a href="{{ route('dolar.index') }}" 
-                       class="flex items-center gap-x-2 px-3 py-2.5 rounded-lg text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all duration-200 group cursor-pointer {{ Route::is('dolar.*') ? 'bg-primary-50 dark:bg-primary-950/20 text-primary-600 dark:text-primary-400 border-r-2 border-primary-500' : '' }}"
-                   data-tooltip="Cotización del Dólar">
-                        <div class="w-8 h-8 rounded-lg {{ Route::is('dolar.*') ? 'bg-primary-500' : 'bg-neutral-100 dark:bg-neutral-800 group-hover:bg-primary-100 dark:group-hover:bg-primary-900/20' }} flex items-center justify-center transition-all duration-200">
-                            <i class="ri-money-dollar-circle-line text-sm {{ Route::is('dolar.*') ? 'text-white' : 'text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-400' }}"></i>
-                    </div>
-                        <span class="text-sm font-medium {{ Route::is('dolar.*') ? 'font-semibold' : '' }}">Dólar</span>
-                </a>
-
-                {{-- Reportes --}}
-                <a href="{{ route('reportes.index') }}" 
-                       class="flex items-center gap-x-2 px-3 py-2.5 rounded-lg text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all duration-200 group cursor-pointer {{ Route::is('reportes.*') ? 'bg-primary-50 dark:bg-primary-950/20 text-primary-600 dark:text-primary-400 border-r-2 border-primary-500' : '' }}"
-                   data-tooltip="Reportes y Estadísticas">
-                        <div class="w-8 h-8 rounded-lg {{ Route::is('reportes.*') ? 'bg-primary-500' : 'bg-neutral-100 dark:bg-neutral-800 group-hover:bg-primary-100 dark:group-hover:bg-primary-900/20' }} flex items-center justify-center transition-all duration-200">
-                            <i class="ri-bar-chart-2-line text-sm {{ Route::is('reportes.*') ? 'text-white' : 'text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-400' }}"></i>
+                    {{-- Sección Análisis Colapsable --}}
+                    <div class="nav-section" data-section="analisis">
+                        <button class="nav-section-toggle w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors duration-200" 
+                                onclick="toggleNavSection('analisis')">
+                            <div class="flex items-center gap-x-2">
+                                <div class="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-900/20 flex items-center justify-center">
+                                    <i class="ri-bar-chart-2-line text-sm text-purple-600 dark:text-purple-400"></i>
+                                </div>
+                                <span class="nav-text text-sm font-medium text-neutral-900 dark:text-white">Análisis</span>
+                            </div>
+                            <i class="nav-arrow ri-arrow-down-s-line text-neutral-500 dark:text-neutral-400 transform transition-transform duration-200" 
+                               id="analisis-arrow"></i>
+                        </button>
+                        <div class="nav-section-items ml-4 mt-1 space-y-1 hidden" id="analisis-items">
+                            <a href="{{ route('dolar.index') }}" 
+                               class="nav-item flex items-center gap-x-2 px-3 py-2 rounded-md text-sm text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-colors duration-200 {{ Route::is('dolar.*') ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/20' : '' }}"
+                               data-tooltip="Cotización del Dólar">
+                                <i class="ri-money-dollar-circle-line text-sm"></i>
+                                <span class="nav-text">Dólar</span>
+                            </a>
+                            <a href="{{ route('reportes.index') }}" 
+                               class="nav-item flex items-center gap-x-2 px-3 py-2 rounded-md text-sm text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-colors duration-200 {{ Route::is('reportes.*') ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/20' : '' }}"
+                               data-tooltip="Reportes y Estadísticas">
+                                <i class="ri-bar-chart-2-line text-sm"></i>
+                                <span class="nav-text">Reportes</span>
+                            </a>
                         </div>
-                        <span class="text-sm font-medium {{ Route::is('reportes.*') ? 'font-semibold' : '' }}">Reportes</span>
-                    </a>
+                    </div>
 
-                    {{-- Sección Administración --}}
+                    {{-- Sección Administración Colapsable --}}
                     @if(auth()->user()->hasRole('administrador'))
-                    <div class="pt-4 pb-2">
-                        <h3 class="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider px-3 mb-2">Administración</h3>
-                    </div>
-
-                {{-- Gestión de Usuarios --}}
-                <a href="{{ route('users.index') }}" 
-                       class="flex items-center gap-x-2 px-3 py-2.5 rounded-lg text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all duration-200 group cursor-pointer {{ Route::is('users.*') ? 'bg-primary-50 dark:bg-primary-950/20 text-primary-600 dark:text-primary-400 border-r-2 border-primary-500' : '' }}"
-                   data-tooltip="Gestión de Usuarios">
-                        <div class="w-8 h-8 rounded-lg {{ Route::is('users.*') ? 'bg-primary-500' : 'bg-neutral-100 dark:bg-neutral-800 group-hover:bg-primary-100 dark:group-hover:bg-primary-900/20' }} flex items-center justify-center transition-all duration-200">
-                            <i class="ri-team-line text-sm {{ Route::is('users.*') ? 'text-white' : 'text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-400' }}"></i>
+                    <div class="nav-section" data-section="administracion">
+                        <button class="nav-section-toggle w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors duration-200" 
+                                onclick="toggleNavSection('administracion')">
+                            <div class="flex items-center gap-x-2">
+                                <div class="w-8 h-8 rounded-lg bg-red-100 dark:bg-red-900/20 flex items-center justify-center">
+                                    <i class="ri-settings-3-line text-sm text-red-600 dark:text-red-400"></i>
+                                </div>
+                                <span class="nav-text text-sm font-medium text-neutral-900 dark:text-white">Administración</span>
+                            </div>
+                            <i class="nav-arrow ri-arrow-down-s-line text-neutral-500 dark:text-neutral-400 transform transition-transform duration-200" 
+                               id="administracion-arrow"></i>
+                        </button>
+                        <div class="nav-section-items ml-4 mt-1 space-y-1 hidden" id="administracion-items">
+                            <a href="{{ route('users.index') }}" 
+                               class="nav-item flex items-center gap-x-2 px-3 py-2 rounded-md text-sm text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-colors duration-200 {{ Route::is('users.*') ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/20' : '' }}"
+                               data-tooltip="Gestión de Usuarios">
+                                <i class="ri-team-line text-sm"></i>
+                                <span class="nav-text">Usuarios</span>
+                            </a>
                         </div>
-                        <span class="text-sm font-medium {{ Route::is('users.*') ? 'font-semibold' : '' }}">Usuarios</span>
-                    </a>
+                    </div>
                     @endif
 
-                    {{-- Sección Usuario --}}
-                    <div class="pt-4 pb-2">
-                        <h3 class="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider px-3 mb-2">Usuario</h3>
-                    </div>
-
-                {{-- Cuenta --}}
-                <a href="{{ route('cuenta.index') }}" 
-                       class="flex items-center gap-x-2 px-3 py-2.5 rounded-lg text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all duration-200 group cursor-pointer {{ Route::is('cuenta.*') ? 'bg-primary-50 dark:bg-primary-950/20 text-primary-600 dark:text-primary-400 border-r-2 border-primary-500' : '' }}"
-                   data-tooltip="Mi Cuenta">
+                    {{-- Cuenta --}}
+                    <a href="{{ route('cuenta.index') }}" 
+                       class="nav-item flex items-center gap-x-2 px-3 py-2.5 rounded-lg text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all duration-200 group cursor-pointer {{ Route::is('cuenta.*') ? 'bg-primary-50 dark:bg-primary-950/20 text-primary-600 dark:text-primary-400 border-r-2 border-primary-500' : '' }}"
+                       data-tooltip="Mi Cuenta">
                         <div class="w-8 h-8 rounded-lg {{ Route::is('cuenta.*') ? 'bg-primary-500' : 'bg-neutral-100 dark:bg-neutral-800 group-hover:bg-primary-100 dark:group-hover:bg-primary-900/20' }} flex items-center justify-center transition-all duration-200">
                             <i class="ri-user-line text-sm {{ Route::is('cuenta.*') ? 'text-white' : 'text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-400' }}"></i>
                         </div>
-                        <span class="text-sm font-medium {{ Route::is('cuenta.*') ? 'font-semibold' : '' }}">Cuenta</span>
+                        <span class="nav-text text-sm font-medium {{ Route::is('cuenta.*') ? 'font-semibold' : '' }}">Cuenta</span>
                     </a>
                 </div>
             </div>
@@ -386,10 +422,12 @@ class NavbarManager {
     constructor() {
         this.sidebar = document.getElementById('sidebar');
         this.mobileToggle = document.getElementById('mobile-toggle');
+        this.sidebarToggle = document.getElementById('sidebar-toggle');
         this.overlay = document.getElementById('sidebar-overlay');
         this.tooltip = document.getElementById('tooltip');
         this.mobileHeader = document.getElementById('mobile-header');
         this.isOpen = false;
+        this.isCollapsed = false;
         this.touchStartX = 0;
         this.touchEndX = 0;
         
@@ -403,6 +441,7 @@ class NavbarManager {
         this.setupHoverEffects();
         this.setupTouchGestures();
         this.setupMobileOptimizations();
+        this.setupCollapsibleSections();
         
         // Forzar cierre del sidebar en móviles al cargar la página
         this.forceMobileSidebarClosed();
@@ -414,11 +453,21 @@ class NavbarManager {
             this.mobileToggle.addEventListener('click', (e) => {
                 e.preventDefault();
                 this.toggleSidebar();
-                
-                // Agregar efecto de ripple al botón
                 this.addRippleEffect(this.mobileToggle, e);
             });
         }
+        
+        // Toggle del sidebar colapsable en desktop
+        if (this.sidebarToggle) {
+            this.sidebarToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.toggleSidebarCollapse();
+                this.addRippleEffect(this.sidebarToggle, e);
+            });
+        }
+        
+        // Funcionalidad de búsqueda
+        this.setupSearchFunctionality();
         
         // Cerrar sidebar al hacer click en el overlay
         if (this.overlay) {
@@ -430,7 +479,6 @@ class NavbarManager {
         navItems.forEach(item => {
             item.addEventListener('click', () => {
                 if (window.innerWidth < 1024) {
-                    // Agregar pequeño delay para mejor UX
                     setTimeout(() => this.closeSidebar(), 150);
                 }
             });
@@ -457,6 +505,231 @@ class NavbarManager {
                 this.closeSidebar();
             }
         });
+    }
+
+    setupSearchFunctionality() {
+        const searchInput = document.getElementById('nav-search');
+        const clearButton = document.getElementById('clear-search');
+        const searchResults = document.getElementById('search-results');
+        
+        if (!searchInput || !clearButton || !searchResults) return;
+        
+        // Datos de navegación para búsqueda
+        this.navItems = [
+            { name: 'Dashboard', url: '/', icon: 'ri-dashboard-3-line', section: 'Principal' },
+            { name: 'Cortes', url: '{{ route("cortes.index") }}', icon: 'ri-scissors-cut-line', section: 'Producción' },
+            { name: 'Costureros', url: '{{ route("costureros.index") }}', icon: 'ri-user-settings-line', section: 'Producción' },
+            { name: 'Artículos', url: '{{ route("articulos.index") }}', icon: 'ri-shirt-line', section: 'Inventario' },
+            { name: 'Categorías', url: '{{ route("categorias.index") }}', icon: 'ri-price-tag-3-line', section: 'Inventario' },
+            { name: 'Temporadas', url: '{{ route("temporadas.index") }}', icon: 'ri-calendar-line', section: 'Inventario' },
+            { name: 'Dólar', url: '{{ route("dolar.index") }}', icon: 'ri-money-dollar-circle-line', section: 'Análisis' },
+            { name: 'Reportes', url: '{{ route("reportes.index") }}', icon: 'ri-bar-chart-2-line', section: 'Análisis' },
+            @if(auth()->user()->hasRole('administrador'))
+            { name: 'Usuarios', url: '{{ route("users.index") }}', icon: 'ri-team-line', section: 'Administración' },
+            @endif
+            { name: 'Mi Cuenta', url: '{{ route("cuenta.index") }}', icon: 'ri-user-line', section: 'Usuario' }
+        ];
+        
+        let searchTimeout;
+        
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.trim().toLowerCase();
+            
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                if (query.length > 0) {
+                    this.performSearch(query);
+                    clearButton.classList.remove('hidden');
+                    searchResults.classList.remove('hidden');
+                } else {
+                    this.clearSearch();
+                }
+            }, 150);
+        });
+        
+        clearButton.addEventListener('click', () => {
+            this.clearSearch();
+        });
+        
+        // Cerrar resultados al hacer click fuera
+        document.addEventListener('click', (e) => {
+            if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                searchResults.classList.add('hidden');
+            }
+        });
+        
+        // Navegación con teclado
+        searchInput.addEventListener('keydown', (e) => {
+            const results = searchResults.querySelectorAll('.search-result-item');
+            const activeResult = searchResults.querySelector('.search-result-item.active');
+            
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (activeResult) {
+                    activeResult.classList.remove('active');
+                    const next = activeResult.nextElementSibling;
+                    if (next) {
+                        next.classList.add('active');
+                    } else {
+                        results[0]?.classList.add('active');
+                    }
+                } else {
+                    results[0]?.classList.add('active');
+                }
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (activeResult) {
+                    activeResult.classList.remove('active');
+                    const prev = activeResult.previousElementSibling;
+                    if (prev) {
+                        prev.classList.add('active');
+                    } else {
+                        results[results.length - 1]?.classList.add('active');
+                    }
+                } else {
+                    results[results.length - 1]?.classList.add('active');
+                }
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                const activeItem = searchResults.querySelector('.search-result-item.active');
+                if (activeItem) {
+                    const link = activeItem.querySelector('a');
+                    if (link) {
+                        window.location.href = link.href;
+                    }
+                }
+            } else if (e.key === 'Escape') {
+                this.clearSearch();
+                searchInput.blur();
+            }
+        });
+    }
+
+    performSearch(query) {
+        const searchResults = document.getElementById('search-results');
+        const filteredItems = this.navItems.filter(item => 
+            item.name.toLowerCase().includes(query) || 
+            item.section.toLowerCase().includes(query)
+        );
+        
+        if (filteredItems.length === 0) {
+            searchResults.innerHTML = `
+                <div class="p-3 text-center text-neutral-500 dark:text-neutral-400">
+                    <i class="ri-search-line text-2xl mb-2"></i>
+                    <p class="text-sm">No se encontraron resultados</p>
+                </div>
+            `;
+            return;
+        }
+        
+        const resultsHTML = filteredItems.map(item => `
+            <div class="search-result-item p-2 hover:bg-neutral-50 dark:hover:bg-neutral-700 cursor-pointer transition-colors duration-200">
+                <a href="${item.url}" class="flex items-center gap-x-3 text-sm">
+                    <div class="w-8 h-8 rounded-lg bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
+                        <i class="${item.icon} text-neutral-600 dark:text-neutral-400"></i>
+                    </div>
+                    <div>
+                        <div class="font-medium text-neutral-900 dark:text-white">${item.name}</div>
+                        <div class="text-xs text-neutral-500 dark:text-neutral-400">${item.section}</div>
+                    </div>
+                </a>
+            </div>
+        `).join('');
+        
+        searchResults.innerHTML = resultsHTML;
+    }
+
+    clearSearch() {
+        const searchInput = document.getElementById('nav-search');
+        const clearButton = document.getElementById('clear-search');
+        const searchResults = document.getElementById('search-results');
+        
+        if (searchInput) searchInput.value = '';
+        if (clearButton) clearButton.classList.add('hidden');
+        if (searchResults) searchResults.classList.add('hidden');
+    }
+
+    setupCollapsibleSections() {
+        // Auto-expandir sección si contiene ruta activa
+        const sections = ['produccion', 'inventario', 'analisis', 'administracion'];
+        sections.forEach(section => {
+            const items = document.getElementById(`${section}-items`);
+            if (items) {
+                const activeItem = items.querySelector('.text-primary-600, .bg-primary-50');
+                if (activeItem) {
+                    this.expandNavSection(section);
+                }
+            }
+        });
+    }
+
+    toggleSidebarCollapse() {
+        this.isCollapsed = !this.isCollapsed;
+        
+        if (this.isCollapsed) {
+            this.sidebar.classList.add('collapsed');
+            this.sidebar.setAttribute('data-expanded', 'false');
+            this.updateSidebarToggleIcon();
+            this.hideNavTexts();
+        } else {
+            this.sidebar.classList.remove('collapsed');
+            this.sidebar.setAttribute('data-expanded', 'true');
+            this.updateSidebarToggleIcon();
+            this.showNavTexts();
+        }
+        
+        // Guardar preferencia en localStorage
+        localStorage.setItem('sidebarCollapsed', this.isCollapsed);
+    }
+
+    updateSidebarToggleIcon() {
+        if (this.sidebarToggle) {
+            const icon = this.sidebarToggle.querySelector('i');
+            if (icon) {
+                if (this.isCollapsed) {
+                    icon.className = 'ri-sidebar-unfold-line text-lg text-neutral-600 dark:text-neutral-400';
+                    this.sidebarToggle.setAttribute('data-tooltip', 'Expandir sidebar');
+                } else {
+                    icon.className = 'ri-sidebar-fold-line text-lg text-neutral-600 dark:text-neutral-400';
+                    this.sidebarToggle.setAttribute('data-tooltip', 'Colapsar sidebar');
+                }
+            }
+        }
+    }
+
+    hideNavTexts() {
+        const navTexts = document.querySelectorAll('.nav-text');
+        navTexts.forEach(text => {
+            text.style.opacity = '0';
+            text.style.transform = 'translateX(-10px)';
+        });
+        
+        // Ocultar secciones colapsables
+        const navSections = document.querySelectorAll('.nav-section');
+        navSections.forEach(section => {
+            const items = section.querySelector('.nav-section-items');
+            if (items) {
+                items.classList.add('hidden');
+            }
+        });
+    }
+
+    showNavTexts() {
+        const navTexts = document.querySelectorAll('.nav-text');
+        navTexts.forEach(text => {
+            text.style.opacity = '1';
+            text.style.transform = 'translateX(0)';
+        });
+    }
+
+    expandNavSection(sectionName) {
+        const items = document.getElementById(`${sectionName}-items`);
+        const arrow = document.getElementById(`${sectionName}-arrow`);
+        
+        if (items && arrow) {
+            items.classList.remove('hidden');
+            arrow.style.transform = 'rotate(180deg)';
+        }
     }
 
     setupResponsive() {
@@ -488,11 +761,9 @@ class NavbarManager {
     }
 
     setupHoverEffects() {
-        // Simplified hover effects - removed transform animations for cleaner look
         const navItems = document.querySelectorAll('[data-tooltip]');
         
         navItems.forEach(item => {
-            // Only add subtle focus indicators, no transform animations
             item.addEventListener('focus', () => {
                 item.style.outline = '2px solid var(--color-primary-500)';
                 item.style.outlineOffset = '2px';
@@ -510,7 +781,6 @@ class NavbarManager {
             this.openSidebar();
         }
         
-        // Cambiar icono del botón toggle
         this.updateToggleIcon();
     }
 
@@ -550,7 +820,6 @@ class NavbarManager {
         }
         this.isOpen = false;
         
-        // Asegurar que el botón toggle vuelva a su estado normal
         this.updateToggleIcon();
     }
 
@@ -562,22 +831,32 @@ class NavbarManager {
                 this.sidebar.classList.remove('-translate-x-full');
                 this.sidebar.classList.add('translate-x-0');
             }
+            
+            // Restaurar estado colapsado si estaba guardado
+            const savedState = localStorage.getItem('sidebarCollapsed');
+            if (savedState === 'true') {
+                this.isCollapsed = true;
+                this.sidebar.classList.add('collapsed');
+                this.sidebar.setAttribute('data-expanded', 'false');
+                this.updateSidebarToggleIcon();
+                this.hideNavTexts();
+            }
         } else {
             // En móvil, asegurar que esté cerrado por defecto
             this.isOpen = false;
             if (this.sidebar) {
                 this.sidebar.classList.add('-translate-x-full');
-                this.sidebar.classList.remove('translate-x-0');
+                this.sidebar.classList.remove('translate-x-0', 'collapsed');
+                this.sidebar.setAttribute('data-expanded', 'true');
             }
-            // Ocultar overlay en móvil
             if (this.overlay) {
                 this.overlay.classList.add('hidden');
             }
+            this.showNavTexts();
         }
     }
 
     setupTouchGestures() {
-        // Gestos de deslizamiento para móviles
         if (window.innerWidth < 1024) {
             document.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: true });
             document.addEventListener('touchend', (e) => this.handleTouchEnd(e), { passive: true });
@@ -585,27 +864,20 @@ class NavbarManager {
     }
 
     setupMobileOptimizations() {
-        // Optimizaciones específicas para móvil
         if ('ontouchstart' in window) {
-            // Mejorar rendimiento en dispositivos táctiles
             this.sidebar?.style.setProperty('transform', 'translateZ(0)');
-            
-            // Prevenir bounce en iOS
             document.body.style.setProperty('overscroll-behavior-x', 'none');
         }
 
-        // Optimizar tooltips para móvil
         if (window.innerWidth < 1024) {
             this.disableTooltipsOnMobile();
         }
 
-        // Configurar secciones colapsables móviles
         this.setupMobileCollapsibleSections();
     }
 
     setupMobileCollapsibleSections() {
-        // Auto-expandir sección si contiene ruta activa
-        const sections = ['produccion', 'inventario', 'analisis'];
+        const sections = ['produccion', 'inventario', 'analisis', 'administracion'];
         sections.forEach(section => {
             const items = document.getElementById(`${section}-items`);
             if (items) {
@@ -640,19 +912,16 @@ class NavbarManager {
         const swipeThreshold = 50;
         const swipeDistance = this.touchEndX - this.touchStartX;
 
-        // Deslizar hacia la derecha para abrir (desde el borde izquierdo)
         if (swipeDistance > swipeThreshold && this.touchStartX < 20 && !this.isOpen) {
             this.openSidebar();
         }
         
-        // Deslizar hacia la izquierda para cerrar
         if (swipeDistance < -swipeThreshold && this.isOpen) {
             this.closeSidebar();
         }
     }
 
     disableTooltipsOnMobile() {
-        // Deshabilitar tooltips en móviles para mejor rendimiento
         const tooltipElements = document.querySelectorAll('[data-tooltip]');
         tooltipElements.forEach(element => {
             element.removeAttribute('data-tooltip');
@@ -702,9 +971,6 @@ class NavbarManager {
         }
     }
 
-
-    
-    // Función para actualizar la imagen de perfil
     updateProfileImage(newImageUrl, newImageAlt = null) {
         const profileImage = document.getElementById('navbar-profile-image');
         if (profileImage) {
@@ -713,7 +979,6 @@ class NavbarManager {
                 profileImage.alt = newImageAlt;
             }
             
-            // Agregar efecto de transición
             profileImage.style.opacity = '0.7';
             setTimeout(() => {
                 profileImage.style.opacity = '1';
@@ -721,7 +986,6 @@ class NavbarManager {
         }
     }
     
-    // Función para actualizar la imagen desde el helper
     updateProfileImageFromHelper(profileImage, userName) {
         if (typeof window.ImageHelper !== 'undefined') {
             const newUrl = window.ImageHelper.getProfileImageUrl(profileImage);
@@ -730,7 +994,6 @@ class NavbarManager {
         }
     }
     
-    // Forzar cierre del sidebar en móviles
     forceMobileSidebarClosed() {
         if (window.innerWidth < 1024) {
             this.isOpen = false;
@@ -754,8 +1017,8 @@ document.addEventListener('DOMContentLoaded', () => {
 // Hacer disponible globalmente para otras páginas
 window.NavbarManager = NavbarManager;
 
-// Función global para alternar secciones móviles
-window.toggleMobileSection = function(sectionName) {
+// Función global para alternar secciones de navegación
+window.toggleNavSection = function(sectionName) {
     const items = document.getElementById(`${sectionName}-items`);
     const arrow = document.getElementById(`${sectionName}-arrow`);
     
@@ -791,9 +1054,12 @@ window.toggleMobileSection = function(sectionName) {
         }
     }
 };
+
+// Función global para alternar secciones móviles (mantener compatibilidad)
+window.toggleMobileSection = window.toggleNavSection;
 </script>
 
-{{-- Estilos CSS adicionales para optimizaciones móviles --}}
+{{-- Estilos CSS adicionales para optimizaciones móviles y sidebar colapsable --}}
 <style>
 @keyframes ripple {
     to {
@@ -802,11 +1068,81 @@ window.toggleMobileSection = function(sectionName) {
     }
 }
 
+/* Sidebar colapsable */
+#sidebar {
+    width: 256px; /* 64 * 4 = 256px */
+    transition: width 0.3s ease-in-out;
+}
+
+#sidebar.collapsed {
+    width: 80px; /* Solo iconos */
+}
+
+#sidebar.collapsed .sidebar-text {
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#sidebar.collapsed .nav-text {
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#sidebar.collapsed .nav-section-toggle {
+    justify-content: center;
+}
+
+#sidebar.collapsed .nav-section-toggle .nav-arrow {
+    display: none;
+}
+
+#sidebar.collapsed .nav-section-items {
+    display: none !important;
+}
+
+/* Tooltips para sidebar colapsado */
+#sidebar.collapsed .nav-item:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1000;
+    margin-left: 8px;
+    pointer-events: none;
+}
+
+#sidebar.collapsed .nav-section-toggle:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1000;
+    margin-left: 8px;
+    pointer-events: none;
+}
+
 /* Optimizaciones para dispositivos móviles */
 @media (max-width: 1024px) {
     /* Asegurar que el sidebar esté oculto por defecto en móvil */
     #sidebar {
         transform: translateX(-100%) !important;
+        width: 256px !important;
         -webkit-overflow-scrolling: touch;
         overscroll-behavior: contain;
     }
@@ -874,6 +1210,142 @@ window.toggleMobileSection = function(sectionName) {
     
     #sidebar-overlay {
         will-change: opacity;
+    }
+}
+
+/* Mejoras para el layout principal cuando el sidebar está colapsado */
+@media (min-width: 1024px) {
+    main {
+        transition: margin-left 0.3s ease-in-out;
+    }
+    
+    #sidebar.collapsed ~ main {
+        margin-left: 80px !important;
+    }
+    
+    #sidebar:not(.collapsed) ~ main {
+        margin-left: 256px !important;
+    }
+    
+    footer {
+        transition: margin-left 0.3s ease-in-out;
+    }
+    
+    #sidebar.collapsed ~ footer {
+        margin-left: 80px !important;
+    }
+    
+    #sidebar:not(.collapsed) ~ footer {
+        margin-left: 256px !important;
+    }
+}
+
+/* Animaciones suaves para elementos del navbar */
+.nav-item, .nav-section-toggle {
+    transition: all 0.2s ease;
+}
+
+.nav-item:hover, .nav-section-toggle:hover {
+    transform: translateX(2px);
+}
+
+/* Mejoras visuales para secciones colapsables */
+.nav-section-items {
+    transition: all 0.3s ease;
+}
+
+.nav-arrow {
+    transition: transform 0.3s ease;
+}
+
+/* Efectos de hover mejorados */
+.nav-item:hover .nav-text,
+.nav-section-toggle:hover .nav-text {
+    color: var(--color-primary-600);
+}
+
+/* Responsive mejorado para pantallas medianas */
+@media (min-width: 1024px) and (max-width: 1280px) {
+    #sidebar {
+        width: 240px;
+    }
+    
+    #sidebar.collapsed {
+        width: 72px;
+    }
+}
+
+/* Estilos para funcionalidad de búsqueda */
+.sidebar-search {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#sidebar.collapsed .sidebar-search {
+    opacity: 0;
+    transform: translateX(-10px);
+    pointer-events: none;
+}
+
+#nav-search:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.search-result-item.active {
+    background-color: rgba(99, 102, 241, 0.1);
+}
+
+.search-result-item:hover {
+    background-color: rgba(99, 102, 241, 0.05);
+}
+
+/* Mejoras para el scroll de resultados de búsqueda */
+#search-results::-webkit-scrollbar {
+    width: 4px;
+}
+
+#search-results::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#search-results::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+}
+
+#search-results::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+/* Animación para mostrar/ocultar búsqueda */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#search-results:not(.hidden) {
+    animation: slideDown 0.2s ease-out;
+}
+
+/* Mejoras de accesibilidad */
+#nav-search::placeholder {
+    color: rgba(107, 114, 128, 0.6);
+}
+
+#nav-search:focus::placeholder {
+    color: rgba(107, 114, 128, 0.4);
+}
+
+/* Responsive para búsqueda en móvil */
+@media (max-width: 1024px) {
+    .sidebar-search {
+        display: none;
     }
 }
 </style>

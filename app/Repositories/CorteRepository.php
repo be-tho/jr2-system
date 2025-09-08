@@ -82,7 +82,6 @@ class CorteRepository extends BaseRepository
             ->selectRaw('
                 COUNT(*) as total_cortes,
                 SUM(cantidad_total) as total_articulos,
-                SUM(cantidad_encimadas) as total_encimadas,
                 COUNT(CASE WHEN estado = 0 THEN 1 END) as cortados,
                 COUNT(CASE WHEN estado = 1 THEN 1 END) as costurando,
                 COUNT(CASE WHEN estado = 2 THEN 1 END) as entregados,
@@ -93,7 +92,6 @@ class CorteRepository extends BaseRepository
         return [
             'total_cortes' => $stats->total_cortes ?? 0,
             'total_articulos' => $stats->total_articulos ?? 0,
-            'total_encimadas' => $stats->total_encimadas ?? 0,
             'cortados' => $stats->cortados ?? 0,
             'costurando' => $stats->costurando ?? 0,
             'entregados' => $stats->entregados ?? 0,

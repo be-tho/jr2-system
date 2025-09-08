@@ -221,18 +221,18 @@
                                 <div class="flex items-center">
                                     <img class="h-10 w-10 rounded-lg object-cover mr-3" 
                                          src="{{ \App\Helpers\ImageHelper::getCorteImageUrl($corte->imagen) }}" 
-                                         alt="{{ $corte->nombre }}">
+                                         alt="{{ $corte->descripcion ?? 'Corte #' . $corte->numero_corte }}">
                                     <div>
                                         <div class="text-sm font-medium text-gray-900">#{{ $corte->numero_corte }}</div>
                                     </div>
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">{{ $corte->nombre }}</div>
-                                <div class="text-sm text-gray-500">{{ Str::limit($corte->descripcion, 50) }}</div>
+                                <div class="text-sm font-medium text-gray-900">{{ $corte->descripcion ?? 'Sin descripción' }}</div>
+                                <div class="text-sm text-gray-500">{{ $corte->tipo_tela ?? 'Sin tipo de tela' }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                {{ number_format($corte->cantidad) }}
+                                {{ number_format($corte->cantidad_total) }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                 {{ Str::limit($corte->articulos, 50) }}
@@ -260,7 +260,13 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                {{ Str::limit($corte->colores, 30) }}
+                                @if($corte->colores && is_array($corte->colores))
+                                    @foreach($corte->colores as $color)
+                                        <span class="inline-block w-3 h-3 rounded-full mr-1" style="background-color: {{ $color }}"></span>
+                                    @endforeach
+                                @else
+                                    <span class="text-gray-400">Sin colores</span>
+                                @endif
                             </td>
                         </tr>
                         @empty

@@ -62,4 +62,22 @@ class User extends Authenticatable
     {
         return $this->updated_at ? $this->updated_at->format('d/m/Y H:i') : 'N/A';
     }
+
+    /**
+     * Safely check if user has a role
+     */
+    public static function hasRoleSafe(string $role): bool
+    {
+        $user = auth()->user();
+        return $user && $user->hasRole($role);
+    }
+
+    /**
+     * Safely check if user has any of the given roles
+     */
+    public static function hasAnyRoleSafe(array $roles): bool
+    {
+        $user = auth()->user();
+        return $user && $user->hasAnyRole($roles);
+    }
 }

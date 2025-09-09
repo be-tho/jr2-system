@@ -156,7 +156,7 @@
                     </div>
 
                     {{-- Sección Administración Colapsable --}}
-                    @if(auth()->user()->hasRole('administrador'))
+                    @hasrole('administrador')
                     <div class="nav-section" data-section="administracion">
                         <button class="nav-section-toggle w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors duration-200" 
                                 onclick="toggleNavSection('administracion')">
@@ -178,7 +178,7 @@
                             </a>
                         </div>
                     </div>
-                    @endif
+                    @endhasrole
 
                     {{-- Cuenta --}}
                     <a href="{{ route('cuenta.index') }}" 
@@ -291,7 +291,7 @@
                     </div>
 
                     {{-- Sección Administración Móvil --}}
-                    @if(auth()->user()->hasRole('administrador'))
+                    @hasrole('administrador')
                     <div class="mobile-section" data-section="administracion">
                         <button class="w-full flex items-center justify-between px-2 py-2 text-left rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors duration-200" 
                                 onclick="toggleMobileSection('administracion')">
@@ -312,7 +312,7 @@
                             </a>
                         </div>
                     </div>
-                    @endif
+                    @endhasrole
 
                     {{-- Cuenta Móvil --}}
                     <a href="{{ route('cuenta.index') }}" 
@@ -524,9 +524,9 @@ class NavbarManager {
             { name: 'Temporadas', url: '{{ route("temporadas.index") }}', icon: 'ri-calendar-line', section: 'Inventario' },
             { name: 'Dólar', url: '{{ route("dolar.index") }}', icon: 'ri-money-dollar-circle-line', section: 'Análisis' },
             { name: 'Reportes', url: '{{ route("reportes.index") }}', icon: 'ri-bar-chart-2-line', section: 'Análisis' },
-            @if(auth()->user()->hasRole('administrador'))
+            @hasrole('administrador')
             { name: 'Usuarios', url: '{{ route("users.index") }}', icon: 'ri-team-line', section: 'Administración' },
-            @endif
+            @endhasrole
             { name: 'Mi Cuenta', url: '{{ route("cuenta.index") }}', icon: 'ri-user-line', section: 'Usuario' }
         ];
         

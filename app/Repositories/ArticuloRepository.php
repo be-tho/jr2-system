@@ -20,7 +20,10 @@ class ArticuloRepository extends BaseRepository
      */
     public function getWithRelations(array $relations = ['categoria:id,nombre', 'temporada:id,nombre']): Collection
     {
-        return $this->model->with($relations)->get();
+        return $this->model
+            ->select('id', 'nombre', 'codigo', 'precio', 'stock', 'imagen', 'categoria_id', 'temporada_id', 'created_at')
+            ->with($relations)
+            ->get();
     }
 
     /**
@@ -28,7 +31,9 @@ class ArticuloRepository extends BaseRepository
      */
     public function getPaginatedWithFilters(array $filters, int $perPage = 12): LengthAwarePaginator
     {
-        $query = $this->model->with(['categoria:id,nombre', 'temporada:id,nombre']);
+        $query = $this->model
+            ->select('id', 'nombre', 'codigo', 'precio', 'stock', 'imagen', 'categoria_id', 'temporada_id', 'created_at')
+            ->with(['categoria:id,nombre', 'temporada:id,nombre']);
 
         // Aplicar búsqueda
         if (!empty($filters['search'])) {
@@ -153,6 +158,7 @@ class ArticuloRepository extends BaseRepository
     public function getLowStock(int $threshold = 10): Collection
     {
         return $this->model
+            ->select('id', 'nombre', 'codigo', 'precio', 'stock', 'imagen', 'categoria_id', 'temporada_id')
             ->where('stock', '>', 0)
             ->where('stock', '<=', $threshold)
             ->with(['categoria:id,nombre', 'temporada:id,nombre'])
@@ -166,6 +172,7 @@ class ArticuloRepository extends BaseRepository
     public function getOutOfStock(): Collection
     {
         return $this->model
+            ->select('id', 'nombre', 'codigo', 'precio', 'stock', 'imagen', 'categoria_id', 'temporada_id')
             ->where('stock', 0)
             ->with(['categoria:id,nombre', 'temporada:id,nombre'])
             ->orderBy('nombre')
@@ -178,6 +185,7 @@ class ArticuloRepository extends BaseRepository
     public function search(string $term): Collection
     {
         return $this->model
+            ->select('id', 'nombre', 'codigo', 'precio', 'stock', 'imagen', 'categoria_id', 'temporada_id')
             ->where(function ($query) use ($term) {
                 $query->where('nombre', 'like', "%{$term}%")
                       ->orWhere('descripcion', 'like', "%{$term}%")
@@ -193,6 +201,7 @@ class ArticuloRepository extends BaseRepository
     public function getByPriceRange(float $minPrice, float $maxPrice): Collection
     {
         return $this->model
+            ->select('id', 'nombre', 'codigo', 'precio', 'stock', 'imagen', 'categoria_id', 'temporada_id')
             ->whereBetween('precio', [$minPrice, $maxPrice])
             ->with(['categoria:id,nombre', 'temporada:id,nombre'])
             ->orderBy('precio')
@@ -205,6 +214,7 @@ class ArticuloRepository extends BaseRepository
     public function getByStockRange(int $minStock, int $maxStock): Collection
     {
         return $this->model
+            ->select('id', 'nombre', 'codigo', 'precio', 'stock', 'imagen', 'categoria_id', 'temporada_id')
             ->whereBetween('stock', [$minStock, $maxStock])
             ->with(['categoria:id,nombre', 'temporada:id,nombre'])
             ->orderBy('stock')

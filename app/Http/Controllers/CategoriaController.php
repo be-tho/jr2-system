@@ -35,6 +35,10 @@ class CategoriaController extends Controller
                 'nombre' => $request->nombre,
             ]);
 
+            // Limpiar caché relacionado
+            cache()->forget('categorias_for_filters');
+            cache()->forget('categorias_for_form');
+
             return redirect()->route('categorias.index')
                 ->with('success', 'Categoría creada exitosamente.');
         } catch (\Exception $e) {
@@ -64,6 +68,10 @@ class CategoriaController extends Controller
                 'nombre' => $request->nombre,
             ]);
 
+            // Limpiar caché relacionado
+            cache()->forget('categorias_for_filters');
+            cache()->forget('categorias_for_form');
+
             return redirect()->route('categorias.index')
                 ->with('success', 'Categoría actualizada exitosamente.');
         } catch (\Exception $e) {
@@ -84,6 +92,10 @@ class CategoriaController extends Controller
             }
 
             $categoria->delete();
+
+            // Limpiar caché relacionado
+            cache()->forget('categorias_for_filters');
+            cache()->forget('categorias_for_form');
 
             return redirect()->route('categorias.index')
                 ->with('success', 'Categoría eliminada exitosamente.');

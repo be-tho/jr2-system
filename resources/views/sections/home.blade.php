@@ -37,7 +37,7 @@
     </div>
 
         {{-- Acciones rápidas --}}
-    @if(auth()->user()->hasRole('administrador'))
+    @hasrole('administrador')
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <a href="{{ route('cortes.create') }}" class="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 group">
                 <div class="px-6 py-4 text-center">
@@ -118,7 +118,7 @@
                 </div>
             </div>
         </div>
-    @endif
+    @endhasrole
 
     {{-- Sección de estadísticas --}}
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -246,11 +246,11 @@
                         <i class="ri-shield-check-line text-secondary-600 dark:text-secondary-400 text-xl"></i>
                     </div>
                     <h4 class="font-medium text-neutral-900 dark:text-white mb-1">Rol</h4>
-                    @if(auth()->user()->hasRole('administrador'))
+                    @hasrole('administrador')
                         <p class="text-sm text-green-600 dark:text-green-400 font-medium">Administrador</p>
                     @else
                         <p class="text-sm text-blue-600 dark:text-blue-400 font-medium">Usuario</p>
-                    @endif
+                    @endhasrole
                 </div>
             </div>
         </div>

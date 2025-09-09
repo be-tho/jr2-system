@@ -48,9 +48,14 @@ class ArticuloController extends Controller
         // Obtener artículos paginados con filtros
         $articulos = $this->articuloRepository->getPaginatedWithFilters($filters, $request->get('per_page', 12));
 
-        // Obtener categorías y temporadas para los filtros
-        $categorias = Categoria::select('id', 'nombre')->orderBy('nombre')->get();
-        $temporadas = Temporada::select('id', 'nombre')->orderBy('nombre')->get();
+        // Obtener categorías y temporadas para los filtros (con caché)
+        $categorias = cache()->remember('categorias_for_filters', 300, function () {
+            return Categoria::select('id', 'nombre')->orderBy('nombre')->get();
+        });
+        
+        $temporadas = cache()->remember('temporadas_for_filters', 300, function () {
+            return Temporada::select('id', 'nombre')->orderBy('nombre')->get();
+        });
 
         return view('sections.articulos', compact(
             'articulos',
@@ -80,9 +85,14 @@ class ArticuloController extends Controller
 
     public function create()
     {
-        // Obtener categorías y temporadas para el formulario
-        $categorias = Categoria::select('id', 'nombre')->orderBy('nombre')->get();
-        $temporadas = Temporada::select('id', 'nombre')->orderBy('nombre')->get();
+        // Obtener categorías y temporadas para el formulario (con caché)
+        $categorias = cache()->remember('categorias_for_form', 300, function () {
+            return Categoria::select('id', 'nombre')->orderBy('nombre')->get();
+        });
+        
+        $temporadas = cache()->remember('temporadas_for_form', 300, function () {
+            return Temporada::select('id', 'nombre')->orderBy('nombre')->get();
+        });
 
         return view('sections.articulos-create', [
             'categorias' => $categorias,
@@ -130,6 +140,12 @@ class ArticuloController extends Controller
                 'imagen' => $imageFilename
             ]);
             
+            // Limpiar caché relacionado
+            cache()->forget('categorias_for_filters');
+            cache()->forget('categorias_for_form');
+            cache()->forget('temporadas_for_filters');
+            cache()->forget('temporadas_for_form');
+            
             return to_route('articulos.index')->with('success', 'Artículo creado correctamente');
             
         } catch (\Exception $e) {
@@ -147,9 +163,14 @@ class ArticuloController extends Controller
     {
         $articulo = Articulo::findOrFail($id);
         
-        // Obtener categorías y temporadas para el formulario
-        $categorias = Categoria::select('id', 'nombre')->orderBy('nombre')->get();
-        $temporadas = Temporada::select('id', 'nombre')->orderBy('nombre')->get();
+        // Obtener categorías y temporadas para el formulario (con caché)
+        $categorias = cache()->remember('categorias_for_form', 300, function () {
+            return Categoria::select('id', 'nombre')->orderBy('nombre')->get();
+        });
+        
+        $temporadas = cache()->remember('temporadas_for_form', 300, function () {
+            return Temporada::select('id', 'nombre')->orderBy('nombre')->get();
+        });
 
         return view('sections.articulos-edit-form', [
             'articulo' => $articulo,
@@ -202,6 +223,12 @@ class ArticuloController extends Controller
                 'imagen' => $imageFilename
             ]);
             
+            // Limpiar caché relacionado
+            cache()->forget('categorias_for_filters');
+            cache()->forget('categorias_for_form');
+            cache()->forget('temporadas_for_filters');
+            cache()->forget('temporadas_for_form');
+            
             return to_route('articulos.index')->with('success', 'Artículo actualizado correctamente');
             
         } catch (\Exception $e) {
@@ -231,6 +258,13 @@ class ArticuloController extends Controller
             $articulo->delete();
             
             Log::info('Artículo eliminado exitosamente', ['articulo_id' => $id]);
+            
+            // Limpiar caché relacionado
+            cache()->forget('categorias_for_filters');
+            cache()->forget('categorias_for_form');
+            cache()->forget('temporadas_for_filters');
+            cache()->forget('temporadas_for_form');
+            
             return to_route('articulos.index')->with('success', 'Artículo eliminado correctamente');
             
         } catch (\Exception $e) {

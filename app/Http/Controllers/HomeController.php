@@ -20,10 +20,10 @@ class HomeController extends Controller
 
     public function index()
     {
-        // Obtener estadísticas del dashboard
+        // Obtener estadísticas del dashboard (ya con caché)
         $dashboardStats = $this->statsRepository->getDashboardStats();
         
-        // Obtener estadísticas generales
+        // Obtener estadísticas generales (ya con caché)
         $generalStats = $this->statsRepository->getGeneralStats();
         
         // Preparar variables para la vista
@@ -31,18 +31,19 @@ class HomeController extends Controller
         $totalArticulos = $generalStats['total_articulos'] ?? 0;
         $totalCategorias = $generalStats['categorias_activas'] ?? 0;
         
-        // Obtener cortes recientes (últimos 5)
+        // Obtener cortes recientes (últimos 5) con campos específicos
         $cortes = $this->corteRepository->getPaginatedWithFilters([], 5);
         
-        // Obtener artículos populares (con más stock)
-        $articulosPopulares = \App\Models\Articulo::orderBy('stock', 'desc')
+        // Obtener artículos populares (con más stock) con campos específicos
+        $articulosPopulares = \App\Models\Articulo::select('id', 'nombre', 'codigo', 'precio', 'stock', 'imagen')
+            ->orderBy('stock', 'desc')
             ->limit(5)
             ->get();
         
-        // Obtener estadísticas de rendimiento
+        // Obtener estadísticas de rendimiento (ya con caché)
         $performanceStats = $this->statsRepository->getPerformanceStats();
         
-        // Obtener estadísticas de crecimiento
+        // Obtener estadísticas de crecimiento (ya con caché)
         $growthStats = $this->statsRepository->getGrowthStats();
 
         return view('sections.home', compact(

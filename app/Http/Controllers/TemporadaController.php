@@ -35,6 +35,10 @@ class TemporadaController extends Controller
                 'nombre' => $request->nombre,
             ]);
 
+            // Limpiar caché relacionado
+            cache()->forget('temporadas_for_filters');
+            cache()->forget('temporadas_for_form');
+
             return redirect()->route('temporadas.index')
                 ->with('success', 'Temporada creada exitosamente.');
         } catch (\Exception $e) {
@@ -64,6 +68,10 @@ class TemporadaController extends Controller
                 'nombre' => $request->nombre,
             ]);
 
+            // Limpiar caché relacionado
+            cache()->forget('temporadas_for_filters');
+            cache()->forget('temporadas_for_form');
+
             return redirect()->route('temporadas.index')
                 ->with('success', 'Temporada actualizada exitosamente.');
         } catch (\Exception $e) {
@@ -84,6 +92,10 @@ class TemporadaController extends Controller
             }
 
             $temporada->delete();
+
+            // Limpiar caché relacionado
+            cache()->forget('temporadas_for_filters');
+            cache()->forget('temporadas_for_form');
 
             return redirect()->route('temporadas.index')
                 ->with('success', 'Temporada eliminada exitosamente.');

@@ -21,7 +21,8 @@ class CorteRepository extends BaseRepository
      */
     public function getPaginatedWithFilters(array $filters, int $perPage = 12): LengthAwarePaginator
     {
-        $query = $this->model->query();
+        $query = $this->model
+            ->select('id', 'numero_corte', 'tipo_tela', 'colores', 'cantidad_total', 'articulos', 'descripcion', 'costureros', 'estado', 'imagen', 'imagen_alt', 'fecha', 'created_at');
 
         // Aplicar búsqueda
         if (!empty($filters['search'])) {
@@ -169,6 +170,7 @@ class CorteRepository extends BaseRepository
     public function getByEstado(int $estado): Collection
     {
         return $this->model
+            ->select('id', 'numero_corte', 'tipo_tela', 'colores', 'cantidad_total', 'articulos', 'descripcion', 'costureros', 'estado', 'imagen', 'imagen_alt', 'fecha', 'created_at')
             ->where('estado', $estado)
             ->orderBy('fecha', 'desc')
             ->get();
@@ -180,6 +182,7 @@ class CorteRepository extends BaseRepository
     public function getPendientes(): Collection
     {
         return $this->model
+            ->select('id', 'numero_corte', 'tipo_tela', 'colores', 'cantidad_total', 'articulos', 'descripcion', 'costureros', 'estado', 'imagen', 'imagen_alt', 'fecha', 'created_at')
             ->whereIn('estado', [0, 1])
             ->orderBy('fecha', 'asc')
             ->get();

@@ -48,9 +48,14 @@ class ArticuloController extends Controller
         // Obtener artículos paginados con filtros
         $articulos = $this->articuloRepository->getPaginatedWithFilters($filters, $request->get('per_page', 12));
 
-        // Obtener categorías y temporadas para los filtros
-        $categorias = Categoria::select('id', 'nombre')->orderBy('nombre')->get();
-        $temporadas = Temporada::select('id', 'nombre')->orderBy('nombre')->get();
+        // Obtener categorías y temporadas para los filtros (con caché)
+        $categorias = cache()->remember('categorias_for_filters', 300, function () {
+            return Categoria::select('id', 'nombre')->orderBy('nombre')->get();
+        });
+        
+        $temporadas = cache()->remember('temporadas_for_filters', 300, function () {
+            return Temporada::select('id', 'nombre')->orderBy('nombre')->get();
+        });
 
         return view('sections.articulos', compact(
             'articulos',
@@ -80,9 +85,14 @@ class ArticuloController extends Controller
 
     public function create()
     {
-        // Obtener categorías y temporadas para el formulario
-        $categorias = Categoria::select('id', 'nombre')->orderBy('nombre')->get();
-        $temporadas = Temporada::select('id', 'nombre')->orderBy('nombre')->get();
+        // Obtener categorías y temporadas para el formulario (con caché)
+        $categorias = cache()->remember('categorias_for_form', 300, function () {
+            return Categoria::select('id', 'nombre')->orderBy('nombre')->get();
+        });
+        
+        $temporadas = cache()->remember('temporadas_for_form', 300, function () {
+            return Temporada::select('id', 'nombre')->orderBy('nombre')->get();
+        });
 
         return view('sections.articulos-create', [
             'categorias' => $categorias,
@@ -93,22 +103,44 @@ class ArticuloController extends Controller
     public function store(ArticuloRequest $request)
     {
         try {
-            Log::info('Creando nuevo artículo', ['request' => $request->except(['imagen'])]);
+            Log::info('Creando nuevo artículo', ['request' => $request->except(['imagen', 'imagen_2', 'imagen_3'])]);
             
-            $imageFilename = null;
+            $imageFilenames = [
+                'imagen' => null,
+                'imagen_2' => null,
+                'imagen_3' => null,
+            ];
             
+            // Procesar imagen principal
             if($request->hasFile('imagen')) {
-                // Validar imagen antes de procesar
                 $this->validateImage($request->file('imagen'));
-                
-                // Procesar y guardar imagen con optimización móvil
-                $imageFilename = $this->processAndSaveImage(
+                $imageFilenames['imagen'] = $this->processAndSaveImage(
                     $request->file('imagen'), 
                     self::IMAGE_DIRECTORY, 
                     self::IMAGE_OPTIONS
                 );
             } else {
-                $imageFilename = self::DEFAULT_IMAGE;
+                $imageFilenames['imagen'] = self::DEFAULT_IMAGE;
+            }
+
+            // Procesar segunda imagen
+            if($request->hasFile('imagen_2')) {
+                $this->validateImage($request->file('imagen_2'));
+                $imageFilenames['imagen_2'] = $this->processAndSaveImage(
+                    $request->file('imagen_2'), 
+                    self::IMAGE_DIRECTORY, 
+                    self::IMAGE_OPTIONS
+                );
+            }
+
+            // Procesar tercera imagen
+            if($request->hasFile('imagen_3')) {
+                $this->validateImage($request->file('imagen_3'));
+                $imageFilenames['imagen_3'] = $this->processAndSaveImage(
+                    $request->file('imagen_3'), 
+                    self::IMAGE_DIRECTORY, 
+                    self::IMAGE_OPTIONS
+                );
             }
 
             $request->codigo = strtoupper($request->codigo);
@@ -119,7 +151,9 @@ class ArticuloController extends Controller
                 'precio' => $request->precio,
                 'categoria_id' => $request->categoria_id,
                 'temporada_id' => $request->temporada_id,
-                'imagen' => $imageFilename,
+                'imagen' => $imageFilenames['imagen'],
+                'imagen_2' => $imageFilenames['imagen_2'],
+                'imagen_3' => $imageFilenames['imagen_3'],
                 'stock' => $request->stock,
                 'codigo' => $request->codigo,
                 'created_at' => now(),
@@ -127,8 +161,14 @@ class ArticuloController extends Controller
             
             Log::info('Artículo creado exitosamente', [
                 'articulo_id' => $articulo->id,
-                'imagen' => $imageFilename
+                'imagenes' => $imageFilenames
             ]);
+            
+            // Limpiar caché relacionado
+            cache()->forget('categorias_for_filters');
+            cache()->forget('categorias_for_form');
+            cache()->forget('temporadas_for_filters');
+            cache()->forget('temporadas_for_form');
             
             return to_route('articulos.index')->with('success', 'Artículo creado correctamente');
             
@@ -136,7 +176,7 @@ class ArticuloController extends Controller
             Log::error('Error al crear artículo', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
-                'request' => $request->except(['imagen'])
+                'request' => $request->except(['imagen', 'imagen_2', 'imagen_3'])
             ]);
             
             return to_route('articulos.index')->with('error', 'Error al crear el artículo: ' . $e->getMessage());
@@ -147,9 +187,14 @@ class ArticuloController extends Controller
     {
         $articulo = Articulo::findOrFail($id);
         
-        // Obtener categorías y temporadas para el formulario
-        $categorias = Categoria::select('id', 'nombre')->orderBy('nombre')->get();
-        $temporadas = Temporada::select('id', 'nombre')->orderBy('nombre')->get();
+        // Obtener categorías y temporadas para el formulario (con caché)
+        $categorias = cache()->remember('categorias_for_form', 300, function () {
+            return Categoria::select('id', 'nombre')->orderBy('nombre')->get();
+        });
+        
+        $temporadas = cache()->remember('temporadas_for_form', 300, function () {
+            return Temporada::select('id', 'nombre')->orderBy('nombre')->get();
+        });
 
         return view('sections.articulos-edit-form', [
             'articulo' => $articulo,
@@ -161,17 +206,19 @@ class ArticuloController extends Controller
     public function update(ArticuloRequest $request, $id)
     {
         try {
-            Log::info('Actualizando artículo', ['articulo_id' => $id, 'request' => $request->except(['imagen'])]);
+            Log::info('Actualizando artículo', ['articulo_id' => $id, 'request' => $request->except(['imagen', 'imagen_2', 'imagen_3'])]);
             
             $articulo = Articulo::findOrFail($id);
-            $imageFilename = $articulo->imagen; // Mantener imagen actual por defecto
+            $imageFilenames = [
+                'imagen' => $articulo->imagen,
+                'imagen_2' => $articulo->imagen_2,
+                'imagen_3' => $articulo->imagen_3,
+            ];
             
+            // Procesar imagen principal
             if($request->hasFile('imagen')) {
-                // Validar nueva imagen
                 $this->validateImage($request->file('imagen'));
-                
-                // Procesar y guardar nueva imagen con optimización móvil
-                $imageFilename = $this->processAndSaveImage(
+                $imageFilenames['imagen'] = $this->processAndSaveImage(
                     $request->file('imagen'), 
                     self::IMAGE_DIRECTORY, 
                     self::IMAGE_OPTIONS
@@ -183,6 +230,36 @@ class ArticuloController extends Controller
                 }
             }
 
+            // Procesar segunda imagen
+            if($request->hasFile('imagen_2')) {
+                $this->validateImage($request->file('imagen_2'));
+                $imageFilenames['imagen_2'] = $this->processAndSaveImage(
+                    $request->file('imagen_2'), 
+                    self::IMAGE_DIRECTORY, 
+                    self::IMAGE_OPTIONS
+                );
+                
+                // Eliminar imagen anterior si existe
+                if($articulo->imagen_2) {
+                    $this->deleteImage($articulo->imagen_2, self::IMAGE_DIRECTORY, self::DEFAULT_IMAGE);
+                }
+            }
+
+            // Procesar tercera imagen
+            if($request->hasFile('imagen_3')) {
+                $this->validateImage($request->file('imagen_3'));
+                $imageFilenames['imagen_3'] = $this->processAndSaveImage(
+                    $request->file('imagen_3'), 
+                    self::IMAGE_DIRECTORY, 
+                    self::IMAGE_OPTIONS
+                );
+                
+                // Eliminar imagen anterior si existe
+                if($articulo->imagen_3) {
+                    $this->deleteImage($articulo->imagen_3, self::IMAGE_DIRECTORY, self::DEFAULT_IMAGE);
+                }
+            }
+
             $request->codigo = strtoupper($request->codigo);
 
             $articulo->update([
@@ -191,7 +268,9 @@ class ArticuloController extends Controller
                 'precio' => $request->precio,
                 'categoria_id' => $request->categoria_id,
                 'temporada_id' => $request->temporada_id,
-                'imagen' => $imageFilename,
+                'imagen' => $imageFilenames['imagen'],
+                'imagen_2' => $imageFilenames['imagen_2'],
+                'imagen_3' => $imageFilenames['imagen_3'],
                 'stock' => $request->stock,
                 'codigo' => $request->codigo,
                 'updated_at' => now(),
@@ -199,8 +278,14 @@ class ArticuloController extends Controller
             
             Log::info('Artículo actualizado exitosamente', [
                 'articulo_id' => $articulo->id,
-                'imagen' => $imageFilename
+                'imagenes' => $imageFilenames
             ]);
+            
+            // Limpiar caché relacionado
+            cache()->forget('categorias_for_filters');
+            cache()->forget('categorias_for_form');
+            cache()->forget('temporadas_for_filters');
+            cache()->forget('temporadas_for_form');
             
             return to_route('articulos.index')->with('success', 'Artículo actualizado correctamente');
             
@@ -209,7 +294,7 @@ class ArticuloController extends Controller
                 'articulo_id' => $id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
-                'request' => $request->except(['imagen'])
+                'request' => $request->except(['imagen', 'imagen_2', 'imagen_3'])
             ]);
             
             return to_route('articulos.index')->with('error', 'Error al actualizar el artículo: ' . $e->getMessage());
@@ -223,14 +308,24 @@ class ArticuloController extends Controller
             
             $articulo = Articulo::findOrFail($id);
             
-            // Eliminar imagen si no es la imagen por defecto
-            if($articulo->imagen !== self::DEFAULT_IMAGE) {
-                $this->deleteImage($articulo->imagen, self::IMAGE_DIRECTORY, self::DEFAULT_IMAGE);
+            // Eliminar todas las imágenes si no son la imagen por defecto
+            $imagesToDelete = $articulo->getAllImages();
+            foreach ($imagesToDelete as $image) {
+                if ($image !== self::DEFAULT_IMAGE) {
+                    $this->deleteImage($image, self::IMAGE_DIRECTORY, self::DEFAULT_IMAGE);
+                }
             }
             
             $articulo->delete();
             
             Log::info('Artículo eliminado exitosamente', ['articulo_id' => $id]);
+            
+            // Limpiar caché relacionado
+            cache()->forget('categorias_for_filters');
+            cache()->forget('categorias_for_form');
+            cache()->forget('temporadas_for_filters');
+            cache()->forget('temporadas_for_form');
+            
             return to_route('articulos.index')->with('success', 'Artículo eliminado correctamente');
             
         } catch (\Exception $e) {

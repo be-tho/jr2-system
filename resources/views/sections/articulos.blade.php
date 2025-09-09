@@ -185,19 +185,19 @@
 
         <!-- Grid de artículos -->
         @if($articulos->count() > 0)
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
                 @foreach($articulos as $articulo)
                 <div class="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden group">
                     <!-- Galería de imágenes del artículo -->
                     <div class="relative overflow-hidden">
-                        <a href="{{ route('articulos.show', $articulo) }}" class="block">
+                        <a href="{{ route('articulos.show', $articulo) }}" class="block touch-manipulation">
                             @if($articulo->hasMultipleImages())
                                 <!-- Carousel para múltiples imágenes -->
-                                <div class="relative w-full h-48 overflow-hidden">
+                                <div class="relative w-full h-40 sm:h-48 overflow-hidden">
                                     <div class="flex transition-transform duration-300 ease-in-out" id="carousel-{{ $articulo->id }}">
                                         @foreach($articulo->getAllImages() as $index => $image)
-                                            <div class="w-full h-48 flex-shrink-0">
-                                                <img class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300 {{ \App\Helpers\ImageHelper::getDefaultImageClass($image, 'default-articulo.svg') }}" 
+                                            <div class="w-full h-40 sm:h-48 flex-shrink-0">
+                                                <img class="w-full h-40 sm:h-48 object-cover group-hover:scale-105 transition-transform duration-300 {{ \App\Helpers\ImageHelper::getDefaultImageClass($image, 'default-articulo.svg') }}" 
                                                      src="{{ \App\Helpers\ImageHelper::getArticuloImageUrl($image) }}" 
                                                      alt="{{ \App\Helpers\ImageHelper::getDefaultImageAlt($image, 'default-articulo.svg', $articulo->nombre, 'artículo') }}" />
                                             </div>
@@ -206,9 +206,9 @@
                                     
                                     <!-- Indicadores de imágenes -->
                                     @if($articulo->getImageCount() > 1)
-                                        <div class="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
+                                        <div class="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1 carousel-indicators">
                                             @foreach($articulo->getAllImages() as $index => $image)
-                                                <button class="w-2 h-2 rounded-full bg-white/70 hover:bg-white transition-colors duration-200" 
+                                                <button class="w-1 h-1 sm:w-1.5 sm:h-1.5 md:w-2 md:h-2 rounded-full bg-white/70 hover:bg-white active:bg-white transition-colors duration-200 touch-manipulation touch-feedback" 
                                                         onclick="showSlide({{ $articulo->id }}, {{ $index }})"></button>
                                             @endforeach
                                         </div>
@@ -221,7 +221,7 @@
                                 </div>
                             @else
                                 <!-- Imagen única -->
-                                <img class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300 {{ \App\Helpers\ImageHelper::getDefaultImageClass($articulo->imagen, 'default-articulo.svg') }}" 
+                                <img class="w-full h-40 sm:h-48 object-cover group-hover:scale-105 transition-transform duration-300 {{ \App\Helpers\ImageHelper::getDefaultImageClass($articulo->imagen, 'default-articulo.svg') }}" 
                                      src="{{ \App\Helpers\ImageHelper::getArticuloImageUrl($articulo->imagen) }}" 
                                      alt="{{ \App\Helpers\ImageHelper::getDefaultImageAlt($articulo->imagen, 'default-articulo.svg', $articulo->nombre, 'artículo') }}" />
                             @endif
@@ -376,6 +376,11 @@
     </x-container-wrapp>
 
     <script>
+        // Variables para gestos táctiles
+        let touchStartX = 0;
+        let touchEndX = 0;
+        let currentCarousel = null;
+        
         // Función para mostrar slide específico en el carousel
         function showSlide(articuloId, slideIndex) {
             const carousel = document.getElementById(`carousel-${articuloId}`);
@@ -384,9 +389,56 @@
             }
         }
 
+        // Configurar gestos táctiles para carousels
+        function setupCarouselTouchGestures() {
+            const carousels = document.querySelectorAll('[id^="carousel-"]');
+            
+            carousels.forEach(carousel => {
+                carousel.addEventListener('touchstart', (e) => {
+                    touchStartX = e.touches[0].clientX;
+                    currentCarousel = carousel;
+                }, { passive: true });
+                
+                carousel.addEventListener('touchend', (e) => {
+                    touchEndX = e.changedTouches[0].clientX;
+                    handleCarouselSwipe();
+                }, { passive: true });
+            });
+        }
+
+        // Manejar gesto de deslizar en carousel
+        function handleCarouselSwipe() {
+            if (!currentCarousel) return;
+            
+            const swipeThreshold = 50;
+            const swipeDistance = touchEndX - touchStartX;
+            const articuloId = currentCarousel.id.split('-')[1];
+            const images = currentCarousel.querySelectorAll('div');
+            
+            if (Math.abs(swipeDistance) > swipeThreshold && images.length > 1) {
+                const currentTransform = currentCarousel.style.transform;
+                const currentSlide = Math.abs(parseInt(currentTransform.match(/-(\d+)%/) || [0, 0])[1]) / 100;
+                
+                if (swipeDistance > 0) {
+                    // Deslizar hacia la derecha - slide anterior
+                    const prevSlide = currentSlide > 0 ? currentSlide - 1 : images.length - 1;
+                    showSlide(articuloId, prevSlide);
+                } else {
+                    // Deslizar hacia la izquierda - slide siguiente
+                    const nextSlide = currentSlide < images.length - 1 ? currentSlide + 1 : 0;
+                    showSlide(articuloId, nextSlide);
+                }
+            }
+            
+            currentCarousel = null;
+        }
+
         // Auto-play para carousels (opcional)
         document.addEventListener('DOMContentLoaded', function() {
             const carousels = document.querySelectorAll('[id^="carousel-"]');
+            
+            // Configurar gestos táctiles
+            setupCarouselTouchGestures();
             
             carousels.forEach(carousel => {
                 const articuloId = carousel.id.split('-')[1];
@@ -394,11 +446,11 @@
                 let currentSlide = 0;
                 
                 if (images.length > 1) {
-                    // Auto-play cada 3 segundos
+                    // Auto-play cada 4 segundos (más lento para móvil)
                     setInterval(() => {
                         currentSlide = (currentSlide + 1) % images.length;
                         showSlide(articuloId, currentSlide);
-                    }, 3000);
+                    }, 4000);
                 }
             });
         });

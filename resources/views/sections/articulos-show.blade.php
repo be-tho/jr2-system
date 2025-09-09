@@ -62,58 +62,66 @@
         </div>
 
         <!-- Contenido principal -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8">
             <!-- Columna izquierda - Galería de imágenes -->
-            <div class="space-y-6">
+            <div class="space-y-4 lg:space-y-6">
                 @if($articulo->hasMultipleImages())
                     <!-- Galería principal -->
                     <div class="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-neutral-200 dark:border-neutral-700 overflow-hidden">
                         <!-- Imagen principal -->
-                        <div class="relative group cursor-pointer" onclick="openImageModal(0)">
+                        <div class="relative group cursor-pointer touch-manipulation" onclick="openImageModal(0)">
                             <img id="mainImage" src="{{ \App\Helpers\ImageHelper::getArticuloImageUrl($articulo->getMainImage()) }}" 
                                  alt="{{ \App\Helpers\ImageHelper::getDefaultImageAlt($articulo->getMainImage(), 'default-articulo.svg', $articulo->nombre, 'artículo') }}" 
-                                 class="w-full h-96 object-cover {{ \App\Helpers\ImageHelper::getDefaultImageClass($articulo->getMainImage(), 'default-articulo.svg') }}" />
+                                 class="w-full h-80 sm:h-96 lg:h-[28rem] xl:h-[32rem] object-cover {{ \App\Helpers\ImageHelper::getDefaultImageClass($articulo->getMainImage(), 'default-articulo.svg') }}" />
                             
                             <!-- Overlay de zoom -->
-                            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
-                                <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 group-active:bg-black/30 transition-all duration-300 flex items-center justify-center">
+                                <div class="opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity duration-300">
+                                    <svg class="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 7v3m0 0v3m0-3h3m-3 0H7"></path>
                                     </svg>
                                 </div>
                             </div>
+                            
+                            <!-- Indicador de múltiples imágenes en móvil -->
+                            @if($articulo->getImageCount() > 1)
+                                <div class="absolute top-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded-full sm:hidden">
+                                    {{ $articulo->getImageCount() }} imágenes
+                                </div>
+                            @endif
                         </div>
                         
                         <!-- Miniaturas -->
-                        <div class="p-4">
-                            <div class="flex space-x-2 overflow-x-auto">
+                        <div class="p-3 sm:p-4">
+                            <div class="flex space-x-2 overflow-x-auto pb-2 -mb-2 thumbnails-scroll" style="scrollbar-width: thin;">
                                 @foreach($articulo->getAllImages() as $index => $image)
                                     <button onclick="changeMainImage('{{ \App\Helpers\ImageHelper::getArticuloImageUrl($image) }}', {{ $index }})" 
-                                            class="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 border-transparent hover:border-primary-500 transition-colors duration-200 {{ $index === 0 ? 'border-primary-500' : '' }}">
+                                            class="flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 rounded-lg overflow-hidden border-2 border-transparent hover:border-primary-500 active:border-primary-500 transition-colors duration-200 gallery-thumbnail touch-feedback {{ $index === 0 ? 'border-primary-500' : '' }}">
                                         <img src="{{ \App\Helpers\ImageHelper::getArticuloImageUrl($image) }}" 
                                              alt="Miniatura {{ $index + 1 }}" 
                                              class="w-full h-full object-cover" />
                                     </button>
                                 @endforeach
                             </div>
-                            <p class="text-sm text-neutral-500 dark:text-neutral-400 mt-2 text-center">
-                                Click en una miniatura para cambiar la imagen principal
+                            <p class="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mt-2 text-center">
+                                <span class="hidden sm:inline">Click en una miniatura para cambiar la imagen principal</span>
+                                <span class="sm:hidden">Toca una miniatura para cambiar</span>
                             </p>
                         </div>
                     </div>
                 @else
                     <!-- Imagen única -->
                     <div class="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-neutral-200 dark:border-neutral-700 overflow-hidden">
-                        <div class="relative group cursor-pointer" onclick="openImageModal(0)">
+                        <div class="relative group cursor-pointer touch-manipulation" onclick="openImageModal(0)">
                             <img src="{{ \App\Helpers\ImageHelper::getArticuloImageUrl($articulo->imagen) }}" 
                                  alt="{{ \App\Helpers\ImageHelper::getDefaultImageAlt($articulo->imagen, 'default-articulo.svg', $articulo->nombre, 'artículo') }}" 
-                                 class="w-full h-96 object-cover {{ \App\Helpers\ImageHelper::getDefaultImageClass($articulo->imagen, 'default-articulo.svg') }}" />
+                                 class="w-full h-80 sm:h-96 lg:h-[28rem] xl:h-[32rem] object-cover {{ \App\Helpers\ImageHelper::getDefaultImageClass($articulo->imagen, 'default-articulo.svg') }}" />
                             
                             <!-- Overlay de zoom -->
-                            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
-                                <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 group-active:bg-black/30 transition-all duration-300 flex items-center justify-center">
+                                <div class="opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity duration-300">
+                                    <svg class="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 7v3m0 0v3m0-3h3m-3 0H7"></path>
                                     </svg>
@@ -121,8 +129,11 @@
                             </div>
                         </div>
                         
-                        <div class="p-4 text-center">
-                            <p class="text-sm text-neutral-500 dark:text-neutral-400">Click para ampliar</p>
+                        <div class="p-3 sm:p-4 text-center">
+                            <p class="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">
+                                <span class="hidden sm:inline">Click para ampliar</span>
+                                <span class="sm:hidden">Toca para ampliar</span>
+                            </p>
                         </div>
                     </div>
                 @endif
@@ -329,18 +340,18 @@
         </div>
 
         <!-- Modal de galería de imágenes -->
-        <div id="imageModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div id="imageModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-2 sm:p-4 modal-mobile">
             <div class="relative max-w-6xl max-h-full w-full">
                 @if($articulo->hasMultipleImages())
                     <!-- Galería completa -->
                     <div class="bg-white dark:bg-neutral-800 rounded-xl overflow-hidden">
                         <!-- Header del modal -->
-                        <div class="flex items-center justify-between p-4 border-b border-neutral-200 dark:border-neutral-700">
-                            <h3 class="text-lg font-semibold text-neutral-900 dark:text-white">
-                                Galería de Imágenes - {{ $articulo->nombre }}
+                        <div class="flex items-center justify-between p-3 sm:p-4 border-b border-neutral-200 dark:border-neutral-700">
+                            <h3 class="text-base sm:text-lg font-semibold text-neutral-900 dark:text-white truncate pr-2">
+                                Galería - {{ $articulo->nombre }}
                             </h3>
-                            <button onclick="closeImageModal()" class="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <button onclick="closeImageModal()" class="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 touch-manipulation flex-shrink-0 w-8 h-8 sm:w-6 sm:h-6 flex items-center justify-center">
+                                <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                 </svg>
                             </button>
@@ -348,18 +359,18 @@
                         
                         <!-- Imagen principal del modal -->
                         <div class="relative">
-                            <img id="modalMainImage" src="" alt="" class="w-full h-auto max-h-[70vh] object-contain">
+                            <img id="modalMainImage" src="" alt="" class="w-full h-auto max-h-[60vh] sm:max-h-[70vh] object-contain">
                             
                             <!-- Navegación -->
                             @if($articulo->getImageCount() > 1)
-                                <button id="prevBtn" onclick="previousImage()" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 dark:bg-neutral-800/90 text-neutral-900 dark:text-white rounded-full w-10 h-10 flex items-center justify-center shadow-lg hover:bg-white dark:hover:bg-neutral-700 transition-colors duration-200">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <button id="prevBtn" onclick="previousImage()" class="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-white/90 dark:bg-neutral-800/90 text-neutral-900 dark:text-white rounded-full w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center shadow-lg hover:bg-white dark:hover:bg-neutral-700 active:bg-white dark:active:bg-neutral-700 transition-colors duration-200 touch-manipulation">
+                                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                                     </svg>
                                 </button>
                                 
-                                <button id="nextBtn" onclick="nextImage()" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 dark:bg-neutral-800/90 text-neutral-900 dark:text-white rounded-full w-10 h-10 flex items-center justify-center shadow-lg hover:bg-white dark:hover:bg-neutral-700 transition-colors duration-200">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <button id="nextBtn" onclick="nextImage()" class="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 bg-white/90 dark:bg-neutral-800/90 text-neutral-900 dark:text-white rounded-full w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center shadow-lg hover:bg-white dark:hover:bg-neutral-700 active:bg-white dark:active:bg-neutral-700 transition-colors duration-200 touch-manipulation">
+                                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                                     </svg>
                                 </button>
@@ -368,11 +379,11 @@
                         
                         <!-- Miniaturas del modal -->
                         @if($articulo->getImageCount() > 1)
-                            <div class="p-4 border-t border-neutral-200 dark:border-neutral-700">
-                                <div class="flex space-x-2 overflow-x-auto justify-center">
+                            <div class="p-3 sm:p-4 border-t border-neutral-200 dark:border-neutral-700">
+                                <div class="flex space-x-2 overflow-x-auto justify-center pb-2 -mb-2 thumbnails-scroll" style="scrollbar-width: thin;">
                                     @foreach($articulo->getAllImages() as $index => $image)
                                         <button onclick="showModalImage({{ $index }})" 
-                                                class="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 border-transparent hover:border-primary-500 transition-colors duration-200 modal-thumbnail" 
+                                                class="flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 rounded-lg overflow-hidden border-2 border-transparent hover:border-primary-500 active:border-primary-500 transition-colors duration-200 modal-thumbnail gallery-thumbnail touch-feedback" 
                                                 data-index="{{ $index }}">
                                             <img src="{{ \App\Helpers\ImageHelper::getArticuloImageUrl($image) }}" 
                                                  alt="Miniatura {{ $index + 1 }}" 
@@ -380,7 +391,7 @@
                                         </button>
                                     @endforeach
                                 </div>
-                                <p class="text-sm text-neutral-500 dark:text-neutral-400 mt-2 text-center">
+                                <p class="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mt-2 text-center">
                                     Imagen <span id="currentImageNumber">1</span> de {{ $articulo->getImageCount() }}
                                 </p>
                             </div>
@@ -389,12 +400,12 @@
                 @else
                     <!-- Modal simple para imagen única -->
                     <div class="relative">
-                        <img id="modalMainImage" src="" alt="" class="w-full h-auto max-h-[90vh] object-contain rounded-lg shadow-2xl">
+                        <img id="modalMainImage" src="" alt="" class="w-full h-auto max-h-[85vh] sm:max-h-[90vh] object-contain rounded-lg shadow-2xl">
                         
                         <!-- Botón cerrar -->
                         <button onclick="closeImageModal()" 
-                                class="absolute -top-4 -right-4 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white rounded-full w-10 h-10 flex items-center justify-center shadow-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors duration-200">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                class="absolute -top-2 -right-2 sm:-top-4 sm:-right-4 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white rounded-full w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center shadow-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 active:bg-neutral-100 dark:active:bg-neutral-700 transition-colors duration-200 touch-manipulation">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
                         </button>
@@ -407,6 +418,9 @@
         // Variables globales para la galería
         let currentImageIndex = 0;
         let images = [];
+        let touchStartX = 0;
+        let touchEndX = 0;
+        let isModalOpen = false;
         
         // Inicializar imágenes
         document.addEventListener('DOMContentLoaded', function() {
@@ -419,7 +433,59 @@
             @else
                 images = ['{{ \App\Helpers\ImageHelper::getArticuloImageUrl($articulo->imagen) }}'];
             @endif
+            
+            // Configurar gestos táctiles para móvil
+            setupTouchGestures();
         });
+
+        // Configurar gestos táctiles
+        function setupTouchGestures() {
+            const modal = document.getElementById('imageModal');
+            const mainImage = document.getElementById('mainImage');
+            
+            // Gestos para la imagen principal
+            if (mainImage) {
+                mainImage.addEventListener('touchstart', handleTouchStart, { passive: true });
+                mainImage.addEventListener('touchend', handleTouchEnd, { passive: true });
+            }
+            
+            // Gestos para el modal
+            if (modal) {
+                modal.addEventListener('touchstart', handleTouchStart, { passive: true });
+                modal.addEventListener('touchend', handleTouchEnd, { passive: true });
+            }
+        }
+
+        // Manejar inicio de toque
+        function handleTouchStart(e) {
+            touchStartX = e.touches[0].clientX;
+        }
+
+        // Manejar fin de toque
+        function handleTouchEnd(e) {
+            touchEndX = e.changedTouches[0].clientX;
+            handleSwipeGesture();
+        }
+
+        // Manejar gesto de deslizar
+        function handleSwipeGesture() {
+            const swipeThreshold = 50;
+            const swipeDistance = touchEndX - touchStartX;
+            
+            if (Math.abs(swipeDistance) > swipeThreshold) {
+                if (swipeDistance > 0) {
+                    // Deslizar hacia la derecha - imagen anterior
+                    if (isModalOpen && images.length > 1) {
+                        previousImage();
+                    }
+                } else {
+                    // Deslizar hacia la izquierda - imagen siguiente
+                    if (isModalOpen && images.length > 1) {
+                        nextImage();
+                    }
+                }
+            }
+        }
 
         // Cambiar imagen principal desde miniatura
         function changeMainImage(imageSrc, index) {
@@ -437,6 +503,7 @@
         // Abrir modal de imagen
         function openImageModal(index = 0) {
             currentImageIndex = index;
+            isModalOpen = true;
             const modal = document.getElementById('imageModal');
             const modalImage = document.getElementById('modalMainImage');
             
@@ -444,13 +511,26 @@
             modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
             
+            // Prevenir scroll en móvil
+            if (window.innerWidth < 768) {
+                document.body.style.position = 'fixed';
+                document.body.style.width = '100%';
+            }
+            
             updateModalUI();
         }
 
         // Cerrar modal
         function closeImageModal() {
+            isModalOpen = false;
             document.getElementById('imageModal').classList.add('hidden');
             document.body.style.overflow = 'auto';
+            
+            // Restaurar scroll en móvil
+            if (window.innerWidth < 768) {
+                document.body.style.position = '';
+                document.body.style.width = '';
+            }
         }
 
         // Mostrar imagen específica en el modal

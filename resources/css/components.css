@@ -292,6 +292,78 @@
     @apply text-sm text-neutral-600 dark:text-neutral-300 mt-1;
 }
 
+/* Galería móvil optimizada */
+.gallery-thumbnail {
+    @apply touch-manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.gallery-thumbnail:active {
+    @apply scale-95;
+}
+
+/* Scrollbar personalizada para miniaturas */
+.thumbnails-scroll::-webkit-scrollbar {
+    height: 4px;
+}
+
+.thumbnails-scroll::-webkit-scrollbar-track {
+    @apply bg-neutral-100 dark:bg-neutral-700 rounded-full;
+}
+
+.thumbnails-scroll::-webkit-scrollbar-thumb {
+    @apply bg-neutral-300 dark:bg-neutral-500 rounded-full;
+}
+
+.thumbnails-scroll::-webkit-scrollbar-thumb:hover {
+    @apply bg-neutral-400 dark:bg-neutral-400;
+}
+
+/* Modal móvil optimizado */
+@media (max-width: 768px) {
+    .modal-mobile {
+        @apply p-2;
+    }
+    
+    .modal-mobile .modal-content {
+        @apply max-h-[95vh] overflow-y-auto;
+    }
+    
+    .modal-mobile img {
+        @apply max-h-[60vh];
+    }
+    
+    .modal-mobile .modal-header {
+        @apply p-3;
+    }
+    
+    .modal-mobile .modal-header h3 {
+        @apply text-base truncate;
+    }
+}
+
+/* Carousel móvil */
+@media (max-width: 640px) {
+    .carousel-indicators {
+        @apply scale-90;
+    }
+    
+    .carousel-indicators button {
+        @apply w-1 h-1;
+        min-width: 4px;
+        min-height: 4px;
+    }
+}
+
+/* Touch feedback */
+.touch-feedback {
+    @apply transition-transform duration-150 ease-out;
+}
+
+.touch-feedback:active {
+    @apply scale-95;
+}
+
 /* Responsive Utilities */
 @media (max-width: 640px) {
     .mobile-hidden {
@@ -304,6 +376,23 @@
     
     .mobile-text-center {
         text-align: center;
+    }
+    
+    /* Optimizaciones específicas para galería móvil */
+    .gallery-main-image {
+        @apply h-64;
+    }
+    
+    .gallery-thumbnails {
+        @apply w-12 h-12;
+    }
+    
+    .gallery-modal {
+        @apply p-2;
+    }
+    
+    .gallery-modal img {
+        @apply max-h-[60vh];
     }
 }
 

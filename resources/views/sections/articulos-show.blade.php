@@ -63,30 +63,69 @@
 
         <!-- Contenido principal -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Columna izquierda - Imagen -->
+            <!-- Columna izquierda - Galería de imágenes -->
             <div class="space-y-6">
-                <!-- Imagen principal -->
-                <div class="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-neutral-200 dark:border-neutral-700 overflow-hidden">
-                    <div class="relative group cursor-pointer" onclick="openImageModal()">
-                        <img src="{{ \App\Helpers\ImageHelper::getArticuloImageUrl($articulo->imagen) }}" 
-                             alt="{{ \App\Helpers\ImageHelper::getDefaultImageAlt($articulo->imagen, 'default-articulo.svg', $articulo->nombre, 'artículo') }}" 
-                             class="w-full h-96 object-cover {{ \App\Helpers\ImageHelper::getDefaultImageClass($articulo->imagen, 'default-articulo.svg') }}" />
-                        
-                        <!-- Overlay de zoom -->
-                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
-                            <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 7v3m0 0v3m0-3h3m-3 0H7"></path>
-                                </svg>
+                @if($articulo->hasMultipleImages())
+                    <!-- Galería principal -->
+                    <div class="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-neutral-200 dark:border-neutral-700 overflow-hidden">
+                        <!-- Imagen principal -->
+                        <div class="relative group cursor-pointer" onclick="openImageModal(0)">
+                            <img id="mainImage" src="{{ \App\Helpers\ImageHelper::getArticuloImageUrl($articulo->getMainImage()) }}" 
+                                 alt="{{ \App\Helpers\ImageHelper::getDefaultImageAlt($articulo->getMainImage(), 'default-articulo.svg', $articulo->nombre, 'artículo') }}" 
+                                 class="w-full h-96 object-cover {{ \App\Helpers\ImageHelper::getDefaultImageClass($articulo->getMainImage(), 'default-articulo.svg') }}" />
+                            
+                            <!-- Overlay de zoom -->
+                            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+                                <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 7v3m0 0v3m0-3h3m-3 0H7"></path>
+                                    </svg>
+                                </div>
                             </div>
                         </div>
+                        
+                        <!-- Miniaturas -->
+                        <div class="p-4">
+                            <div class="flex space-x-2 overflow-x-auto">
+                                @foreach($articulo->getAllImages() as $index => $image)
+                                    <button onclick="changeMainImage('{{ \App\Helpers\ImageHelper::getArticuloImageUrl($image) }}', {{ $index }})" 
+                                            class="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 border-transparent hover:border-primary-500 transition-colors duration-200 {{ $index === 0 ? 'border-primary-500' : '' }}">
+                                        <img src="{{ \App\Helpers\ImageHelper::getArticuloImageUrl($image) }}" 
+                                             alt="Miniatura {{ $index + 1 }}" 
+                                             class="w-full h-full object-cover" />
+                                    </button>
+                                @endforeach
+                            </div>
+                            <p class="text-sm text-neutral-500 dark:text-neutral-400 mt-2 text-center">
+                                Click en una miniatura para cambiar la imagen principal
+                            </p>
+                        </div>
                     </div>
-                    
-                    <div class="p-4 text-center">
-                        <p class="text-sm text-neutral-500 dark:text-neutral-400">Click para ampliar</p>
+                @else
+                    <!-- Imagen única -->
+                    <div class="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-neutral-200 dark:border-neutral-700 overflow-hidden">
+                        <div class="relative group cursor-pointer" onclick="openImageModal(0)">
+                            <img src="{{ \App\Helpers\ImageHelper::getArticuloImageUrl($articulo->imagen) }}" 
+                                 alt="{{ \App\Helpers\ImageHelper::getDefaultImageAlt($articulo->imagen, 'default-articulo.svg', $articulo->nombre, 'artículo') }}" 
+                                 class="w-full h-96 object-cover {{ \App\Helpers\ImageHelper::getDefaultImageClass($articulo->imagen, 'default-articulo.svg') }}" />
+                            
+                            <!-- Overlay de zoom -->
+                            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+                                <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 7v3m0 0v3m0-3h3m-3 0H7"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 text-center">
+                            <p class="text-sm text-neutral-500 dark:text-neutral-400">Click para ampliar</p>
+                        </div>
                     </div>
-                </div>
+                @endif
 
                 <!-- Información adicional -->
                 <div class="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-neutral-200 dark:border-neutral-700 p-6">
@@ -289,38 +328,185 @@
             </div>
         </div>
 
-        <!-- Modal de imagen -->
+        <!-- Modal de galería de imágenes -->
         <div id="imageModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-            <div class="relative max-w-4xl max-h-full">
-                <img src="{{ \App\Helpers\ImageHelper::getArticuloImageUrl($articulo->imagen) }}" 
-                     alt="{{ \App\Helpers\ImageHelper::getDefaultImageAlt($articulo->imagen, 'default-articulo.svg', $articulo->nombre, 'artículo') }}" 
-                     class="w-full h-auto max-h-[90vh] object-contain rounded-lg shadow-2xl {{ \App\Helpers\ImageHelper::getDefaultImageClass($articulo->imagen, 'default-articulo.svg') }}">
-                
-                <!-- Botón cerrar -->
-                <button onclick="closeImageModal()" 
-                        class="absolute -top-4 -right-4 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white rounded-full w-10 h-10 flex items-center justify-center shadow-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors duration-200">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
+            <div class="relative max-w-6xl max-h-full w-full">
+                @if($articulo->hasMultipleImages())
+                    <!-- Galería completa -->
+                    <div class="bg-white dark:bg-neutral-800 rounded-xl overflow-hidden">
+                        <!-- Header del modal -->
+                        <div class="flex items-center justify-between p-4 border-b border-neutral-200 dark:border-neutral-700">
+                            <h3 class="text-lg font-semibold text-neutral-900 dark:text-white">
+                                Galería de Imágenes - {{ $articulo->nombre }}
+                            </h3>
+                            <button onclick="closeImageModal()" class="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <!-- Imagen principal del modal -->
+                        <div class="relative">
+                            <img id="modalMainImage" src="" alt="" class="w-full h-auto max-h-[70vh] object-contain">
+                            
+                            <!-- Navegación -->
+                            @if($articulo->getImageCount() > 1)
+                                <button id="prevBtn" onclick="previousImage()" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 dark:bg-neutral-800/90 text-neutral-900 dark:text-white rounded-full w-10 h-10 flex items-center justify-center shadow-lg hover:bg-white dark:hover:bg-neutral-700 transition-colors duration-200">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                                    </svg>
+                                </button>
+                                
+                                <button id="nextBtn" onclick="nextImage()" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 dark:bg-neutral-800/90 text-neutral-900 dark:text-white rounded-full w-10 h-10 flex items-center justify-center shadow-lg hover:bg-white dark:hover:bg-neutral-700 transition-colors duration-200">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                </button>
+                            @endif
+                        </div>
+                        
+                        <!-- Miniaturas del modal -->
+                        @if($articulo->getImageCount() > 1)
+                            <div class="p-4 border-t border-neutral-200 dark:border-neutral-700">
+                                <div class="flex space-x-2 overflow-x-auto justify-center">
+                                    @foreach($articulo->getAllImages() as $index => $image)
+                                        <button onclick="showModalImage({{ $index }})" 
+                                                class="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 border-transparent hover:border-primary-500 transition-colors duration-200 modal-thumbnail" 
+                                                data-index="{{ $index }}">
+                                            <img src="{{ \App\Helpers\ImageHelper::getArticuloImageUrl($image) }}" 
+                                                 alt="Miniatura {{ $index + 1 }}" 
+                                                 class="w-full h-full object-cover" />
+                                        </button>
+                                    @endforeach
+                                </div>
+                                <p class="text-sm text-neutral-500 dark:text-neutral-400 mt-2 text-center">
+                                    Imagen <span id="currentImageNumber">1</span> de {{ $articulo->getImageCount() }}
+                                </p>
+                            </div>
+                        @endif
+                    </div>
+                @else
+                    <!-- Modal simple para imagen única -->
+                    <div class="relative">
+                        <img id="modalMainImage" src="" alt="" class="w-full h-auto max-h-[90vh] object-contain rounded-lg shadow-2xl">
+                        
+                        <!-- Botón cerrar -->
+                        <button onclick="closeImageModal()" 
+                                class="absolute -top-4 -right-4 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white rounded-full w-10 h-10 flex items-center justify-center shadow-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors duration-200">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                @endif
             </div>
         </div>
 
         <script>
-        function openImageModal() {
-            document.getElementById('imageModal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
+        // Variables globales para la galería
+        let currentImageIndex = 0;
+        let images = [];
+        
+        // Inicializar imágenes
+        document.addEventListener('DOMContentLoaded', function() {
+            @if($articulo->hasMultipleImages())
+                images = [
+                    @foreach($articulo->getAllImages() as $index => $image)
+                        '{{ \App\Helpers\ImageHelper::getArticuloImageUrl($image) }}'{{ $index < $articulo->getImageCount() - 1 ? ',' : '' }}
+                    @endforeach
+                ];
+            @else
+                images = ['{{ \App\Helpers\ImageHelper::getArticuloImageUrl($articulo->imagen) }}'];
+            @endif
+        });
+
+        // Cambiar imagen principal desde miniatura
+        function changeMainImage(imageSrc, index) {
+            const mainImage = document.getElementById('mainImage');
+            mainImage.src = imageSrc;
+            currentImageIndex = index;
+            
+            // Actualizar bordes de miniaturas
+            document.querySelectorAll('.flex-shrink-0').forEach((btn, i) => {
+                btn.classList.toggle('border-primary-500', i === index);
+                btn.classList.toggle('border-transparent', i !== index);
+            });
         }
 
+        // Abrir modal de imagen
+        function openImageModal(index = 0) {
+            currentImageIndex = index;
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalMainImage');
+            
+            modalImage.src = images[currentImageIndex];
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            
+            updateModalUI();
+        }
+
+        // Cerrar modal
         function closeImageModal() {
             document.getElementById('imageModal').classList.add('hidden');
             document.body.style.overflow = 'auto';
         }
 
-        // Cerrar modal con ESC
+        // Mostrar imagen específica en el modal
+        function showModalImage(index) {
+            currentImageIndex = index;
+            const modalImage = document.getElementById('modalMainImage');
+            modalImage.src = images[currentImageIndex];
+            updateModalUI();
+        }
+
+        // Imagen anterior
+        function previousImage() {
+            currentImageIndex = currentImageIndex > 0 ? currentImageIndex - 1 : images.length - 1;
+            const modalImage = document.getElementById('modalMainImage');
+            modalImage.src = images[currentImageIndex];
+            updateModalUI();
+        }
+
+        // Imagen siguiente
+        function nextImage() {
+            currentImageIndex = currentImageIndex < images.length - 1 ? currentImageIndex + 1 : 0;
+            const modalImage = document.getElementById('modalMainImage');
+            modalImage.src = images[currentImageIndex];
+            updateModalUI();
+        }
+
+        // Actualizar UI del modal
+        function updateModalUI() {
+            // Actualizar número de imagen
+            const currentImageNumber = document.getElementById('currentImageNumber');
+            if (currentImageNumber) {
+                currentImageNumber.textContent = currentImageIndex + 1;
+            }
+            
+            // Actualizar bordes de miniaturas del modal
+            document.querySelectorAll('.modal-thumbnail').forEach((btn, i) => {
+                btn.classList.toggle('border-primary-500', i === currentImageIndex);
+                btn.classList.toggle('border-transparent', i !== currentImageIndex);
+            });
+        }
+
+        // Navegación con teclado
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeImageModal();
+            const modal = document.getElementById('imageModal');
+            if (!modal.classList.contains('hidden')) {
+                switch(e.key) {
+                    case 'Escape':
+                        closeImageModal();
+                        break;
+                    case 'ArrowLeft':
+                        previousImage();
+                        break;
+                    case 'ArrowRight':
+                        nextImage();
+                        break;
+                }
             }
         });
 

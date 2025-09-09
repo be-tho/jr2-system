@@ -42,6 +42,21 @@ trait ImageHandler
             if (!file_exists($fullPath)) {
                 mkdir($fullPath, 0755, true);
             }
+            
+            // Verificar y corregir permisos del directorio
+            if (!is_writable($fullPath)) {
+                chmod($fullPath, 0755);
+                
+                // Si aún no es escribible, intentar con permisos más amplios
+                if (!is_writable($fullPath)) {
+                    chmod($fullPath, 0777);
+                }
+                
+                // Si sigue sin funcionar, lanzar excepción con información útil
+                if (!is_writable($fullPath)) {
+                    throw new \Exception("No se pueden escribir archivos en el directorio: {$fullPath}. Verifique los permisos del directorio.");
+                }
+            }
 
             // Generar nombre único para la imagen
             $filename = $options['filename_prefix'] . $this->sanitizeFilename($image->getClientOriginalName());
@@ -118,6 +133,22 @@ trait ImageHandler
     protected function processStandardImage($image, string $directory, array $options): string
     {
         $fullPath = public_path($directory);
+        
+        // Verificar y corregir permisos del directorio
+        if (!is_writable($fullPath)) {
+            chmod($fullPath, 0755);
+            
+            // Si aún no es escribible, intentar con permisos más amplios
+            if (!is_writable($fullPath)) {
+                chmod($fullPath, 0777);
+            }
+            
+            // Si sigue sin funcionar, lanzar excepción con información útil
+            if (!is_writable($fullPath)) {
+                throw new \Exception("No se pueden escribir archivos en el directorio: {$fullPath}. Verifique los permisos del directorio.");
+            }
+        }
+        
         $filename = $options['filename_prefix'] . $this->sanitizeFilename($image->getClientOriginalName());
         $filepath = $fullPath . '/' . $filename;
 
@@ -273,6 +304,22 @@ trait ImageHandler
     protected function saveWithTargetSize($img, string $directory, array $options, int $targetSize, int $initialQuality): string
     {
         $fullPath = public_path($directory);
+        
+        // Verificar y corregir permisos del directorio
+        if (!is_writable($fullPath)) {
+            chmod($fullPath, 0755);
+            
+            // Si aún no es escribible, intentar con permisos más amplios
+            if (!is_writable($fullPath)) {
+                chmod($fullPath, 0777);
+            }
+            
+            // Si sigue sin funcionar, lanzar excepción con información útil
+            if (!is_writable($fullPath)) {
+                throw new \Exception("No se pueden escribir archivos en el directorio: {$fullPath}. Verifique los permisos del directorio.");
+            }
+        }
+        
         $filename = $options['filename_prefix'] . uniqid() . '.webp';
         $filepath = $fullPath . '/' . $filename;
         

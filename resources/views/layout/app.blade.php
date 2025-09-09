@@ -15,6 +15,7 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 
     <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- Linkear el css de build -->
     <link rel="stylesheet" href="{{ asset('build/assets/app-Cs6YtDRv.css') }}">
@@ -273,6 +274,7 @@
             // Los formularios con confirmación ahora son manejados por los componentes delete-button y delete-modal
         });
 </script>
+    @stack('scripts')
     <script src="{{ asset('build/assets/app-Q25KwOla.js') }}"></script>
 </body>
 </html>

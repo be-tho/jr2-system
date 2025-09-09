@@ -188,12 +188,43 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 @foreach($articulos as $articulo)
                 <div class="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden group">
-                    <!-- Imagen del artículo -->
+                    <!-- Galería de imágenes del artículo -->
                     <div class="relative overflow-hidden">
                         <a href="{{ route('articulos.show', $articulo) }}" class="block">
-                            <img class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300 {{ \App\Helpers\ImageHelper::getDefaultImageClass($articulo->imagen, 'default-articulo.svg') }}" 
-                                 src="{{ \App\Helpers\ImageHelper::getArticuloImageUrl($articulo->imagen) }}" 
-                                 alt="{{ \App\Helpers\ImageHelper::getDefaultImageAlt($articulo->imagen, 'default-articulo.svg', $articulo->nombre, 'artículo') }}" />
+                            @if($articulo->hasMultipleImages())
+                                <!-- Carousel para múltiples imágenes -->
+                                <div class="relative w-full h-48 overflow-hidden">
+                                    <div class="flex transition-transform duration-300 ease-in-out" id="carousel-{{ $articulo->id }}">
+                                        @foreach($articulo->getAllImages() as $index => $image)
+                                            <div class="w-full h-48 flex-shrink-0">
+                                                <img class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300 {{ \App\Helpers\ImageHelper::getDefaultImageClass($image, 'default-articulo.svg') }}" 
+                                                     src="{{ \App\Helpers\ImageHelper::getArticuloImageUrl($image) }}" 
+                                                     alt="{{ \App\Helpers\ImageHelper::getDefaultImageAlt($image, 'default-articulo.svg', $articulo->nombre, 'artículo') }}" />
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                    
+                                    <!-- Indicadores de imágenes -->
+                                    @if($articulo->getImageCount() > 1)
+                                        <div class="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
+                                            @foreach($articulo->getAllImages() as $index => $image)
+                                                <button class="w-2 h-2 rounded-full bg-white/70 hover:bg-white transition-colors duration-200" 
+                                                        onclick="showSlide({{ $articulo->id }}, {{ $index }})"></button>
+                                            @endforeach
+                                        </div>
+                                        
+                                        <!-- Contador de imágenes -->
+                                        <div class="absolute top-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded-full">
+                                            {{ $articulo->getImageCount() }} imágenes
+                                        </div>
+                                    @endif
+                                </div>
+                            @else
+                                <!-- Imagen única -->
+                                <img class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300 {{ \App\Helpers\ImageHelper::getDefaultImageClass($articulo->imagen, 'default-articulo.svg') }}" 
+                                     src="{{ \App\Helpers\ImageHelper::getArticuloImageUrl($articulo->imagen) }}" 
+                                     alt="{{ \App\Helpers\ImageHelper::getDefaultImageAlt($articulo->imagen, 'default-articulo.svg', $articulo->nombre, 'artículo') }}" />
+                            @endif
                         </a>
                         
                         <!-- Badge de stock -->
@@ -343,4 +374,33 @@
             </div>
         @endif
     </x-container-wrapp>
+
+    <script>
+        // Función para mostrar slide específico en el carousel
+        function showSlide(articuloId, slideIndex) {
+            const carousel = document.getElementById(`carousel-${articuloId}`);
+            if (carousel) {
+                carousel.style.transform = `translateX(-${slideIndex * 100}%)`;
+            }
+        }
+
+        // Auto-play para carousels (opcional)
+        document.addEventListener('DOMContentLoaded', function() {
+            const carousels = document.querySelectorAll('[id^="carousel-"]');
+            
+            carousels.forEach(carousel => {
+                const articuloId = carousel.id.split('-')[1];
+                const images = carousel.querySelectorAll('div');
+                let currentSlide = 0;
+                
+                if (images.length > 1) {
+                    // Auto-play cada 3 segundos
+                    setInterval(() => {
+                        currentSlide = (currentSlide + 1) % images.length;
+                        showSlide(articuloId, currentSlide);
+                    }, 3000);
+                }
+            });
+        });
+    </script>
 @endsection

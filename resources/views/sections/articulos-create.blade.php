@@ -207,39 +207,125 @@
                     @enderror
                 </div>
 
-                {{-- Imagen --}}
+                {{-- Galería de imágenes --}}
                 <div class="md:col-span-2">
-                    <label for="imagen" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                        Imagen del Artículo
+                    <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                        Galería de Imágenes del Artículo
                     </label>
                     <div class="space-y-4">
-                        {{-- Input de archivo --}}
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="ri-image-line text-neutral-400 dark:text-neutral-500"></i>
+                        {{-- Imagen principal --}}
+                        <div>
+                            <label for="imagen" class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-2">
+                                Imagen Principal <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="ri-image-line text-neutral-400 dark:text-neutral-500"></i>
+                                </div>
+                                <input 
+                                    type="file" 
+                                    id="imagen" 
+                                    name="imagen" 
+                                    accept="image/*"
+                                    class="block w-full pl-10 pr-3 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200 @error('imagen') border-red-500 dark:border-red-400 @enderror file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 dark:file:bg-primary-900/20 dark:file:text-primary-400"
+                                >
                             </div>
-                            <input 
-                                type="file" 
-                                id="imagen" 
-                                name="imagen" 
-                                accept="image/*"
-                                class="block w-full pl-10 pr-3 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200 @error('imagen') border-red-500 dark:border-red-400 @enderror file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 dark:file:bg-primary-900/20 dark:file:text-primary-400"
-                            >
+                            @error('imagen')
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
                         </div>
-                        <div class="space-y-2">
-                            <p class="text-xs text-neutral-500 dark:text-neutral-400">
-                                <strong>Formatos soportados:</strong> JPG, PNG, GIF, WEBP, HEIC (iPhone)
-                            </p>
-                            <p class="text-xs text-neutral-500 dark:text-neutral-400">
-                                <strong>Tamaño máximo:</strong> 50MB (se optimizará automáticamente)
-                            </p>
-                            <p class="text-xs text-primary-600 dark:text-primary-400">
-                                <i class="ri-information-line"></i> Las imágenes se optimizarán automáticamente para mejor rendimiento
-                            </p>
+
+                        {{-- Segunda imagen --}}
+                        <div>
+                            <label for="imagen_2" class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-2">
+                                Segunda Imagen <span class="text-neutral-400">(Opcional)</span>
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="ri-image-line text-neutral-400 dark:text-neutral-500"></i>
+                                </div>
+                                <input 
+                                    type="file" 
+                                    id="imagen_2" 
+                                    name="imagen_2" 
+                                    accept="image/*"
+                                    class="block w-full pl-10 pr-3 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200 @error('imagen_2') border-red-500 dark:border-red-400 @enderror file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 dark:file:bg-primary-900/20 dark:file:text-primary-400"
+                                >
+                            </div>
+                            @error('imagen_2')
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
                         </div>
-                        @error('imagen')
-                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                        @enderror
+
+                        {{-- Tercera imagen --}}
+                        <div>
+                            <label for="imagen_3" class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-2">
+                                Tercera Imagen <span class="text-neutral-400">(Opcional)</span>
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="ri-image-line text-neutral-400 dark:text-neutral-500"></i>
+                                </div>
+                                <input 
+                                    type="file" 
+                                    id="imagen_3" 
+                                    name="imagen_3" 
+                                    accept="image/*"
+                                    class="block w-full pl-10 pr-3 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200 @error('imagen_3') border-red-500 dark:border-red-400 @enderror file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 dark:file:bg-primary-900/20 dark:file:text-primary-400"
+                                >
+                            </div>
+                            @error('imagen_3')
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- Información sobre las imágenes --}}
+                        <div class="bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 rounded-lg p-4">
+                            <div class="flex items-start">
+                                <i class="ri-information-line text-primary-600 dark:text-primary-400 text-lg mr-3 mt-0.5"></i>
+                                <div class="text-sm text-primary-800 dark:text-primary-200">
+                                    <p class="font-medium mb-2">Información sobre las imágenes:</p>
+                                    <ul class="space-y-1 text-xs">
+                                        <li>• <strong>Imagen Principal:</strong> Obligatoria, será la imagen principal del artículo</li>
+                                        <li>• <strong>Imágenes adicionales:</strong> Opcionales, hasta 2 imágenes más para crear una galería</li>
+                                        <li>• <strong>Formatos soportados:</strong> JPG, PNG, GIF, WEBP, HEIC (iPhone)</li>
+                                        <li>• <strong>Tamaño máximo:</strong> 50MB por imagen (se optimizarán automáticamente)</li>
+                                        <li>• <strong>Total máximo:</strong> 3 imágenes por artículo</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Vista previa de imágenes --}}
+                        <div id="imagePreviews" class="grid grid-cols-1 md:grid-cols-3 gap-4 hidden">
+                            <div class="space-y-2">
+                                <h4 class="text-sm font-medium text-neutral-700 dark:text-neutral-300">Imagen Principal</h4>
+                                <div class="relative">
+                                    <img id="preview1" src="" alt="Vista previa 1" class="w-full h-32 object-cover rounded-lg border border-neutral-200 dark:border-neutral-700">
+                                    <button onclick="removeImage(1)" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600">
+                                        ×
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <h4 class="text-sm font-medium text-neutral-700 dark:text-neutral-300">Segunda Imagen</h4>
+                                <div class="relative">
+                                    <img id="preview2" src="" alt="Vista previa 2" class="w-full h-32 object-cover rounded-lg border border-neutral-200 dark:border-neutral-700">
+                                    <button onclick="removeImage(2)" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600">
+                                        ×
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <h4 class="text-sm font-medium text-neutral-700 dark:text-neutral-300">Tercera Imagen</h4>
+                                <div class="relative">
+                                    <img id="preview3" src="" alt="Vista previa 3" class="w-full h-32 object-cover rounded-lg border border-neutral-200 dark:border-neutral-700">
+                                    <button onclick="removeImage(3)" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600">
+                                        ×
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -295,13 +381,19 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const imageInput = document.getElementById('imagen');
-    const previewModal = document.getElementById('imagePreviewModal');
-    const previewImage = document.getElementById('previewImage');
-    const fileName = document.getElementById('fileName');
-    const fileSize = document.getElementById('fileSize');
-    const fileDimensions = document.getElementById('fileDimensions');
-    const fileType = document.getElementById('fileType');
+    const imageInputs = {
+        1: document.getElementById('imagen'),
+        2: document.getElementById('imagen_2'),
+        3: document.getElementById('imagen_3')
+    };
+    
+    const previewImages = {
+        1: document.getElementById('preview1'),
+        2: document.getElementById('preview2'),
+        3: document.getElementById('preview3')
+    };
+    
+    const imagePreviews = document.getElementById('imagePreviews');
     
     // Detectar si es dispositivo móvil
     const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -310,61 +402,77 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Dispositivo móvil detectado - Optimizando experiencia de subida de artículos');
     }
     
-    imageInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            // Validar tipo de archivo
-            const validTypes = [
-                'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 
-                'image/webp', 'image/heic', 'image/heif'
-            ];
-            
-            if (!validTypes.includes(file.type)) {
-                alert('Por favor selecciona un archivo de imagen válido (JPEG, PNG, GIF, WEBP, HEIC)');
-                this.value = '';
-                return;
-            }
-            
-            // Validar tamaño (50MB máximo)
-            const maxSize = 50 * 1024 * 1024; // 50MB en bytes
-            if (file.size > maxSize) {
-                alert('La imagen no puede ser mayor a 50MB');
-                this.value = '';
-                return;
-            }
-            
-            // Mostrar información del archivo
-            console.log('Archivo seleccionado:', {
-                nombre: file.name,
-                tipo: file.type,
-                tamaño: (file.size / 1024 / 1024).toFixed(2) + ' MB'
-            });
-            
-            // Crear vista previa
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    // Actualizar información en el modal
-                    fileName.textContent = file.name;
-                    fileSize.textContent = (file.size / 1024 / 1024).toFixed(2) + ' MB';
-                    fileDimensions.textContent = this.width + ' x ' + this.height + ' píxeles';
-                    fileType.textContent = file.type;
-                    
-                    // Mostrar imagen en el modal
-                    previewImage.src = e.target.result;
-                    previewModal.classList.remove('hidden');
+    // Función para manejar cada input de imagen
+    Object.keys(imageInputs).forEach(key => {
+        const input = imageInputs[key];
+        const preview = previewImages[key];
+        
+        input.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Validar tipo de archivo
+                const validTypes = [
+                    'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 
+                    'image/webp', 'image/heic', 'image/heif'
+                ];
+                
+                if (!validTypes.includes(file.type)) {
+                    alert('Por favor selecciona un archivo de imagen válido (JPEG, PNG, GIF, WEBP, HEIC)');
+                    this.value = '';
+                    return;
+                }
+                
+                // Validar tamaño (50MB máximo)
+                const maxSize = 50 * 1024 * 1024; // 50MB en bytes
+                if (file.size > maxSize) {
+                    alert('La imagen no puede ser mayor a 50MB');
+                    this.value = '';
+                    return;
+                }
+                
+                // Mostrar información del archivo
+                console.log(`Imagen ${key} seleccionada:`, {
+                    nombre: file.name,
+                    tipo: file.type,
+                    tamaño: (file.size / 1024 / 1024).toFixed(2) + ' MB'
+                });
+                
+                // Crear vista previa
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    showImagePreviews();
                 };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-            
-            // Mostrar mensaje de optimización para móviles
-            if (isMobile) {
-                showMobileOptimizationMessage();
+                reader.readAsDataURL(file);
+                
+                // Mostrar mensaje de optimización para móviles
+                if (isMobile) {
+                    showMobileOptimizationMessage();
+                }
             }
-        }
+        });
     });
+    
+    // Función para mostrar las vistas previas
+    function showImagePreviews() {
+        const hasImages = Object.values(imageInputs).some(input => input.files.length > 0);
+        if (hasImages) {
+            imagePreviews.classList.remove('hidden');
+        } else {
+            imagePreviews.classList.add('hidden');
+        }
+    }
+    
+    // Función para remover imagen
+    window.removeImage = function(imageNumber) {
+        const input = imageInputs[imageNumber];
+        const preview = previewImages[imageNumber];
+        
+        input.value = '';
+        preview.src = '';
+        
+        showImagePreviews();
+    };
     
     // Función para mostrar mensaje de optimización móvil
     function showMobileOptimizationMessage() {
@@ -385,24 +493,28 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Validación del formulario
     document.querySelector('form').addEventListener('submit', function(e) {
-        const file = imageInput.files[0];
+        const hasMainImage = imageInputs[1].files.length > 0;
         
-        if (file) {
-            // Validación adicional antes de enviar
-            const maxSize = 50 * 1024 * 1024;
-            if (file.size > maxSize) {
-                e.preventDefault();
-                alert('La imagen es demasiado grande. Por favor selecciona una imagen más pequeña.');
-                return false;
-            }
+        if (!hasMainImage) {
+            e.preventDefault();
+            alert('Debes seleccionar al menos la imagen principal del artículo.');
+            return false;
         }
+        
+        // Validación adicional de tamaño para todas las imágenes
+        Object.keys(imageInputs).forEach(key => {
+            const file = imageInputs[key].files[0];
+            if (file) {
+                const maxSize = 50 * 1024 * 1024;
+                if (file.size > maxSize) {
+                    e.preventDefault();
+                    alert(`La imagen ${key} es demasiado grande. Por favor selecciona una imagen más pequeña.`);
+                    return false;
+                }
+            }
+        });
     });
 });
-
-// Funciones para el modal
-function closeImagePreview() {
-    document.getElementById('imagePreviewModal').classList.add('hidden');
-}
 
 // Detectar orientación del dispositivo móvil
 window.addEventListener('orientationchange', function() {

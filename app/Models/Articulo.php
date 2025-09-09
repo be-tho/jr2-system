@@ -22,6 +22,8 @@ class Articulo extends Model
         'stock',
         'precio',
         'imagen',
+        'imagen_2',
+        'imagen_3',
     ];
 
     protected $casts = [
@@ -112,5 +114,53 @@ class Articulo extends Model
         }
 
         return $query->paginate($perPage);
+    }
+
+    /**
+     * Obtener todas las imágenes del artículo
+     */
+    public function getAllImages(): array
+    {
+        $images = [];
+        
+        if ($this->imagen) {
+            $images[] = $this->imagen;
+        }
+        if ($this->imagen_2) {
+            $images[] = $this->imagen_2;
+        }
+        if ($this->imagen_3) {
+            $images[] = $this->imagen_3;
+        }
+        
+        return $images;
+    }
+
+    /**
+     * Obtener la imagen principal del artículo
+     */
+    public function getMainImage(): string
+    {
+        return $this->imagen ?: 'default-articulo.svg';
+    }
+
+    /**
+     * Verificar si el artículo tiene múltiples imágenes
+     */
+    public function hasMultipleImages(): bool
+    {
+        return !empty($this->imagen_2) || !empty($this->imagen_3);
+    }
+
+    /**
+     * Contar el número de imágenes del artículo
+     */
+    public function getImageCount(): int
+    {
+        $count = 0;
+        if ($this->imagen) $count++;
+        if ($this->imagen_2) $count++;
+        if ($this->imagen_3) $count++;
+        return $count;
     }
 }

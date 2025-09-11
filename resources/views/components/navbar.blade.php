@@ -215,9 +215,9 @@
                                 <span class="text-sm font-medium text-neutral-900 dark:text-white">Producción</span>
                             </div>
                             <i class="ri-arrow-down-s-line text-neutral-500 dark:text-neutral-400 transform transition-transform duration-200" 
-                               id="produccion-arrow"></i>
+                               id="mobile-produccion-arrow"></i>
                         </button>
-                        <div class="ml-4 mt-1 space-y-1 hidden" id="produccion-items">
+                        <div class="ml-4 mt-1 space-y-1 hidden" id="mobile-produccion-items">
                             <a href="{{ route('cortes.index') }}" 
                                class="flex items-center gap-x-2 px-2 py-1.5 rounded-md text-sm text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 {{ Route::is('cortes.*') ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/20' : '' }}">
                                 <i class="ri-scissors-cut-line text-xs"></i>
@@ -242,9 +242,9 @@
                                 <span class="text-sm font-medium text-neutral-900 dark:text-white">Inventario</span>
                             </div>
                             <i class="ri-arrow-down-s-line text-neutral-500 dark:text-neutral-400 transform transition-transform duration-200" 
-                               id="inventario-arrow"></i>
+                               id="mobile-inventario-arrow"></i>
                         </button>
-                        <div class="ml-4 mt-1 space-y-1 hidden" id="inventario-items">
+                        <div class="ml-4 mt-1 space-y-1 hidden" id="mobile-inventario-items">
                             <a href="{{ route('articulos.index') }}" 
                                class="flex items-center gap-x-2 px-2 py-1.5 rounded-md text-sm text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 {{ Route::is('articulos.*') ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/20' : '' }}">
                                 <i class="ri-shirt-line text-xs"></i>
@@ -274,9 +274,9 @@
                                 <span class="text-sm font-medium text-neutral-900 dark:text-white">Análisis</span>
                             </div>
                             <i class="ri-arrow-down-s-line text-neutral-500 dark:text-neutral-400 transform transition-transform duration-200" 
-                               id="analisis-arrow"></i>
+                               id="mobile-analisis-arrow"></i>
                         </button>
-                        <div class="ml-4 mt-1 space-y-1 hidden" id="analisis-items">
+                        <div class="ml-4 mt-1 space-y-1 hidden" id="mobile-analisis-items">
                             <a href="{{ route('dolar.index') }}" 
                                class="flex items-center gap-x-2 px-2 py-1.5 rounded-md text-sm text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 {{ Route::is('dolar.*') ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/20' : '' }}">
                                 <i class="ri-money-dollar-circle-line text-xs"></i>
@@ -302,9 +302,9 @@
                                 <span class="text-sm font-medium text-neutral-900 dark:text-white">Administración</span>
                             </div>
                             <i class="ri-arrow-down-s-line text-neutral-500 dark:text-neutral-400 transform transition-transform duration-200" 
-                               id="administracion-arrow"></i>
+                               id="mobile-administracion-arrow"></i>
                         </button>
-                        <div class="ml-4 mt-1 space-y-1 hidden" id="administracion-items">
+                        <div class="ml-4 mt-1 space-y-1 hidden" id="mobile-administracion-items">
                             <a href="{{ route('users.index') }}" 
                                class="flex items-center gap-x-2 px-2 py-1.5 rounded-md text-sm text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 {{ Route::is('users.*') ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/20' : '' }}">
                                 <i class="ri-team-line text-xs"></i>
@@ -879,7 +879,7 @@ class NavbarManager {
     setupMobileCollapsibleSections() {
         const sections = ['produccion', 'inventario', 'analisis', 'administracion'];
         sections.forEach(section => {
-            const items = document.getElementById(`${section}-items`);
+            const items = document.getElementById(`mobile-${section}-items`);
             if (items) {
                 const activeItem = items.querySelector('.text-primary-600, .bg-primary-50');
                 if (activeItem) {
@@ -890,8 +890,8 @@ class NavbarManager {
     }
 
     expandMobileSection(sectionName) {
-        const items = document.getElementById(`${sectionName}-items`);
-        const arrow = document.getElementById(`${sectionName}-arrow`);
+        const items = document.getElementById(`mobile-${sectionName}-items`);
+        const arrow = document.getElementById(`mobile-${sectionName}-arrow`);
         
         if (items && arrow) {
             items.classList.remove('hidden');
@@ -1055,8 +1055,43 @@ window.toggleNavSection = function(sectionName) {
     }
 };
 
-// Función global para alternar secciones móviles (mantener compatibilidad)
-window.toggleMobileSection = window.toggleNavSection;
+// Función global para alternar secciones móviles
+window.toggleMobileSection = function(sectionName) {
+    const items = document.getElementById(`mobile-${sectionName}-items`);
+    const arrow = document.getElementById(`mobile-${sectionName}-arrow`);
+    
+    if (items && arrow) {
+        const isHidden = items.classList.contains('hidden');
+        
+        if (isHidden) {
+            // Expandir
+            items.classList.remove('hidden');
+            arrow.style.transform = 'rotate(180deg)';
+            
+            // Agregar pequeña animación
+            items.style.opacity = '0';
+            items.style.transform = 'translateY(-10px)';
+            
+            setTimeout(() => {
+                items.style.opacity = '1';
+                items.style.transform = 'translateY(0)';
+                items.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+            }, 10);
+        } else {
+            // Colapsar
+            items.style.opacity = '0';
+            items.style.transform = 'translateY(-10px)';
+            arrow.style.transform = 'rotate(0deg)';
+            
+            setTimeout(() => {
+                items.classList.add('hidden');
+                items.style.opacity = '';
+                items.style.transform = '';
+                items.style.transition = '';
+            }, 200);
+        }
+    }
+};
 </script>
 
 {{-- Estilos CSS adicionales para optimizaciones móviles y sidebar colapsable --}}

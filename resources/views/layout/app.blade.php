@@ -7,6 +7,13 @@
 
     <title>{{ config('app.name', 'JR2 System') }}</title>
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon-16x16.svg') }}" sizes="16x16">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon-32x32.svg') }}" sizes="32x32">
+    <link rel="apple-touch-icon" href="{{ asset('favicon-32x32.svg') }}">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700" rel="stylesheet" />

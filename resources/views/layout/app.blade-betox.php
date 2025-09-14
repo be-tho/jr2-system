@@ -15,10 +15,9 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 
     <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- Linkear el css de build -->
-    <link rel="stylesheet" href="{{ asset('build/assets/app-Cs6YtDRv.css') }}">
+    <link rel="stylesheet" href="{{ asset('build/assets/app-CN4TgH4M.css') }}">
     
     <!-- Theme Script -->
     <script>

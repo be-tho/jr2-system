@@ -1,0 +1,464 @@
+/* ============================================================================
+   STATS CARDS COMPONENTS - JR2 System
+   ============================================================================ */
+
+/* Variables específicas de stats cards - Movidas a variables.css */
+
+/* ============================================================================
+   BASE STATS CARD STYLES
+   ============================================================================ */
+
+.stats-card {
+    background: var(--stats-card-bg-light);
+    border: 1px solid var(--stats-card-border-light);
+    border-radius: var(--stats-card-radius);
+    box-shadow: var(--stats-card-shadow-sm);
+    padding: var(--stats-card-padding);
+    transition: var(--stats-card-transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.dark .stats-card {
+    background: var(--stats-card-bg-dark);
+    border-color: var(--stats-card-border-dark);
+}
+
+.stats-card:hover {
+    box-shadow: var(--stats-card-shadow-md);
+    transform: translateY(-2px);
+}
+
+/* ============================================================================
+   STATS CARD LAYOUT
+   ============================================================================ */
+
+.stats-card-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.stats-card-icon {
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    border-radius: var(--button-radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stats-card-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.stats-card-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: rgb(107, 114, 128);
+    margin: 0 0 0.25rem 0;
+}
+
+.dark .stats-card-label {
+    color: rgb(156, 163, 175);
+}
+
+.stats-card-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: rgb(17, 24, 39);
+    margin: 0;
+    line-height: 1.2;
+}
+
+.dark .stats-card-value {
+    color: white;
+}
+
+.stats-card-percentage {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin: 0.25rem 0 0 0;
+}
+
+/* ============================================================================
+   STATS CARD VARIANTS - COLORS
+   ============================================================================ */
+
+.stats-card-primary .stats-card-icon {
+    background: rgb(253, 242, 248);
+    color: rgb(219, 39, 119);
+}
+
+.dark .stats-card-primary .stats-card-icon {
+    background: rgba(219, 39, 119, 0.1);
+    color: rgb(244, 114, 182);
+}
+
+.stats-card-primary .stats-card-percentage {
+    color: rgb(219, 39, 119);
+}
+
+.dark .stats-card-primary .stats-card-percentage {
+    color: rgb(244, 114, 182);
+}
+
+.stats-card-success .stats-card-icon {
+    background: rgb(220, 252, 231);
+    color: rgb(22, 163, 74);
+}
+
+.dark .stats-card-success .stats-card-icon {
+    background: rgba(22, 163, 74, 0.1);
+    color: rgb(74, 222, 128);
+}
+
+.stats-card-success .stats-card-percentage {
+    color: rgb(22, 163, 74);
+}
+
+.dark .stats-card-success .stats-card-percentage {
+    color: rgb(74, 222, 128);
+}
+
+.stats-card-warning .stats-card-icon {
+    background: rgb(254, 249, 195);
+    color: rgb(202, 138, 4);
+}
+
+.dark .stats-card-warning .stats-card-icon {
+    background: rgba(202, 138, 4, 0.1);
+    color: rgb(250, 204, 21);
+}
+
+.stats-card-warning .stats-card-percentage {
+    color: rgb(202, 138, 4);
+}
+
+.dark .stats-card-warning .stats-card-percentage {
+    color: rgb(250, 204, 21);
+}
+
+.stats-card-danger .stats-card-icon {
+    background: rgb(254, 226, 226);
+    color: rgb(220, 38, 38);
+}
+
+.dark .stats-card-danger .stats-card-icon {
+    background: rgba(220, 38, 38, 0.1);
+    color: rgb(248, 113, 113);
+}
+
+.stats-card-danger .stats-card-percentage {
+    color: rgb(220, 38, 38);
+}
+
+.dark .stats-card-danger .stats-card-percentage {
+    color: rgb(248, 113, 113);
+}
+
+.stats-card-info .stats-card-icon {
+    background: rgb(219, 234, 254);
+    color: rgb(37, 99, 235);
+}
+
+.dark .stats-card-info .stats-card-icon {
+    background: rgba(37, 99, 235, 0.1);
+    color: rgb(96, 165, 250);
+}
+
+.stats-card-info .stats-card-percentage {
+    color: rgb(37, 99, 235);
+}
+
+.dark .stats-card-info .stats-card-percentage {
+    color: rgb(96, 165, 250);
+}
+
+.stats-card-secondary .stats-card-icon {
+    background: rgb(243, 232, 255);
+    color: rgb(168, 85, 247);
+}
+
+.dark .stats-card-secondary .stats-card-icon {
+    background: rgba(168, 85, 247, 0.1);
+    color: rgb(196, 132, 252);
+}
+
+.stats-card-secondary .stats-card-percentage {
+    color: rgb(168, 85, 247);
+}
+
+.dark .stats-card-secondary .stats-card-percentage {
+    color: rgb(196, 132, 252);
+}
+
+/* ============================================================================
+   STATS CARD SIZES
+   ============================================================================ */
+
+.stats-card-sm {
+    padding: 1rem;
+}
+
+.stats-card-sm .stats-card-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.stats-card-sm .stats-card-value {
+    font-size: 1.25rem;
+}
+
+.stats-card-lg {
+    padding: 2rem;
+}
+
+.stats-card-lg .stats-card-icon {
+    width: 3rem;
+    height: 3rem;
+}
+
+.stats-card-lg .stats-card-value {
+    font-size: 2rem;
+}
+
+.stats-card-lg .stats-card-label {
+    font-size: 1rem;
+}
+
+/* ============================================================================
+   STATS CARD GRID LAYOUTS
+   ============================================================================ */
+
+.stats-grid {
+    display: grid;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stats-grid-1 {
+    grid-template-columns: 1fr;
+}
+
+.stats-grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.stats-grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.stats-grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.stats-grid-5 {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.stats-grid-6 {
+    grid-template-columns: repeat(6, 1fr);
+}
+
+/* ============================================================================
+   STATS CARD ANIMATIONS
+   ============================================================================ */
+
+.stats-card-animate {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: statsCardSlideIn 0.6s ease-out forwards;
+}
+
+.stats-card-animate:nth-child(1) { animation-delay: 0.1s; }
+.stats-card-animate:nth-child(2) { animation-delay: 0.2s; }
+.stats-card-animate:nth-child(3) { animation-delay: 0.3s; }
+.stats-card-animate:nth-child(4) { animation-delay: 0.4s; }
+.stats-card-animate:nth-child(5) { animation-delay: 0.5s; }
+.stats-card-animate:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes statsCardSlideIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================================================
+   STATS CARD SPECIAL FEATURES
+   ============================================================================ */
+
+.stats-card-trend {
+    position: relative;
+}
+
+.stats-card-trend::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-left: 20px solid transparent;
+    border-top: 20px solid currentColor;
+    opacity: 0.1;
+}
+
+.stats-card-trend-up::after {
+    border-top-color: rgb(34, 197, 94);
+}
+
+.stats-card-trend-down::after {
+    border-top-color: rgb(239, 68, 68);
+}
+
+.stats-card-trend-neutral::after {
+    border-top-color: rgb(107, 114, 128);
+}
+
+.stats-card-clickable {
+    cursor: pointer;
+}
+
+.stats-card-clickable:hover {
+    box-shadow: var(--stats-card-shadow-lg);
+    transform: translateY(-4px);
+}
+
+.stats-card-loading {
+    position: relative;
+    overflow: hidden;
+}
+
+.stats-card-loading::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: shimmer 1.5s infinite;
+}
+
+.dark .stats-card-loading::before {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+}
+
+@keyframes shimmer {
+    to {
+        left: 100%;
+    }
+}
+
+/* ============================================================================
+   RESPONSIVE STATS CARDS
+   ============================================================================ */
+
+@media (max-width: 1024px) {
+    .stats-grid-6,
+    .stats-grid-5 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .stats-grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .stats-grid-6,
+    .stats-grid-5,
+    .stats-grid-4,
+    .stats-grid-3 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .stats-grid-2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .stats-grid-6,
+    .stats-grid-5,
+    .stats-grid-4,
+    .stats-grid-3,
+    .stats-grid-2 {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-card {
+        padding: 1rem;
+    }
+    
+    .stats-card-content {
+        gap: 0.75rem;
+    }
+    
+    .stats-card-icon {
+        width: 1.75rem;
+        height: 1.75rem;
+    }
+    
+    .stats-card-value {
+        font-size: 1.25rem;
+    }
+}
+
+/* ============================================================================
+   ACCESSIBILITY IMPROVEMENTS
+   ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    .stats-card,
+    .stats-card-animate {
+        transition: none;
+        animation: none;
+        transform: none;
+    }
+    
+    .stats-card:hover {
+        transform: none;
+    }
+    
+    .stats-card-loading::before {
+        animation: none;
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .stats-card {
+        border-width: 2px;
+    }
+    
+    .stats-card-icon {
+        border: 1px solid currentColor;
+    }
+}
+
+/* ============================================================================
+   PRINT STYLES
+   ============================================================================ */
+
+@media print {
+    .stats-card {
+        background: white !important;
+        border: 1px solid black !important;
+        box-shadow: none !important;
+        break-inside: avoid;
+        margin-bottom: 1rem;
+    }
+    
+    .stats-card:hover {
+        transform: none !important;
+    }
+    
+    .stats-grid {
+        display: block;
+    }
+}

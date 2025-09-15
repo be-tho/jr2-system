@@ -1,0 +1,346 @@
+/* ============================================================================
+   MODAL COMPONENTS - JR2 System
+   ============================================================================ */
+
+/* Variables específicas de modales - Movidas a variables.css */
+
+/* ============================================================================
+   BASE MODAL STYLES
+   ============================================================================ */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--modal-backdrop-bg);
+    backdrop-filter: var(--modal-backdrop-blur);
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--modal-transition);
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.modal-content {
+    background: var(--modal-bg-light);
+    border-radius: var(--modal-radius);
+    box-shadow: var(--modal-shadow);
+    border: 1px solid var(--modal-border-light);
+    max-width: 28rem;
+    width: 100%;
+    margin: 0 1rem;
+    transform: scale(0.95);
+    opacity: 0;
+    transition: var(--modal-transition);
+}
+
+.dark .modal-content {
+    background: var(--modal-bg-dark);
+    border-color: var(--modal-border-dark);
+}
+
+.modal-overlay.active .modal-content {
+    transform: scale(1);
+    opacity: 1;
+}
+
+/* ============================================================================
+   MODAL STRUCTURE
+   ============================================================================ */
+
+.modal-header {
+    padding: var(--modal-padding);
+    border-bottom: 1px solid var(--modal-border-light);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.dark .modal-header {
+    border-bottom-color: var(--modal-border-dark);
+}
+
+.modal-body {
+    padding: var(--modal-padding);
+}
+
+.modal-footer {
+    padding: var(--modal-padding);
+    border-top: 1px solid var(--modal-border-light);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+.dark .modal-footer {
+    border-top-color: var(--modal-border-dark);
+}
+
+/* ============================================================================
+   MODAL ICONS & CONTENT
+   ============================================================================ */
+
+.modal-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.modal-icon-danger {
+    background: rgb(254, 226, 226);
+    color: rgb(220, 38, 38);
+}
+
+.dark .modal-icon-danger {
+    background: rgba(220, 38, 38, 0.1);
+    color: rgb(248, 113, 113);
+}
+
+.modal-icon-warning {
+    background: rgb(254, 249, 195);
+    color: rgb(202, 138, 4);
+}
+
+.dark .modal-icon-warning {
+    background: rgba(202, 138, 4, 0.1);
+    color: rgb(250, 204, 21);
+}
+
+.modal-icon-info {
+    background: rgb(219, 234, 254);
+    color: rgb(37, 99, 235);
+}
+
+.dark .modal-icon-info {
+    background: rgba(37, 99, 235, 0.1);
+    color: rgb(96, 165, 250);
+}
+
+.modal-icon-success {
+    background: rgb(220, 252, 231);
+    color: rgb(22, 163, 74);
+}
+
+.dark .modal-icon-success {
+    background: rgba(22, 163, 74, 0.1);
+    color: rgb(74, 222, 128);
+}
+
+.modal-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: rgb(17, 24, 39);
+    margin: 0;
+}
+
+.dark .modal-title {
+    color: white;
+}
+
+.modal-description {
+    font-size: 0.875rem;
+    color: rgb(107, 114, 128);
+    margin: 0.25rem 0 0 0;
+}
+
+.dark .modal-description {
+    color: rgb(156, 163, 175);
+}
+
+.modal-message {
+    color: rgb(55, 65, 81);
+    margin: 0;
+}
+
+.dark .modal-message {
+    color: rgb(209, 213, 219);
+}
+
+/* ============================================================================
+   MODAL BUTTONS
+   ============================================================================ */
+
+.modal-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    transition: var(--modal-transition);
+    cursor: pointer;
+    border: none;
+    outline: none;
+}
+
+.modal-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+.modal-button-cancel {
+    background: rgb(243, 244, 246);
+    color: rgb(55, 65, 81);
+}
+
+.dark .modal-button-cancel {
+    background: rgb(55, 65, 81);
+    color: rgb(209, 213, 219);
+}
+
+.modal-button-cancel:hover {
+    background: rgb(229, 231, 235);
+}
+
+.dark .modal-button-cancel:hover {
+    background: rgb(75, 85, 99);
+}
+
+.modal-button-confirm {
+    background: linear-gradient(to right, rgb(239, 68, 68), rgb(220, 38, 38));
+    color: white;
+}
+
+.modal-button-confirm:hover {
+    background: linear-gradient(to right, rgb(220, 38, 38), rgb(185, 28, 28));
+}
+
+.modal-button-confirm:focus {
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.5);
+}
+
+/* ============================================================================
+   MODAL SIZES
+   ============================================================================ */
+
+.modal-sm .modal-content {
+    max-width: 24rem;
+}
+
+.modal-lg .modal-content {
+    max-width: 32rem;
+}
+
+.modal-xl .modal-content {
+    max-width: 48rem;
+}
+
+.modal-full .modal-content {
+    max-width: 100vw;
+    max-height: 100vh;
+    margin: 0;
+    border-radius: 0;
+}
+
+/* ============================================================================
+   MODAL ANIMATIONS
+   ============================================================================ */
+
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(-1rem) scale(0.95);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes modalSlideOut {
+    from {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(-1rem) scale(0.95);
+        opacity: 0;
+    }
+}
+
+.modal-content.animate-in {
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+.modal-content.animate-out {
+    animation: modalSlideOut 0.3s ease-in;
+}
+
+/* ============================================================================
+   RESPONSIVE MODAL
+   ============================================================================ */
+
+@media (max-width: 640px) {
+    .modal-overlay {
+        padding: 0.5rem;
+    }
+    
+    .modal-content {
+        margin: 0;
+        max-height: 95vh;
+        overflow-y: auto;
+    }
+    
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+        padding: 1rem;
+    }
+    
+    .modal-footer {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .modal-button {
+        width: 100%;
+    }
+}
+
+/* ============================================================================
+   ACCESSIBILITY IMPROVEMENTS
+   ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    .modal-overlay,
+    .modal-content,
+    .modal-button {
+        transition: none;
+    }
+    
+    .modal-content.animate-in,
+    .modal-content.animate-out {
+        animation: none;
+    }
+}
+
+/* Focus trap para accesibilidad */
+.modal-overlay.active {
+    /* El JavaScript manejará el focus trap */
+}
+
+/* ============================================================================
+   PRINT STYLES
+   ============================================================================ */
+
+@media print {
+    .modal-overlay {
+        display: none !important;
+    }
+}

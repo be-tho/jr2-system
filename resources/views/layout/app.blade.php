@@ -25,7 +25,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- Linkear el css de build -->
-    <link rel="stylesheet" href="{{ asset('build/assets/app-DrjEgsb_.css') }}">
+     <!-- <link rel="stylesheet" href="{{ asset('build/assets/app-DrjEgsb_.css') }}"> -->
     
     <!-- Theme Script -->
     <script>

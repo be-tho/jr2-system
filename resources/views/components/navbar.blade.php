@@ -15,13 +15,13 @@
                         <div class="absolute -top-0.5 -right-0.5 w-3 h-3 bg-accent-400 rounded-full border-2 border-white dark:border-neutral-900 animate-pulse"></div>
                     </div>
                     <div class="flex flex-col sidebar-text" data-text="true">
-                        <span class="text-lg font-bold text-neutral-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300">JR2 System</span>
+                        <span class="text-lg font-bold text-neutral-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-300 transition-colors duration-300">JR2 System</span>
                         <span class="text-xs text-neutral-600 dark:text-neutral-400">Management Platform</span>
                     </div>
                 </a>
                 
                 {{-- Botón para colapsar/expandir sidebar --}}
-                <button id="sidebar-toggle" class="hidden lg:flex p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-200" 
+                <button id="sidebar-toggle" class="hidden lg:flex p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors duration-200" 
                         data-tooltip="Colapsar sidebar">
                     <i class="ri-sidebar-fold-line text-lg text-neutral-600 dark:text-neutral-400"></i>
                 </button>
@@ -36,7 +36,7 @@
                            class="w-full px-3 py-2 pl-9 text-sm bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200"
                            autocomplete="off">
                     <i class="ri-search-line absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 text-sm"></i>
-                    <button id="clear-search" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 hidden">
+                    <button id="clear-search" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 hidden">
                         <i class="ri-close-line text-sm"></i>
                     </button>
                 </div>
@@ -54,17 +54,17 @@
                 <div class="space-y-1">
                     {{-- Dashboard --}}
                     <a href="/" 
-                       class="nav-item flex items-center gap-x-2 px-3 py-2.5 rounded-lg text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all duration-200 relative group cursor-pointer {{ Route::is('home.index') ? 'bg-primary-50 dark:bg-primary-950/20 text-primary-600 dark:text-primary-400 border-r-2 border-primary-500' : '' }}"
+                       class="nav-item flex items-center gap-x-2 px-3 py-2.5 rounded-lg text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-300 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all duration-200 relative group cursor-pointer {{ Route::is('home.index') ? 'bg-primary-50 dark:bg-primary-950/20 text-primary-600 dark:text-primary-400 border-r-2 border-primary-500' : '' }}"
                        data-tooltip="Dashboard">
                         <div class="w-8 h-8 rounded-lg {{ Route::is('home.index') ? 'bg-primary-500' : 'bg-neutral-100 dark:bg-neutral-800 group-hover:bg-primary-100 dark:group-hover:bg-primary-900/20' }} flex items-center justify-center transition-all duration-200">
-                            <i class="ri-dashboard-3-line text-sm {{ Route::is('home.index') ? 'text-white' : 'text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-400' }}"></i>
+                            <i class="ri-dashboard-3-line text-sm {{ Route::is('home.index') ? 'text-white' : 'text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-300' }}"></i>
                         </div>
                         <span class="nav-text text-sm font-medium {{ Route::is('home.index') ? 'font-semibold' : '' }}">Dashboard</span>
                     </a>
 
                     {{-- Sección Producción Colapsable --}}
                     <div class="nav-section" data-section="produccion">
-                        <button class="nav-section-toggle w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors duration-200" 
+                        <button class="nav-section-toggle w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-600 transition-colors duration-200" 
                                 onclick="toggleNavSection('produccion')">
                             <div class="flex items-center gap-x-2">
                                 <div class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
@@ -77,7 +77,7 @@
                         </button>
                         <div class="nav-section-items ml-4 mt-1 space-y-1 hidden" id="produccion-items">
                             <a href="{{ route('cortes.index') }}" 
-                               class="nav-item flex items-center gap-x-2 px-3 py-2 rounded-md text-sm text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-colors duration-200 {{ Route::is('cortes.*') ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/20' : '' }}"
+                               class="nav-item flex items-center gap-x-2 px-3 py-2 rounded-md text-sm text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-300 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-colors duration-200 {{ Route::is('cortes.*') ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/20' : '' }}"
                                data-tooltip="Gestión de Cortes">
                                 <i class="ri-scissors-cut-line text-sm"></i>
                                 <span class="nav-text">Cortes</span>
@@ -93,7 +93,7 @@
 
                     {{-- Sección Inventario Colapsable --}}
                     <div class="nav-section" data-section="inventario">
-                        <button class="nav-section-toggle w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors duration-200" 
+                        <button class="nav-section-toggle w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-600 transition-colors duration-200" 
                                 onclick="toggleNavSection('inventario')">
                             <div class="flex items-center gap-x-2">
                                 <div class="w-8 h-8 rounded-lg bg-green-100 dark:bg-green-900/20 flex items-center justify-center">
@@ -128,7 +128,7 @@
 
                     {{-- Sección Análisis Colapsable --}}
                     <div class="nav-section" data-section="analisis">
-                        <button class="nav-section-toggle w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors duration-200" 
+                        <button class="nav-section-toggle w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-600 transition-colors duration-200" 
                                 onclick="toggleNavSection('analisis')">
                             <div class="flex items-center gap-x-2">
                                 <div class="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-900/20 flex items-center justify-center">
@@ -158,7 +158,7 @@
                     {{-- Sección Administración Colapsable --}}
                     @hasrole('administrador')
                     <div class="nav-section" data-section="administracion">
-                        <button class="nav-section-toggle w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors duration-200" 
+                        <button class="nav-section-toggle w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-600 transition-colors duration-200" 
                                 onclick="toggleNavSection('administracion')">
                             <div class="flex items-center gap-x-2">
                                 <div class="w-8 h-8 rounded-lg bg-red-100 dark:bg-red-900/20 flex items-center justify-center">
@@ -182,10 +182,10 @@
 
                     {{-- Cuenta --}}
                     <a href="{{ route('cuenta.index') }}" 
-                       class="nav-item flex items-center gap-x-2 px-3 py-2.5 rounded-lg text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all duration-200 group cursor-pointer {{ Route::is('cuenta.*') ? 'bg-primary-50 dark:bg-primary-950/20 text-primary-600 dark:text-primary-400 border-r-2 border-primary-500' : '' }}"
+                       class="nav-item flex items-center gap-x-2 px-3 py-2.5 rounded-lg text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-300 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all duration-200 group cursor-pointer {{ Route::is('cuenta.*') ? 'bg-primary-50 dark:bg-primary-950/20 text-primary-600 dark:text-primary-400 border-r-2 border-primary-500' : '' }}"
                        data-tooltip="Mi Cuenta">
                         <div class="w-8 h-8 rounded-lg {{ Route::is('cuenta.*') ? 'bg-primary-500' : 'bg-neutral-100 dark:bg-neutral-800 group-hover:bg-primary-100 dark:group-hover:bg-primary-900/20' }} flex items-center justify-center transition-all duration-200">
-                            <i class="ri-user-line text-sm {{ Route::is('cuenta.*') ? 'text-white' : 'text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-400' }}"></i>
+                            <i class="ri-user-line text-sm {{ Route::is('cuenta.*') ? 'text-white' : 'text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-300' }}"></i>
                         </div>
                         <span class="nav-text text-sm font-medium {{ Route::is('cuenta.*') ? 'font-semibold' : '' }}">Cuenta</span>
                     </a>
@@ -206,7 +206,7 @@
 
                     {{-- Sección Producción Colapsable --}}
                     <div class="mobile-section" data-section="produccion">
-                        <button class="w-full flex items-center justify-between px-2 py-2 text-left rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors duration-200" 
+                        <button class="w-full flex items-center justify-between px-2 py-2 text-left rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors duration-200" 
                                 onclick="toggleMobileSection('produccion')">
                             <div class="flex items-center gap-x-2">
                                 <div class="w-7 h-7 rounded-lg bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
@@ -219,7 +219,7 @@
                         </button>
                         <div class="ml-4 mt-1 space-y-1 hidden" id="mobile-produccion-items">
                             <a href="{{ route('cortes.index') }}" 
-                               class="flex items-center gap-x-2 px-2 py-1.5 rounded-md text-sm text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 {{ Route::is('cortes.*') ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/20' : '' }}">
+                               class="flex items-center gap-x-2 px-2 py-1.5 rounded-md text-sm text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-300 transition-colors duration-200 {{ Route::is('cortes.*') ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/20' : '' }}">
                                 <i class="ri-scissors-cut-line text-xs"></i>
                                 <span>Cortes</span>
                             </a>
@@ -233,7 +233,7 @@
 
                     {{-- Sección Inventario Colapsable --}}
                     <div class="mobile-section" data-section="inventario">
-                        <button class="w-full flex items-center justify-between px-2 py-2 text-left rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors duration-200" 
+                        <button class="w-full flex items-center justify-between px-2 py-2 text-left rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors duration-200" 
                                 onclick="toggleMobileSection('inventario')">
                             <div class="flex items-center gap-x-2">
                                 <div class="w-7 h-7 rounded-lg bg-green-100 dark:bg-green-900/20 flex items-center justify-center">
@@ -265,7 +265,7 @@
 
                     {{-- Sección Análisis Colapsable --}}
                     <div class="mobile-section" data-section="analisis">
-                        <button class="w-full flex items-center justify-between px-2 py-2 text-left rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors duration-200" 
+                        <button class="w-full flex items-center justify-between px-2 py-2 text-left rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors duration-200" 
                                 onclick="toggleMobileSection('analisis')">
                             <div class="flex items-center gap-x-2">
                                 <div class="w-7 h-7 rounded-lg bg-purple-100 dark:bg-purple-900/20 flex items-center justify-center">
@@ -293,7 +293,7 @@
                     {{-- Sección Administración Móvil --}}
                     @hasrole('administrador')
                     <div class="mobile-section" data-section="administracion">
-                        <button class="w-full flex items-center justify-between px-2 py-2 text-left rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors duration-200" 
+                        <button class="w-full flex items-center justify-between px-2 py-2 text-left rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors duration-200" 
                                 onclick="toggleMobileSection('administracion')">
                             <div class="flex items-center gap-x-2">
                                 <div class="w-7 h-7 rounded-lg bg-red-100 dark:bg-red-900/20 flex items-center justify-center">
@@ -378,7 +378,7 @@
         <div class="flex items-center justify-between h-full px-4">
             {{-- Logo y botón toggle --}}
             <div class="flex items-center gap-3">
-                <button class="p-2 -ml-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-200"
+                <button class="p-2 -ml-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors duration-200"
             id="mobile-toggle"
                         aria-label="Abrir menú">
                     <i class="ri-menu-line text-xl text-neutral-700 dark:text-neutral-300"></i>
@@ -394,7 +394,7 @@
             {{-- Acciones rápidas móvil --}}
             <div class="flex items-center gap-2">
                 {{-- Perfil usuario móvil --}}
-                <a href="{{ route('cuenta.index') }}" class="p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-200">
+                <a href="{{ route('cuenta.index') }}" class="p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors duration-200">
                     <img src="{{ \App\Helpers\ImageHelper::getProfileImageUrl(auth()->user()?->profile_image) }}" 
                          alt="{{ \App\Helpers\ImageHelper::getProfileImageAlt(auth()->user()?->profile_image, auth()->user()?->name ?? 'Usuario') }}" 
                          class="w-6 h-6 rounded-full object-cover {{ \App\Helpers\ImageHelper::getProfileImageClass(auth()->user()?->profile_image) }}">
@@ -1235,6 +1235,18 @@ window.toggleMobileSection = function(sectionName) {
         background: rgba(23, 23, 23, 0.95);
         backdrop-filter: blur(10px);
     }
+    
+    /* Mejorar visibilidad de elementos hover en móvil modo oscuro */
+    #mobile-header button:hover,
+    #mobile-header a:hover {
+        background-color: rgba(64, 64, 64, 0.8) !important;
+    }
+    
+    /* Asegurar que los iconos sean visibles en hover */
+    #mobile-header button:hover i,
+    #mobile-header a:hover img {
+        opacity: 1;
+    }
 }
 
 /* Animaciones de entrada más suaves para móvil */
@@ -1245,6 +1257,124 @@ window.toggleMobileSection = function(sectionName) {
     
     #sidebar-overlay {
         will-change: opacity;
+    }
+}
+
+/* Estilos generales para sobrescribir components.css */
+#sidebar .nav-item:hover {
+    transform: none !important; /* Evitar el translateX de components.css */
+}
+
+#sidebar .sidebar-item:hover {
+    transform: none !important; /* Evitar el translateX de components.css */
+}
+
+/* Estilos específicos para elementos del menú - MAYOR ESPECIFICIDAD */
+#sidebar .nav-item.nav-item:hover {
+    transform: none !important;
+    color: inherit !important;
+}
+
+#sidebar .nav-item.nav-item:hover i {
+    color: inherit !important;
+}
+
+#sidebar .nav-item.nav-item:hover span {
+    color: inherit !important;
+}
+
+/* Estilos específicos para botones de secciones - MAYOR ESPECIFICIDAD */
+#sidebar .nav-section-toggle:hover {
+    transform: none !important;
+}
+
+#sidebar .nav-section-toggle:hover span {
+    color: inherit !important;
+}
+
+#sidebar .nav-section-toggle:hover i {
+    color: inherit !important;
+}
+
+/* Mejoras adicionales para modo oscuro */
+@media (prefers-color-scheme: dark) {
+    /* Mejorar contraste en sidebar modo oscuro */
+    #sidebar .nav-item:hover {
+        background-color: rgba(64, 64, 64, 0.6) !important;
+    }
+    
+    /* Mejorar visibilidad de botones en modo oscuro */
+    #sidebar button:hover {
+        background-color: rgba(64, 64, 64, 0.6) !important;
+    }
+    
+    /* Asegurar que los textos sean visibles en hover */
+    #sidebar .nav-item:hover span,
+    #sidebar button:hover span {
+        color: rgb(229, 231, 235) !important; /* text-gray-200 */
+    }
+    
+    /* Mejorar visibilidad de textos hover en modo oscuro - SOBRESCRIBIR components.css */
+    #sidebar .nav-item:hover {
+        color: rgb(147, 197, 253) !important; /* text-blue-300 - más claro que primary-300 */
+        transform: none !important; /* Evitar el translateX de components.css */
+    }
+    
+    /* Mejorar visibilidad de iconos hover en modo oscuro */
+    #sidebar .nav-item:hover i {
+        color: rgb(147, 197, 253) !important; /* text-blue-300 */
+    }
+    
+    /* Mejorar visibilidad de elementos colapsados */
+    #sidebar .collapsed .nav-item:hover {
+        color: rgb(147, 197, 253) !important;
+        transform: none !important; /* Evitar el translateX de components.css */
+    }
+    
+    #sidebar .collapsed .nav-item:hover i {
+        color: rgb(147, 197, 253) !important;
+    }
+    
+    /* Sobrescribir específicamente los estilos de sidebar-item de components.css */
+    #sidebar .sidebar-item:hover {
+        transform: none !important;
+        color: rgb(147, 197, 253) !important;
+    }
+    
+    #sidebar .sidebar-item:hover i {
+        color: rgb(147, 197, 253) !important;
+    }
+    
+    #sidebar .sidebar-item:hover span {
+        color: rgb(147, 197, 253) !important;
+    }
+    
+    /* Mejorar visibilidad de los botones de secciones en modo oscuro */
+    #sidebar .nav-section-toggle:hover {
+        transform: none !important;
+        background-color: rgba(64, 64, 64, 0.6) !important;
+    }
+    
+    #sidebar .nav-section-toggle:hover span {
+        color: rgb(147, 197, 253) !important; /* text-blue-300 */
+    }
+    
+    #sidebar .nav-section-toggle:hover i {
+        color: rgb(147, 197, 253) !important; /* text-blue-300 */
+    }
+    
+    /* Mejorar visibilidad de elementos colapsados de secciones */
+    #sidebar .collapsed .nav-section-toggle:hover {
+        transform: none !important;
+        background-color: rgba(64, 64, 64, 0.6) !important;
+    }
+    
+    #sidebar .collapsed .nav-section-toggle:hover span {
+        color: rgb(147, 197, 253) !important;
+    }
+    
+    #sidebar .collapsed .nav-section-toggle:hover i {
+        color: rgb(147, 197, 253) !important;
     }
 }
 

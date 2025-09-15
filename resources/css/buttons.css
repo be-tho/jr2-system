@@ -1,0 +1,424 @@
+/* ============================================================================
+   BUTTON COMPONENTS - JR2 System
+   ============================================================================ */
+
+/* Variables específicas de botones - Movidas a variables.css */
+
+/* ============================================================================
+   BASE BUTTON STYLES
+   ============================================================================ */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    border-radius: var(--button-radius-md);
+    transition: var(--button-transition);
+    cursor: pointer;
+    border: none;
+    outline: none;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* ============================================================================
+   BUTTON SIZES
+   ============================================================================ */
+
+.btn-sm {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    border-radius: var(--button-radius-sm);
+}
+
+.btn-md {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+}
+
+.btn-lg {
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    border-radius: var(--button-radius-lg);
+}
+
+.btn-xl {
+    padding: 1.25rem 2rem;
+    font-size: 1.125rem;
+    border-radius: var(--button-radius-lg);
+}
+
+/* ============================================================================
+   BUTTON VARIANTS - PRIMARY
+   ============================================================================ */
+
+.btn-primary {
+    background: linear-gradient(to right, rgb(236, 72, 153), rgb(219, 39, 119));
+    color: white;
+    box-shadow: var(--button-shadow-sm);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(to right, rgb(219, 39, 119), rgb(190, 24, 93));
+    box-shadow: var(--button-shadow-md);
+    transform: translateY(-1px);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+    box-shadow: var(--button-shadow-sm);
+}
+
+.btn-primary:focus {
+    box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.5);
+}
+
+/* ============================================================================
+   BUTTON VARIANTS - SECONDARY
+   ============================================================================ */
+
+.btn-secondary {
+    background: linear-gradient(to right, rgb(107, 114, 128), rgb(75, 85, 99));
+    color: white;
+    box-shadow: var(--button-shadow-sm);
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(to right, rgb(75, 85, 99), rgb(55, 65, 81));
+    box-shadow: var(--button-shadow-md);
+    transform: translateY(-1px);
+}
+
+.btn-secondary:focus {
+    box-shadow: 0 0 0 2px rgba(107, 114, 128, 0.5);
+}
+
+/* ============================================================================
+   BUTTON VARIANTS - SUCCESS
+   ============================================================================ */
+
+.btn-success {
+    background: linear-gradient(to right, rgb(34, 197, 94), rgb(22, 163, 74));
+    color: white;
+    box-shadow: var(--button-shadow-sm);
+}
+
+.btn-success:hover {
+    background: linear-gradient(to right, rgb(22, 163, 74), rgb(21, 128, 61));
+    box-shadow: var(--button-shadow-md);
+    transform: translateY(-1px);
+}
+
+.btn-success:focus {
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.5);
+}
+
+/* ============================================================================
+   BUTTON VARIANTS - DANGER
+   ============================================================================ */
+
+.btn-danger {
+    background: linear-gradient(to right, rgb(239, 68, 68), rgb(220, 38, 38));
+    color: white;
+    box-shadow: var(--button-shadow-sm);
+}
+
+.btn-danger:hover {
+    background: linear-gradient(to right, rgb(220, 38, 38), rgb(185, 28, 28));
+    box-shadow: var(--button-shadow-md);
+    transform: translateY(-1px);
+}
+
+.btn-danger:focus {
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.5);
+}
+
+/* ============================================================================
+   BUTTON VARIANTS - WARNING
+   ============================================================================ */
+
+.btn-warning {
+    background: linear-gradient(to right, rgb(245, 158, 11), rgb(217, 119, 6));
+    color: white;
+    box-shadow: var(--button-shadow-sm);
+}
+
+.btn-warning:hover {
+    background: linear-gradient(to right, rgb(217, 119, 6), rgb(180, 83, 9));
+    box-shadow: var(--button-shadow-md);
+    transform: translateY(-1px);
+}
+
+.btn-warning:focus {
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.5);
+}
+
+/* ============================================================================
+   BUTTON VARIANTS - OUTLINE
+   ============================================================================ */
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid rgb(236, 72, 153);
+    color: rgb(219, 39, 119);
+}
+
+.btn-outline:hover {
+    background: rgb(236, 72, 153);
+    color: white;
+    transform: translateY(-1px);
+}
+
+.btn-outline:focus {
+    box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.5);
+}
+
+.btn-outline-danger {
+    border-color: rgb(239, 68, 68);
+    color: rgb(220, 38, 38);
+}
+
+.btn-outline-danger:hover {
+    background: rgb(239, 68, 68);
+    color: white;
+}
+
+.btn-outline-danger:focus {
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.5);
+}
+
+.btn-outline-success {
+    border-color: rgb(34, 197, 94);
+    color: rgb(22, 163, 74);
+}
+
+.btn-outline-success:hover {
+    background: rgb(34, 197, 94);
+    color: white;
+}
+
+.btn-outline-success:focus {
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.5);
+}
+
+/* ============================================================================
+   BUTTON VARIANTS - GHOST/SUBTLE
+   ============================================================================ */
+
+.btn-ghost {
+    background: transparent;
+    color: rgb(107, 114, 128);
+}
+
+.btn-ghost:hover {
+    background: rgb(243, 244, 246);
+    color: rgb(55, 65, 81);
+}
+
+.dark .btn-ghost {
+    color: rgb(156, 163, 175);
+}
+
+.dark .btn-ghost:hover {
+    background: rgb(55, 65, 81);
+    color: rgb(209, 213, 219);
+}
+
+.btn-subtle-danger {
+    background: rgb(254, 226, 226);
+    color: rgb(220, 38, 38);
+}
+
+.btn-subtle-danger:hover {
+    background: rgb(252, 165, 165);
+    color: rgb(185, 28, 28);
+}
+
+.dark .btn-subtle-danger {
+    background: rgba(220, 38, 38, 0.1);
+    color: rgb(248, 113, 113);
+}
+
+.dark .btn-subtle-danger:hover {
+    background: rgba(220, 38, 38, 0.2);
+    color: rgb(252, 165, 165);
+}
+
+/* ============================================================================
+   BUTTON STATES
+   ============================================================================ */
+
+.btn-loading {
+    position: relative;
+    color: transparent;
+}
+
+.btn-loading::after {
+    content: '';
+    position: absolute;
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid transparent;
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes spin {
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+.btn-full {
+    width: 100%;
+}
+
+.btn-icon-only {
+    padding: 0.75rem;
+    aspect-ratio: 1;
+}
+
+.btn-icon-only.btn-sm {
+    padding: 0.5rem;
+}
+
+.btn-icon-only.btn-lg {
+    padding: 1rem;
+}
+
+/* ============================================================================
+   BUTTON GROUPS
+   ============================================================================ */
+
+.btn-group {
+    display: inline-flex;
+    border-radius: var(--button-radius-md);
+    overflow: hidden;
+}
+
+.btn-group .btn {
+    border-radius: 0;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-group .btn:first-child {
+    border-top-left-radius: var(--button-radius-md);
+    border-bottom-left-radius: var(--button-radius-md);
+}
+
+.btn-group .btn:last-child {
+    border-top-right-radius: var(--button-radius-md);
+    border-bottom-right-radius: var(--button-radius-md);
+    border-right: none;
+}
+
+.btn-group .btn:only-child {
+    border-radius: var(--button-radius-md);
+}
+
+/* ============================================================================
+   BUTTON ICONS
+   ============================================================================ */
+
+.btn-icon {
+    margin-right: 0.5rem;
+    transition: transform var(--button-transition);
+}
+
+.btn:hover .btn-icon {
+    transform: scale(1.1);
+}
+
+.btn-icon-only .btn-icon {
+    margin-right: 0;
+}
+
+/* ============================================================================
+   RESPONSIVE BUTTONS
+   ============================================================================ */
+
+@media (max-width: 640px) {
+    .btn-responsive {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    .btn-group-responsive {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .btn-group-responsive .btn {
+        border-radius: var(--button-radius-md);
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        margin-bottom: 0.25rem;
+    }
+    
+    .btn-group-responsive .btn:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+    }
+}
+
+/* ============================================================================
+   ACCESSIBILITY IMPROVEMENTS
+   ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    .btn,
+    .btn-icon {
+        transition: none;
+    }
+    
+    .btn:hover {
+        transform: none;
+    }
+    
+    .btn-loading::after {
+        animation: none;
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .btn {
+        border: 2px solid currentColor;
+    }
+    
+    .btn-outline,
+    .btn-outline-danger,
+    .btn-outline-success {
+        border-width: 3px;
+    }
+}
+
+/* ============================================================================
+   PRINT STYLES
+   ============================================================================ */
+
+@media print {
+    .btn {
+        background: white !important;
+        color: black !important;
+        border: 1px solid black !important;
+        box-shadow: none !important;
+    }
+}

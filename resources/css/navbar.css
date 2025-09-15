@@ -1,0 +1,333 @@
+/* ============================================================================
+   NAVBAR & SIDEBAR STYLES - JR2 System
+   ============================================================================ */
+
+/* Variables específicas del navbar - Movidas a variables.css */
+
+/* ============================================================================
+   BASE NAVBAR STYLES
+   ============================================================================ */
+
+.navbar-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: var(--navbar-width);
+    background: white;
+    border-right: 1px solid rgb(229, 231, 235);
+    transition: var(--navbar-transition);
+    z-index: 50;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.dark .navbar-container {
+    background: rgb(23, 23, 23);
+    border-right-color: rgb(64, 64, 64);
+}
+
+.navbar-container.collapsed {
+    width: var(--navbar-collapsed-width);
+}
+
+/* ============================================================================
+   NAVBAR ITEMS & HOVER STATES
+   ============================================================================ */
+
+.navbar-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    color: rgb(107, 114, 128);
+    text-decoration: none;
+    transition: var(--navbar-transition);
+    cursor: pointer;
+    position: relative;
+}
+
+.dark .navbar-item {
+    color: rgb(209, 213, 219);
+}
+
+.navbar-item:hover {
+    background-color: var(--navbar-hover-bg-light);
+    color: var(--navbar-text-hover-light);
+    transform: none; /* Override any conflicting transforms */
+}
+
+.dark .navbar-item:hover {
+    background-color: var(--navbar-hover-bg-dark);
+    color: var(--navbar-text-hover-dark);
+}
+
+.navbar-item.active {
+    background-color: rgba(236, 72, 153, 0.1);
+    color: rgb(219, 39, 119);
+    border-right: 2px solid rgb(236, 72, 153);
+}
+
+.dark .navbar-item.active {
+    background-color: rgba(236, 72, 153, 0.1);
+    color: rgb(244, 114, 182);
+}
+
+/* ============================================================================
+   NAVBAR SECTION TOGGLES
+   ============================================================================ */
+
+.navbar-section-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    background: transparent;
+    border: none;
+    color: rgb(17, 24, 39);
+    transition: var(--navbar-transition);
+    cursor: pointer;
+}
+
+.dark .navbar-section-toggle {
+    color: white;
+}
+
+.navbar-section-toggle:hover {
+    background-color: var(--navbar-hover-bg-light);
+    color: var(--navbar-text-hover-light);
+    transform: none; /* Override any conflicting transforms */
+}
+
+.dark .navbar-section-toggle:hover {
+    background-color: var(--navbar-hover-bg-dark);
+    color: var(--navbar-text-hover-dark);
+}
+
+/* ============================================================================
+   NAVBAR ICONS & TEXT
+   ============================================================================ */
+
+.navbar-item:hover .navbar-icon,
+.navbar-section-toggle:hover .navbar-icon {
+    color: inherit;
+}
+
+.navbar-item:hover .navbar-text,
+.navbar-section-toggle:hover .navbar-text {
+    color: inherit;
+}
+
+/* ============================================================================
+   MOBILE NAVBAR
+   ============================================================================ */
+
+.navbar-mobile {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--navbar-mobile-height);
+    background: white;
+    border-bottom: 1px solid rgb(229, 231, 235);
+    z-index: 50;
+    display: none;
+}
+
+.dark .navbar-mobile {
+    background: rgb(23, 23, 23);
+    border-bottom-color: rgb(64, 64, 64);
+}
+
+@media (max-width: 1024px) {
+    .navbar-mobile {
+        display: flex;
+    }
+    
+    .navbar-container {
+        transform: translateX(-100%);
+        width: var(--navbar-width);
+    }
+    
+    .navbar-container.open {
+        transform: translateX(0);
+    }
+}
+
+/* ============================================================================
+   MOBILE NAVBAR ITEMS
+   ============================================================================ */
+
+.navbar-mobile-item {
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    color: rgb(107, 114, 128);
+    transition: var(--navbar-transition);
+    cursor: pointer;
+}
+
+.dark .navbar-mobile-item {
+    color: rgb(209, 213, 219);
+}
+
+.navbar-mobile-item:hover {
+    background-color: var(--navbar-hover-bg-light);
+    color: var(--navbar-text-hover-light);
+}
+
+.dark .navbar-mobile-item:hover {
+    background-color: var(--navbar-hover-bg-dark);
+    color: var(--navbar-text-hover-dark);
+}
+
+/* ============================================================================
+   COLLAPSED STATE STYLES
+   ============================================================================ */
+
+.navbar-container.collapsed .navbar-text {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.navbar-container.collapsed .navbar-item {
+    justify-content: center;
+    padding: 0.75rem;
+}
+
+.navbar-container.collapsed .navbar-section-toggle {
+    justify-content: center;
+    padding: 0.75rem;
+}
+
+/* ============================================================================
+   OVERLAY & BACKDROP
+   ============================================================================ */
+
+.navbar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 40;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.navbar-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+@media (min-width: 1024px) {
+    .navbar-overlay {
+        display: none;
+    }
+}
+
+/* ============================================================================
+   TOOLTIP STYLES
+   ============================================================================ */
+
+.navbar-tooltip {
+    position: fixed;
+    z-index: 50;
+    padding: 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: white;
+    background: rgb(23, 23, 23);
+    border-radius: 0.5rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(64, 64, 64, 0.5);
+    backdrop-filter: blur(8px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.dark .navbar-tooltip {
+    background: rgb(38, 38, 38);
+    border-color: rgba(64, 64, 64, 0.5);
+}
+
+.navbar-tooltip.show {
+    opacity: 1;
+}
+
+/* ============================================================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================================================ */
+
+@media (max-width: 1024px) {
+    .navbar-container {
+        width: var(--navbar-width);
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+    }
+    
+    /* Prevenir zoom accidental en inputs */
+    input, select, textarea {
+        font-size: 16px !important;
+    }
+    
+    /* Optimizar transiciones en móvil */
+    .navbar-item,
+    .navbar-section-toggle,
+    .navbar-mobile-item {
+        transition-duration: 200ms !important;
+    }
+    
+    /* Mejorar área de toque para elementos pequeños */
+    button, a {
+        min-height: 44px;
+        min-width: 44px;
+    }
+}
+
+/* ============================================================================
+   ACCESSIBILITY IMPROVEMENTS
+   ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    .navbar-container,
+    .navbar-item,
+    .navbar-section-toggle,
+    .navbar-mobile-item,
+    .navbar-overlay {
+        transition-duration: 0.01ms !important;
+    }
+}
+
+@media (prefers-contrast: high) {
+    .navbar-container {
+        border-right-color: rgb(0, 0, 0);
+    }
+    
+    .dark .navbar-container {
+        border-right-color: rgb(255, 255, 255);
+    }
+    
+    .navbar-item:hover,
+    .navbar-section-toggle:hover {
+        border: 1px solid currentColor;
+    }
+}
+
+/* ============================================================================
+   PRINT STYLES
+   ============================================================================ */
+
+@media print {
+    .navbar-container,
+    .navbar-mobile,
+    .navbar-overlay {
+        display: none !important;
+    }
+}

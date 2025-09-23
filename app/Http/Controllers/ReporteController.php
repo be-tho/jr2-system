@@ -171,13 +171,21 @@ class ReporteController extends Controller
             $filename = 'reporte-articulos-' . date('Y-m-d-H-i-s') . '.pdf';
 
             // Configurar headers para descarga automática
-            return response($pdf->output(), 200, [
-                'Content-Type' => 'application/pdf',
+            $response = response($pdf->output(), 200, [
+                'Content-Type' => 'application/force-download',
                 'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+                'Content-Transfer-Encoding' => 'binary',
+                'Content-Length' => strlen($pdf->output()),
                 'Cache-Control' => 'no-cache, no-store, must-revalidate',
                 'Pragma' => 'no-cache',
-                'Expires' => '0'
+                'Expires' => '0',
+                'X-Content-Type-Options' => 'nosniff'
             ]);
+
+            // Agregar header para redirección después de la descarga
+            $response->header('Refresh', '3; url=' . route('reportes.index'));
+            
+            return $response;
                 
         } catch (\Exception $e) {
             return redirect()->route('reportes.index')
@@ -233,13 +241,21 @@ class ReporteController extends Controller
             $filename = 'reporte-cortes-' . date('Y-m-d-H-i-s') . '.pdf';
 
             // Configurar headers para descarga automática
-            return response($pdf->output(), 200, [
-                'Content-Type' => 'application/pdf',
+            $response = response($pdf->output(), 200, [
+                'Content-Type' => 'application/force-download',
                 'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+                'Content-Transfer-Encoding' => 'binary',
+                'Content-Length' => strlen($pdf->output()),
                 'Cache-Control' => 'no-cache, no-store, must-revalidate',
                 'Pragma' => 'no-cache',
-                'Expires' => '0'
+                'Expires' => '0',
+                'X-Content-Type-Options' => 'nosniff'
             ]);
+
+            // Agregar header para redirección después de la descarga
+            $response->header('Refresh', '3; url=' . route('reportes.index'));
+            
+            return $response;
                 
         } catch (\Exception $e) {
             return redirect()->route('reportes.index')

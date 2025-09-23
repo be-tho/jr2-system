@@ -1269,7 +1269,7 @@ window.toggleMobileSection = function(sectionName) {
     transform: none !important; /* Evitar el translateX de components.css */
 }
 
-/* Estilos específicos para elementos del menú - MAYOR ESPECIFICIDAD */
+car/* Estilos específicos para elementos del menú - MAYOR ESPECIFICIDAD */
 #sidebar .nav-item.nav-item:hover {
     transform: none !important;
     color: inherit !important;

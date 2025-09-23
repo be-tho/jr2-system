@@ -8,6 +8,7 @@ use App\Repositories\CorteRepository;
 use App\Repositories\StatsRepository;
 use App\Models\Categoria;
 use App\Models\Temporada;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ReporteController extends Controller
 {
@@ -125,12 +126,63 @@ class ReporteController extends Controller
      */
     public function exportArticulosPDF(Request $request)
     {
-        // Implementar exportación a PDF
-        // Por ahora retornamos JSON
-        return response()->json([
-            'success' => true,
-            'message' => 'Exportación a PDF implementada correctamente'
-        ]);
+        try {
+            // Obtener los mismos filtros que se usan en la vista
+            $filters = [
+                'categoria_id' => $request->get('categoria_id'),
+                'temporada_id' => $request->get('temporada_id'),
+                'stock_min' => $request->get('stock_min'),
+                'stock_max' => $request->get('stock_max'),
+                'precio_min' => $request->get('precio_min'),
+                'precio_max' => $request->get('precio_max'),
+                'order_by' => $request->get('order_by', 'nombre'),
+                'order_direction' => $request->get('order_direction', 'asc'),
+            ];
+
+            // Obtener artículos con filtros aplicados (sin paginación para el PDF)
+            $articulos = $this->articuloRepository->getPaginatedWithFilters($filters, 1000);
+            $stats = $this->articuloRepository->getStats();
+            $porCategoria = $this->articuloRepository->getGroupedByCategoria();
+            $porTemporada = $this->articuloRepository->getGroupedByTemporada();
+
+            // Generar el PDF
+            $pdf = Pdf::loadView('pdf.reporte-articulos', compact(
+                'articulos',
+                'stats',
+                'porCategoria',
+                'porTemporada'
+            ));
+
+            // Configurar el PDF
+            $pdf->setPaper('A4', 'portrait');
+            $pdf->setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => false,
+                'defaultFont' => 'Arial',
+                'isPhpEnabled' => false,
+                'isJavascriptEnabled' => false,
+                'isFontSubsettingEnabled' => true,
+                'debugKeepTemp' => false,
+                'debugCss' => false,
+                'debugLayout' => false
+            ]);
+
+            // Generar nombre del archivo
+            $filename = 'reporte-articulos-' . date('Y-m-d-H-i-s') . '.pdf';
+
+            // Configurar headers para descarga automática
+            return response($pdf->output(), 200, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+                'Cache-Control' => 'no-cache, no-store, must-revalidate',
+                'Pragma' => 'no-cache',
+                'Expires' => '0'
+            ]);
+                
+        } catch (\Exception $e) {
+            return redirect()->route('reportes.index')
+                ->with('error', 'Error al generar el reporte de artículos: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -138,11 +190,60 @@ class ReporteController extends Controller
      */
     public function exportCortesPDF(Request $request)
     {
-        // Implementar exportación a PDF
-        // Por ahora retornamos JSON
-        return response()->json([
-            'success' => true,
-            'message' => 'Exportación a PDF implementada correctamente'
-        ]);
+        try {
+            // Obtener los mismos filtros que se usan en la vista
+            $filters = [
+                'estado' => $request->get('estado'),
+                'fecha' => $request->get('fecha'),
+                'fecha_desde' => $request->get('fecha_desde'),
+                'fecha_hasta' => $request->get('fecha_hasta'),
+                'order_by' => $request->get('order_by', 'fecha'),
+                'order_direction' => $request->get('order_direction', 'desc'),
+            ];
+
+            // Obtener cortes con filtros aplicados (sin paginación para el PDF)
+            $cortes = $this->corteRepository->getPaginatedWithFilters($filters, 1000);
+            $stats = $this->corteRepository->getStats();
+            $porEstado = $this->corteRepository->getGroupedByEstado();
+            $porMes = $this->corteRepository->getGroupedByMes();
+
+            // Generar el PDF
+            $pdf = Pdf::loadView('pdf.reporte-cortes', compact(
+                'cortes',
+                'stats',
+                'porEstado',
+                'porMes'
+            ));
+
+            // Configurar el PDF
+            $pdf->setPaper('A4', 'portrait');
+            $pdf->setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => false,
+                'defaultFont' => 'Arial',
+                'isPhpEnabled' => false,
+                'isJavascriptEnabled' => false,
+                'isFontSubsettingEnabled' => true,
+                'debugKeepTemp' => false,
+                'debugCss' => false,
+                'debugLayout' => false
+            ]);
+
+            // Generar nombre del archivo
+            $filename = 'reporte-cortes-' . date('Y-m-d-H-i-s') . '.pdf';
+
+            // Configurar headers para descarga automática
+            return response($pdf->output(), 200, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+                'Cache-Control' => 'no-cache, no-store, must-revalidate',
+                'Pragma' => 'no-cache',
+                'Expires' => '0'
+            ]);
+                
+        } catch (\Exception $e) {
+            return redirect()->route('reportes.index')
+                ->with('error', 'Error al generar el reporte de cortes: ' . $e->getMessage());
+        }
     }
 }

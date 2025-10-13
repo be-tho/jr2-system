@@ -20,27 +20,9 @@
                     </button>
                     
                     @if(auth()->user() && auth()->user()->hasRole('administrador'))
-                    <form method="POST" action="{{ route('reportes.export.articulos.pdf') }}" class="inline">
-                        @csrf
-                        <button type="submit" 
-                                class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                            </svg>
-                            Exportar Artículos PDF
-                        </button>
-                    </form>
-                    
-                    <form method="POST" action="{{ route('reportes.export.cortes.pdf') }}" class="inline">
-                        @csrf
-                        <button type="submit" 
-                                class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                            </svg>
-                            Exportar Cortes PDF
-                        </button>
-                    </form>
+                    <div class="text-center text-neutral-500 dark:text-neutral-400">
+                        <p class="text-sm">Funcionalidad de exportación temporalmente deshabilitada</p>
+                    </div>
                     @endif
                 </div>
             </div>
@@ -222,7 +204,7 @@
             <div class="text-center">
                 <h4 class="text-lg font-semibold text-blue-900 mb-2">¿Necesitas reportes personalizados?</h4>
                 <p class="text-blue-700 mb-4">
-                    Todos los reportes incluyen filtros avanzados y opciones de exportación a PDF. 
+                    Todos los reportes incluyen filtros avanzados y opciones de exportación. 
                     Los datos se actualizan en tiempo real desde tu base de datos.
                 </p>
                 <div class="flex justify-center gap-4">
@@ -236,7 +218,7 @@
                         <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                         </svg>
-                        Exportación PDF
+                        Exportación de datos
                     </div>
                     <div class="flex items-center text-sm text-blue-600">
                         <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">

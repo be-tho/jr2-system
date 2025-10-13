@@ -1,0 +1,41 @@
+# Permitir acceso a archivos de storage para Laravel
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>
+
+# Configurar permisos para directorios de framework
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options nosniff
+    Header set X-Frame-Options DENY
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# Denegar acceso a archivos sensibles
+<Files "*.log">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "*.env">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Permitir escritura en directorios de sesiones y cache
+<Directory "framework/sessions">
+    AllowOverride All
+    Require all granted
+</Directory>
+
+<Directory "framework/cache">
+    AllowOverride All
+    Require all granted
+</Directory>
+
+<Directory "framework/views">
+    AllowOverride All
+    Require all granted
+</Directory>

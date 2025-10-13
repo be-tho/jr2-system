@@ -19,9 +19,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //editar paginador en tailwind
-        $this->app->bind('paginator', function ($app, $data) {
-            return new \App\Paginator($data);
-        });
+        // Configurar paginación por defecto con Tailwind CSS
+        \Illuminate\Pagination\Paginator::defaultView('vendor.pagination.tailwind');
+        \Illuminate\Pagination\Paginator::defaultSimpleView('vendor.pagination.simple-tailwind');
     }
 }

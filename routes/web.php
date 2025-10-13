@@ -207,8 +207,6 @@ Route::middleware('auth')->group(function () {
         // REPORTS EXPORT - Solo administradores
         // ====================================================================
         Route::prefix('reportes')->name('reportes.')->group(function () {
-            Route::post('/export/articulos/pdf', [ReporteController::class, 'exportArticulosPDF'])->name('export.articulos.pdf');
-            Route::post('/export/cortes/pdf', [ReporteController::class, 'exportCortesPDF'])->name('export.cortes.pdf');
         });
         
         // ====================================================================

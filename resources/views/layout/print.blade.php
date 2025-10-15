@@ -291,45 +291,19 @@
         
     </div>
 
-    <!-- Script simplificado y robusto -->
     <script>
-        let isClosing = false;
-        
-        // Función para cerrar ventana de forma segura
-        function safeClose() {
-            if (isClosing) return;
-            isClosing = true;
-            
-            // Redirigir al historial de ventas
-            window.location.href = '/ventas';
-        }
-        
-        // NO imprimir automáticamente - mostrar la vista primero
-        window.onload = function() {
-            // Solo mostrar la vista, no imprimir automáticamente
-            console.log('Vista de impresión cargada - lista para imprimir');
-        };
-        
-        // Cerrar después de imprimir - SOLUCIÓN SIMPLE
+        // Redirigir al historial después de imprimir
         window.onafterprint = function() {
-            setTimeout(function() {
-                window.location.href = '/ventas';
-            }, 1000);
+            setTimeout(() => window.location.href = '/ventas', 1000);
         };
         
-        // Detectar si el usuario cancela múltiples veces
+        // Detectar cancelaciones múltiples
         let cancelCount = 0;
         window.addEventListener('focus', function() {
-            cancelCount++;
-            if (cancelCount >= 2) {
-                setTimeout(function() {
-                    window.location.href = '/ventas';
-                }, 500);
+            if (++cancelCount >= 2) {
+                setTimeout(() => window.location.href = '/ventas', 500);
             }
         });
-        
-        // Función global para el botón manual
-        window.safeClose = safeClose;
     </script>
 </body>
 </html>

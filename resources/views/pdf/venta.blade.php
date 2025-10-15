@@ -3,7 +3,7 @@
 @section('content')
     <!-- Información del cliente y vendedor -->
     <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-        @if(isset($venta) && $venta->cliente_nombre)
+        @if($venta->cliente_nombre)
             <div class="client-info" style="flex: 1; margin-right: 20px;">
                 <div class="client-title">Cliente:</div>
                 <div>{{ $venta->cliente_nombre }}</div>
@@ -28,48 +28,44 @@
             </tr>
         </thead>
         <tbody>
-            @if(isset($venta) && $venta->items)
-                @foreach($venta->items as $item)
-                    <tr>
-                        <td>{{ $item->articulo->codigo ?? 'N/A' }}</td>
-                        <td>{{ $item->detalle ?? $item->articulo->nombre ?? 'Artículo' }}</td>
-                        <td class="text-center">{{ $item->cantidad }}</td>
-                        <td class="text-right">${{ number_format($item->precio_unitario, 2, '.', ',') }}</td>
-                        <td class="text-right">${{ number_format($item->cantidad * $item->precio_unitario, 2, '.', ',') }}</td>
-                    </tr>
-                @endforeach
-            @else
+            @forelse($venta->items as $item)
+                <tr>
+                    <td>{{ $item->articulo->codigo ?? 'N/A' }}</td>
+                    <td>{{ $item->detalle ?? $item->articulo->nombre ?? 'Artículo' }}</td>
+                    <td class="text-center">{{ $item->cantidad }}</td>
+                    <td class="text-right">${{ number_format($item->precio_unitario, 2, '.', ',') }}</td>
+                    <td class="text-right">${{ number_format($item->cantidad * $item->precio_unitario, 2, '.', ',') }}</td>
+                </tr>
+            @empty
                 <tr>
                     <td colspan="5" class="text-center">No hay artículos en esta venta</td>
                 </tr>
-            @endif
+            @endforelse
         </tbody>
     </table>
 
     <!-- Totales -->
-    @if(isset($venta))
-        <div class="totals-section">
-            <div class="total-row">
-                <div class="total-label">Subtotal:</div>
-                <div class="total-value">${{ number_format($venta->total, 2, '.', ',') }}</div>
-            </div>
-            
-            @if(isset($venta->impuestos) && $venta->impuestos > 0)
-                <div class="total-row">
-                    <div class="total-label">Impuestos:</div>
-                    <div class="total-value">${{ number_format($venta->impuestos, 2, '.', ',') }}</div>
-                </div>
-            @endif
-            
-            <div class="total-row grand-total">
-                <div class="total-label">TOTAL:</div>
-                <div class="total-value">${{ number_format($venta->total, 2, '.', ',') }}</div>
-            </div>
+    <div class="totals-section">
+        <div class="total-row">
+            <div class="total-label">Subtotal:</div>
+            <div class="total-value">${{ number_format($venta->total, 2, '.', ',') }}</div>
         </div>
-    @endif
+        
+        @if($venta->impuestos > 0)
+            <div class="total-row">
+                <div class="total-label">Impuestos:</div>
+                <div class="total-value">${{ number_format($venta->impuestos, 2, '.', ',') }}</div>
+            </div>
+        @endif
+        
+        <div class="total-row grand-total">
+            <div class="total-label">TOTAL:</div>
+            <div class="total-value">${{ number_format($venta->total, 2, '.', ',') }}</div>
+        </div>
+    </div>
 
     <!-- Notas adicionales -->
-    @if(isset($venta) && $venta->notas)
+    @if($venta->notas)
         <div class="additional-info">
             <div class="info-title">Observaciones:</div>
             <div>{{ $venta->notas }}</div>

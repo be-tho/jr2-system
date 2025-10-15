@@ -192,4 +192,34 @@ class VentaController extends Controller
             'promedio_venta' => number_format($estadisticas['promedio_venta'], 2, '.', ','),
         ]);
     }
+
+    /**
+     * Mostrar vista de impresión de una venta
+     */
+    public function print(Venta $venta)
+    {
+        // Cargar relaciones necesarias
+        $venta->load(['items.articulo', 'user']);
+
+        // Datos de la empresa (puedes configurar estos valores)
+        $companyData = [
+            'company_name' => 'JR2 System',
+            'company_address' => 'Cuenca 218, Flores',
+            'company_phone' => 'Teléfono: (11) 3092-2950',
+            'company_email' => 'yiyevp@gmail.com',
+            'company_logo' => null, // Puedes agregar la ruta del logo aquí
+        ];
+
+        // Datos del documento
+        $documentData = [
+            'document_title' => 'COMPROBANTE DE VENTA',
+            'document_number' => 'VTA-' . str_pad($venta->id, 6, '0', STR_PAD_LEFT),
+            'document_date' => $venta->created_at->format('d/m/Y'),
+            'document_time' => $venta->created_at->format('H:i'),
+        ];
+
+        return view('pdf.venta', array_merge([
+            'venta' => $venta,
+        ], $companyData, $documentData));
+    }
 }

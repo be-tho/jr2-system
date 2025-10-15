@@ -132,6 +132,7 @@ Route::middleware('auth')->group(function () {
             Route::post('/', [VentaController::class, 'store'])->name('store');
             Route::get('/search-articulos', [VentaController::class, 'searchArticulos'])->name('search-articulos');
             Route::get('/stats/estadisticas', [VentaController::class, 'getEstadisticas'])->name('stats.estadisticas');
+            Route::get('/{venta}/print', [VentaController::class, 'print'])->name('print');
             Route::get('/{venta}', [VentaController::class, 'show'])->name('show');
         });
         

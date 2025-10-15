@@ -42,7 +42,7 @@ class ArticuloService
     /**
      * Obtener artículos disponibles para venta (con stock > 0)
      */
-    public function getArticulosDisponiblesParaVenta(string $busqueda = '', int $limite = 50): Collection
+    public function getArticulosDisponiblesParaVenta(?string $busqueda = '', int $limite = 50): Collection
     {
         $query = Articulo::where('stock', '>', 0)
             ->with(['categoria:id,nombre', 'temporada:id,nombre']);

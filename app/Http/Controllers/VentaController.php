@@ -118,7 +118,7 @@ class VentaController extends Controller
      */
     public function searchArticulos(Request $request)
     {
-        $search = $request->get('q', '');
+        $search = $request->get('q', '') ?: '';
         
         $articulos = $this->articuloService->getArticulosDisponiblesParaVenta($search);
 

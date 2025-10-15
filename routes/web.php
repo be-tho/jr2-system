@@ -11,6 +11,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\TemporadaController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VentaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -123,6 +124,19 @@ Route::middleware('auth')->group(function () {
         });
         
         // ====================================================================
+        // VENTAS - Todos los usuarios autenticados pueden ver y crear
+        // ====================================================================
+        Route::prefix('ventas')->name('ventas.')->group(function () {
+            Route::get('/', [VentaController::class, 'index'])->name('index');
+            Route::get('/create', [VentaController::class, 'create'])->name('create');
+            Route::post('/', [VentaController::class, 'store'])->name('store');
+            Route::get('/search-articulos', [VentaController::class, 'searchArticulos'])->name('search-articulos');
+            Route::get('/stats/estadisticas', [VentaController::class, 'getEstadisticas'])->name('stats.estadisticas');
+            Route::get('/{venta}/print', [VentaController::class, 'print'])->name('print');
+            Route::get('/{venta}', [VentaController::class, 'show'])->name('show');
+        });
+        
+        // ====================================================================
         // REPORTS VIEW - Todos pueden ver
         // ====================================================================
         Route::prefix('reportes')->name('reportes.')->group(function () {
@@ -207,6 +221,13 @@ Route::middleware('auth')->group(function () {
         // REPORTS EXPORT - Solo administradores
         // ====================================================================
         Route::prefix('reportes')->name('reportes.')->group(function () {
+        });
+        
+        // ====================================================================
+        // VENTAS MANAGEMENT - Solo administradores pueden eliminar
+        // ====================================================================
+        Route::prefix('ventas')->name('ventas.')->group(function () {
+            Route::delete('/{venta}', [VentaController::class, 'destroy'])->name('destroy');
         });
         
         // ====================================================================

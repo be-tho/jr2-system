@@ -1,3 +1,4 @@
+
 @extends('layout.app')
 @section('title', 'Nueva Venta')
 @section('content')
@@ -165,36 +166,74 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Variables globales
-            let itemsVenta = [];
-            let todosLosArticulos = [];
-            let searchTimeout;
+            // ===== CONFIGURACIÓN =====
+            const CONFIG = {
+                SEARCH_DELAY: 300,
+                IMAGE_BASE_URL: '{{ asset('src/assets/uploads/articulos/') }}/',
+                ROUTES: {
+                    SEARCH_ARTICULOS: '{{ route('ventas.search-articulos') }}',
+                    STORE_VENTA: '{{ route('ventas.store') }}'
+                }
+            };
 
-            // Elementos del DOM
-            const articulosDisponibles = document.getElementById('articulos-disponibles');
-            const searchInput = document.getElementById('search-articulos');
-            const articulosCount = document.getElementById('articulos-count');
-            const itemsList = document.getElementById('items-list');
-            const itemsCount = document.getElementById('items-count');
-            const totalVenta = document.getElementById('total-venta');
-            const btnGuardar = document.getElementById('btn-guardar');
-            const ventaForm = document.getElementById('venta-form');
+            // ===== ESTADO DE LA APLICACIÓN =====
+            const state = {
+                itemsVenta: [],
+                todosLosArticulos: [],
+                searchTimeout: null
+            };
 
-            // Inicialización
-            cargarArticulosDisponibles();
-            setupEventListeners();
+            // ===== ELEMENTOS DEL DOM =====
+            const elements = {
+                articulosDisponibles: document.getElementById('articulos-disponibles'),
+                searchInput: document.getElementById('search-articulos'),
+                articulosCount: document.getElementById('articulos-count'),
+                itemsList: document.getElementById('items-list'),
+                itemsCount: document.getElementById('items-count'),
+                totalVenta: document.getElementById('total-venta'),
+                btnGuardar: document.getElementById('btn-guardar'),
+                ventaForm: document.getElementById('venta-form')
+            };
+
+            // ===== FUNCIONES AUXILIARES =====
+            const utils = {
+                // Generar URL de imagen con fallback
+                getImageUrl: (imagen) => `${CONFIG.IMAGE_BASE_URL}${imagen}`,
+                
+                // Obtener clase CSS según el stock
+                getStockClass: (stock) => {
+                    if (stock > 10) return 'text-green-600 dark:text-green-400';
+                    if (stock > 5) return 'text-yellow-600 dark:text-yellow-400';
+                    return 'text-red-600 dark:text-red-400';
+                },
+                
+                // Formatear precio
+                formatPrice: (precio) => precio.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+                
+                // Escapar HTML para prevenir XSS
+                escapeHtml: (text) => text.replace(/"/g, '&quot;'),
+                
+                // Validar cantidad
+                validateQuantity: (cantidad, stock) => Math.max(1, Math.min(cantidad, stock))
+            };
+
+            // ===== INICIALIZACIÓN =====
+            function init() {
+                cargarArticulosDisponibles();
+                setupEventListeners();
+            }
 
             // ===== EVENT LISTENERS =====
             function setupEventListeners() {
-                searchInput.addEventListener('input', function(e) {
+                elements.searchInput.addEventListener('input', function(e) {
                     const query = e.target.value.trim();
-                    clearTimeout(searchTimeout);
-                    searchTimeout = setTimeout(() => filtrarArticulos(query), 300);
+                    clearTimeout(state.searchTimeout);
+                    state.searchTimeout = setTimeout(() => filtrarArticulos(query), CONFIG.SEARCH_DELAY);
                 });
 
-                ventaForm.addEventListener('submit', function(e) {
+                elements.ventaForm.addEventListener('submit', function(e) {
                     e.preventDefault();
-                    if (itemsVenta.length === 0) {
+                    if (state.itemsVenta.length === 0) {
                         alert('Debe agregar al menos un artículo a la venta');
                         return;
                     }
@@ -203,45 +242,51 @@
             }
 
             // ===== CARGAR ARTÍCULOS =====
-            function cargarArticulosDisponibles() {
-                fetch(`{{ route('ventas.search-articulos') }}?q=`, {
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/json',
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    todosLosArticulos = data;
+            async function cargarArticulosDisponibles() {
+                try {
+                    const response = await fetch(`${CONFIG.ROUTES.SEARCH_ARTICULOS}?q=`, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json',
+                        }
+                    });
+                    
+                    if (!response.ok) throw new Error('Error en la respuesta del servidor');
+                    
+                    const data = await response.json();
+                    state.todosLosArticulos = data;
                     mostrarArticulosDisponibles(data);
-                })
-                .catch(error => {
+                } catch (error) {
                     console.error('Error al cargar artículos:', error);
                     mostrarError('Error al cargar los artículos');
-                });
+                }
             }
 
             // ===== MOSTRAR ARTÍCULOS =====
             function mostrarArticulosDisponibles(articulos) {
-                articulosCount.textContent = articulos.length;
+                elements.articulosCount.textContent = articulos.length;
                 
                 if (articulos.length === 0) {
                     mostrarMensajeVacio('No se encontraron artículos');
                 } else {
-                    articulosDisponibles.innerHTML = articulos.map(crearCardArticulo).join('');
+                    elements.articulosDisponibles.innerHTML = articulos.map(crearCardArticulo).join('');
                 }
             }
 
             function crearCardArticulo(articulo) {
-                const stockClass = articulo.stock > 10 ? 'text-green-600 dark:text-green-400' : 
-                                 articulo.stock > 5 ? 'text-yellow-600 dark:text-yellow-400' : 
-                                 'text-red-600 dark:text-red-400';
+                const stockClass = utils.getStockClass(articulo.stock);
+                const imageUrl = utils.getImageUrl(articulo.imagen);
+                const escapedArticulo = utils.escapeHtml(JSON.stringify(articulo));
                 
                 return `
                     <div class="bg-neutral-50 dark:bg-neutral-700 rounded-lg p-4 border border-neutral-200 dark:border-neutral-600 hover:border-primary-300 dark:hover:border-primary-600 transition-colors duration-200 cursor-pointer"
-                         onclick="agregarArticulo(${JSON.stringify(articulo).replace(/"/g, '&quot;')})">
+                         onclick="agregarArticulo(${escapedArticulo})">
                         <div class="flex items-center space-x-3">
-                            <div class="w-12 h-12 bg-neutral-100 dark:bg-neutral-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <img src="${imageUrl}" 
+                                 alt="${articulo.nombre}" 
+                                 class="w-12 h-12 object-cover rounded-lg flex-shrink-0" 
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="w-12 h-12 bg-neutral-100 dark:bg-neutral-600 rounded-lg flex items-center justify-center flex-shrink-0" style="display: none;">
                                 <svg class="w-6 h-6 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                 </svg>
@@ -268,7 +313,7 @@
             }
 
             function mostrarMensajeVacio(mensaje) {
-                articulosDisponibles.innerHTML = `
+                elements.articulosDisponibles.innerHTML = `
                     <div class="col-span-full text-center py-8">
                         <svg class="mx-auto h-12 w-12 text-neutral-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -279,7 +324,7 @@
             }
 
             function mostrarError(mensaje) {
-                articulosDisponibles.innerHTML = `
+                elements.articulosDisponibles.innerHTML = `
                     <div class="col-span-full text-center py-8">
                         <svg class="mx-auto h-12 w-12 text-red-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -291,32 +336,32 @@
 
             // ===== FILTRADO =====
             function filtrarArticulos(query) {
-                if (query === '') {
-                    mostrarArticulosDisponibles(todosLosArticulos);
-                } else {
-                    const articulosFiltrados = todosLosArticulos.filter(articulo => 
+                const articulos = query === '' 
+                    ? state.todosLosArticulos 
+                    : state.todosLosArticulos.filter(articulo => 
                         articulo.nombre.toLowerCase().includes(query.toLowerCase()) ||
                         articulo.codigo.toLowerCase().includes(query.toLowerCase()) ||
                         (articulo.descripcion && articulo.descripcion.toLowerCase().includes(query.toLowerCase()))
                     );
-                    mostrarArticulosDisponibles(articulosFiltrados);
-                }
+                
+                mostrarArticulosDisponibles(articulos);
             }
 
 
             // ===== GESTIÓN DE ARTÍCULOS EN VENTA =====
             function agregarArticulo(articulo) {
-                if (itemsVenta.find(item => item.id === articulo.id)) {
+                if (state.itemsVenta.find(item => item.id === articulo.id)) {
                     alert('Este artículo ya está agregado a la venta');
                     return;
                 }
 
-                itemsVenta.push({
+                state.itemsVenta.push({
                     id: articulo.id,
                     nombre: articulo.nombre,
                     codigo: articulo.codigo,
                     precio: articulo.precio,
                     stock: articulo.stock,
+                    imagen: articulo.imagen,
                     cantidad: 1,
                     subtotal: articulo.precio
                 });
@@ -325,13 +370,13 @@
             }
 
             function eliminarArticulo(index) {
-                itemsVenta.splice(index, 1);
+                state.itemsVenta.splice(index, 1);
                 actualizarVista();
             }
 
             function actualizarCantidad(index, nuevaCantidad) {
-                const item = itemsVenta[index];
-                nuevaCantidad = Math.max(1, Math.min(nuevaCantidad, item.stock));
+                const item = state.itemsVenta[index];
+                nuevaCantidad = utils.validateQuantity(nuevaCantidad, item.stock);
                 
                 if (nuevaCantidad > item.stock) {
                     alert(`La cantidad no puede exceder el stock disponible (${item.stock})`);
@@ -350,21 +395,19 @@
             }
 
             function actualizarContadores() {
-                itemsCount.textContent = `${itemsVenta.length} artículo${itemsVenta.length !== 1 ? 's' : ''}`;
+                elements.itemsCount.textContent = `${state.itemsVenta.length} artículo${state.itemsVenta.length !== 1 ? 's' : ''}`;
             }
 
             function actualizarTotal() {
-                const total = itemsVenta.reduce((sum, item) => sum + item.subtotal, 0);
-                totalVenta.textContent = `$${total.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
-                btnGuardar.disabled = itemsVenta.length === 0;
+                const total = state.itemsVenta.reduce((sum, item) => sum + item.subtotal, 0);
+                elements.totalVenta.textContent = `$${utils.formatPrice(total)}`;
+                elements.btnGuardar.disabled = state.itemsVenta.length === 0;
             }
 
             function actualizarListaItems() {
-                if (itemsVenta.length === 0) {
-                    itemsList.innerHTML = crearEstadoVacio();
-                } else {
-                    itemsList.innerHTML = itemsVenta.map((item, index) => crearItemVenta(item, index)).join('');
-                }
+                elements.itemsList.innerHTML = state.itemsVenta.length === 0 
+                    ? crearEstadoVacio() 
+                    : state.itemsVenta.map((item, index) => crearItemVenta(item, index)).join('');
             }
 
             function crearEstadoVacio() {
@@ -382,13 +425,26 @@
             }
 
             function crearItemVenta(item, index) {
+                const imageUrl = utils.getImageUrl(item.imagen);
+                
                 return `
                     <div class="bg-neutral-50 dark:bg-neutral-700 rounded-lg p-4">
                         <div class="flex items-center justify-between">
-                            <div class="flex-1">
-                                <h4 class="font-medium text-neutral-900 dark:text-white">${item.nombre}</h4>
-                                <p class="text-sm text-neutral-500 dark:text-neutral-400">Código: ${item.codigo}</p>
-                                <p class="text-sm font-medium text-green-600 dark:text-green-400">$${formatearPrecio(item.precio)} c/u</p>
+                            <div class="flex items-center space-x-3 flex-1">
+                                <img src="${imageUrl}" 
+                                     alt="${item.nombre}" 
+                                     class="w-10 h-10 object-cover rounded-lg flex-shrink-0" 
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <div class="w-10 h-10 bg-neutral-100 dark:bg-neutral-600 rounded-lg flex items-center justify-center flex-shrink-0" style="display: none;">
+                                    <svg class="w-5 h-5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="font-medium text-neutral-900 dark:text-white">${item.nombre}</h4>
+                                    <p class="text-sm text-neutral-500 dark:text-neutral-400">Código: ${item.codigo}</p>
+                                    <p class="text-sm font-medium text-green-600 dark:text-green-400">$${utils.formatPrice(item.precio)} c/u</p>
+                                </div>
                             </div>
                             <div class="flex items-center space-x-3">
                                 <div class="flex items-center space-x-2">
@@ -402,7 +458,7 @@
                                 </div>
                                 <div class="text-right">
                                     <p class="text-sm font-medium text-neutral-900 dark:text-white">Subtotal</p>
-                                    <p class="text-lg font-bold text-primary-600 dark:text-primary-400">$${formatearPrecio(item.subtotal)}</p>
+                                    <p class="text-lg font-bold text-primary-600 dark:text-primary-400">$${utils.formatPrice(item.subtotal)}</p>
                                 </div>
                                 <button onclick="eliminarArticulo(${index})" 
                                         class="p-2 text-red-600 hover:text-red-800 hover:bg-red-100 dark:hover:bg-red-900/20 rounded-lg transition-colors">
@@ -416,19 +472,15 @@
                 `;
             }
 
-            function formatearPrecio(precio) {
-                return precio.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-            }
-
             // ===== ENVÍO DE VENTA =====
             function enviarVenta() {
                 crearInputsOcultos();
                 mostrarLoading();
-                ventaForm.submit();
+                elements.ventaForm.submit();
             }
 
             function crearInputsOcultos() {
-                itemsVenta.forEach((item, index) => {
+                state.itemsVenta.forEach((item, index) => {
                     const inputs = [
                         { name: `items[${index}][articulo_id]`, value: item.id },
                         { name: `items[${index}][cantidad]`, value: item.cantidad },
@@ -441,14 +493,14 @@
                         hiddenInput.type = 'hidden';
                         hiddenInput.name = input.name;
                         hiddenInput.value = input.value;
-                        ventaForm.appendChild(hiddenInput);
+                        elements.ventaForm.appendChild(hiddenInput);
                     });
                 });
             }
 
             function mostrarLoading() {
-                btnGuardar.disabled = true;
-                btnGuardar.innerHTML = `
+                elements.btnGuardar.disabled = true;
+                elements.btnGuardar.innerHTML = `
                     <svg class="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -461,6 +513,9 @@
             window.agregarArticulo = agregarArticulo;
             window.eliminarArticulo = eliminarArticulo;
             window.actualizarCantidad = actualizarCantidad;
+
+            // ===== INICIALIZAR APLICACIÓN =====
+            init();
         });
     </script>
 @endsection

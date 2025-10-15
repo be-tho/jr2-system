@@ -22,7 +22,9 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 
     <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!--@vite(['resources/css/app.css', 'resources/js/app.js']) -->
+
+    <link rel="stylesheet" href="{{ asset('build/assets/app-CRXkhkcP.css') }}">
     
     <!-- Theme Script -->
     <script>
@@ -279,6 +281,9 @@
         });
 </script>
     <script src="{{ asset('build/assets/app-Q25KwOla.js') }}"></script>
-    @vite('resources/js/app.js')
+    <!--@vite('resources/js/app.js') -->
+    
+    <!-- Stack para scripts adicionales -->
+    @stack('scripts')
 </body>
 </html>

@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Articulo;
+use App\Services\StockService;
 
 class StoreVentaRequest extends FormRequest
 {
@@ -25,9 +27,34 @@ class StoreVentaRequest extends FormRequest
             'cliente_nombre' => 'nullable|string|max:255',
             'notas' => 'nullable|string|max:1000',
             'items' => 'required|array|min:1',
-            'items.*.articulo_id' => 'required|exists:articulos,id',
-            'items.*.cantidad' => 'required|integer|min:1',
-            'items.*.precio_unitario' => 'required|numeric|min:0',
+            'items.*.articulo_id' => [
+                'required',
+                'exists:articulos,id',
+                function ($attribute, $value, $fail) {
+                    $articulo = Articulo::find($value);
+                    if ($articulo && $articulo->stock <= 0) {
+                        $fail("El artículo '{$articulo->nombre}' no tiene stock disponible.");
+                    }
+                }
+            ],
+            'items.*.cantidad' => [
+                'required',
+                'integer',
+                'min:1',
+                function ($attribute, $value, $fail) {
+                    // Obtener el índice del item
+                    $index = explode('.', $attribute)[1];
+                    $articuloId = $this->input("items.{$index}.articulo_id");
+                    
+                    if ($articuloId) {
+                        $articulo = Articulo::find($articuloId);
+                        if ($articulo && $value > $articulo->stock) {
+                            $fail("La cantidad solicitada ({$value}) excede el stock disponible ({$articulo->stock}) para el artículo '{$articulo->nombre}'.");
+                        }
+                    }
+                }
+            ],
+            'items.*.precio_unitario' => 'required|numeric|min:0.01',
             'items.*.detalle' => 'nullable|string|max:500',
         ];
     }
@@ -49,7 +76,7 @@ class StoreVentaRequest extends FormRequest
             'items.*.cantidad.min' => 'La cantidad debe ser mayor a 0.',
             'items.*.precio_unitario.required' => 'El precio unitario es requerido.',
             'items.*.precio_unitario.numeric' => 'El precio unitario debe ser un número.',
-            'items.*.precio_unitario.min' => 'El precio unitario debe ser mayor o igual a 0.',
+            'items.*.precio_unitario.min' => 'El precio unitario debe ser mayor a 0.',
         ];
     }
 

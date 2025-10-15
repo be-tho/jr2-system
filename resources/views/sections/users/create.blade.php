@@ -99,6 +99,29 @@
                         />
                     </div>
 
+                    <!-- Rol -->
+                    <div>
+                        <label for="role" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                            Rol del usuario <span class="text-red-500">*</span>
+                        </label>
+                        <select
+                            name="role"
+                            id="role"
+                            class="block w-full p-3 text-sm border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white focus:ring-primary-500 focus:border-primary-500 @error('role') border-red-500 @enderror"
+                            required
+                        >
+                            <option value="">Selecciona un rol</option>
+                            @foreach($roles as $role)
+                                <option value="{{ $role->name }}" {{ old('role') == $role->name ? 'selected' : '' }}>
+                                    {{ ucfirst($role->name) }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('role')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                     <!-- Información adicional -->
                     <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
                         <div class="flex items-start">
@@ -111,7 +134,7 @@
                                 <h4 class="text-sm font-medium text-blue-800 dark:text-blue-200">Información importante</h4>
                                 <div class="mt-2 text-sm text-blue-700 dark:text-blue-300">
                                     <ul class="list-disc list-inside space-y-1">
-                                        <li>El usuario será creado automáticamente con rol "user"</li>
+                                        <li>Selecciona el rol apropiado para el usuario</li>
                                         <li>La contraseña debe tener al menos 8 caracteres</li>
                                         <li>El email debe ser único en el sistema</li>
                                         <li>El usuario podrá acceder inmediatamente después de la creación</li>

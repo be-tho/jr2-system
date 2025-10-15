@@ -11,11 +11,11 @@ use Spatie\Permission\Models\Role;
 class UserController extends Controller
 {
     /**
-     * Display a listing of users with "user" role.
+     * Display a listing of all users.
      */
     public function index()
     {
-        $users = User::role('user')->paginate(10);
+        $users = User::with('roles')->paginate(10);
         
         return view('sections.users.index', compact('users'));
     }
@@ -25,7 +25,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('sections.users.create');
+        $roles = Role::all();
+        return view('sections.users.create', compact('roles'));
     }
 
     /**
@@ -37,6 +38,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'role' => 'required|string|exists:roles,name',
         ]);
 
         $user = User::create([
@@ -45,8 +47,8 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        // Asignar rol de "user"
-        $user->assignRole('user');
+        // Asignar rol seleccionado
+        $user->assignRole($request->role);
 
         return redirect()->route('users.index')
             ->with('success', 'Usuario creado exitosamente.');
@@ -57,11 +59,6 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        // Verificar que el usuario tenga rol "user"
-        if (!$user->hasRole('user')) {
-            abort(404);
-        }
-
         return view('sections.users.show', compact('user'));
     }
 
@@ -70,12 +67,8 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        // Verificar que el usuario tenga rol "user"
-        if (!$user->hasRole('user')) {
-            abort(404);
-        }
-
-        return view('sections.users.edit', compact('user'));
+        $roles = Role::all();
+        return view('sections.users.edit', compact('user', 'roles'));
     }
 
     /**
@@ -83,11 +76,6 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        // Verificar que el usuario tenga rol "user"
-        if (!$user->hasRole('user')) {
-            abort(404);
-        }
-
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => [
@@ -98,6 +86,7 @@ class UserController extends Controller
                 Rule::unique('users')->ignore($user->id),
             ],
             'password' => 'nullable|string|min:8|confirmed',
+            'role' => 'required|string|exists:roles,name',
         ]);
 
         $user->update([
@@ -112,6 +101,9 @@ class UserController extends Controller
             ]);
         }
 
+        // Actualizar rol
+        $user->syncRoles([$request->role]);
+
         return redirect()->route('users.index')
             ->with('success', 'Usuario actualizado exitosamente.');
     }
@@ -121,11 +113,6 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        // Verificar que el usuario tenga rol "user"
-        if (!$user->hasRole('user')) {
-            abort(404);
-        }
-
         // No permitir eliminar al usuario actual
         if ($user->id === auth()->id()) {
             return redirect()->route('users.index')
@@ -136,5 +123,26 @@ class UserController extends Controller
 
         return redirect()->route('users.index')
             ->with('success', 'Usuario eliminado exitosamente.');
+    }
+
+    /**
+     * Change user role.
+     */
+    public function changeRole(Request $request, User $user)
+    {
+        $request->validate([
+            'role' => 'required|string|exists:roles,name',
+        ]);
+
+        // No permitir cambiar el rol del usuario actual
+        if ($user->id === auth()->id()) {
+            return redirect()->route('users.index')
+                ->with('error', 'No puedes cambiar tu propio rol.');
+        }
+
+        $user->syncRoles([$request->role]);
+
+        return redirect()->route('users.index')
+            ->with('success', 'Rol del usuario actualizado exitosamente.');
     }
 }

@@ -104,6 +104,9 @@
                                     Email
                                 </th>
                                 <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
+                                    Rol
+                                </th>
+                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
                                     Fecha de Registro
                                 </th>
                                 <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
@@ -138,6 +141,42 @@
                                 <!-- Email -->
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm text-neutral-900 dark:text-white">{{ $user->email }}</div>
+                                </td>
+
+                                <!-- Rol -->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @if($user->id === auth()->id())
+                                        <!-- Mostrar rol actual sin opción de cambio para el usuario actual -->
+                                        @if($user->hasRole('administrador'))
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-300">
+                                                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                                </svg>
+                                                Administrador
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300">
+                                                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                                                </svg>
+                                                Usuario
+                                            </span>
+                                        @endif
+                                    @else
+                                        <!-- Dropdown para cambiar rol -->
+                                        <form method="POST" action="{{ route('users.change-role', $user) }}" class="inline-block" onchange="this.submit()">
+                                            @csrf
+                                            @method('PATCH')
+                                            <select name="role" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border-0 cursor-pointer transition-all duration-200 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 {{ $user->hasRole('administrador') ? 'bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-300 focus:ring-red-500 hover:bg-red-200 dark:hover:bg-red-800/30' : 'bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300 focus:ring-blue-500 hover:bg-blue-200 dark:hover:bg-blue-800/30' }}">
+                                                <option value="user" {{ $user->hasRole('user') ? 'selected' : '' }} class="bg-white dark:bg-neutral-800 text-gray-900 dark:text-white">
+                                                    👤 Usuario
+                                                </option>
+                                                <option value="administrador" {{ $user->hasRole('administrador') ? 'selected' : '' }} class="bg-white dark:bg-neutral-800 text-gray-900 dark:text-white">
+                                                    👑 Administrador
+                                                </option>
+                                            </select>
+                                        </form>
+                                    @endif
                                 </td>
 
                                 <!-- Fecha de registro -->
@@ -218,4 +257,27 @@
             </div>
         @endif
     </x-container-wrapp>
+
+    <script>
+        // Agregar indicador de carga cuando se cambie el rol
+        document.addEventListener('DOMContentLoaded', function() {
+            const roleSelects = document.querySelectorAll('select[name="role"]');
+            
+            roleSelects.forEach(select => {
+                select.addEventListener('change', function() {
+                    // Agregar clase de loading
+                    this.style.opacity = '0.6';
+                    this.style.pointerEvents = 'none';
+                    
+                    // Crear indicador de carga
+                    const loadingText = document.createElement('span');
+                    loadingText.textContent = 'Cambiando...';
+                    loadingText.className = 'text-xs text-gray-500 ml-2';
+                    loadingText.id = 'loading-' + this.name;
+                    
+                    this.parentNode.appendChild(loadingText);
+                });
+            });
+        });
+    </script>
 @endsection

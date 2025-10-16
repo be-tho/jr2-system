@@ -6,12 +6,25 @@ use App\Models\Venta;
 use App\Models\VentaItem;
 use App\Models\Articulo;
 use App\Http\Requests\StoreVentaRequest;
+use App\Services\VentaService;
+use App\Services\ArticuloService;
+use App\Exceptions\InsufficientStockException;
+use App\Exceptions\VentaException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class VentaController extends Controller
 {
+    protected $ventaService;
+    protected $articuloService;
+
+    public function __construct(VentaService $ventaService, ArticuloService $articuloService)
+    {
+        $this->ventaService = $ventaService;
+        $this->articuloService = $articuloService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -24,7 +37,7 @@ class VentaController extends Controller
             'articulo_id' => $request->get('articulo_id'),
         ];
 
-        $ventas = Venta::getOptimizedList($filtros);
+        $ventas = $this->ventaService->getVentasConFiltros($filtros);
         
         // Para el filtro de artículos
         $articulos = Articulo::select('id', 'nombre', 'codigo')->orderBy('nombre')->get();
@@ -46,46 +59,27 @@ class VentaController extends Controller
     public function store(StoreVentaRequest $request)
     {
         try {
-            DB::beginTransaction();
-
-            // Calcular el total de la venta
-            $total = 0;
-            foreach ($request->items as $item) {
-                $subtotal = $item['cantidad'] * $item['precio_unitario'];
-                $total += $subtotal;
-            }
-
-            // Crear la venta
-            $venta = Venta::create([
-                'user_id' => Auth::id(),
+            $datosVenta = [
                 'cliente_nombre' => $request->cliente_nombre,
-                'total' => $total,
-                'fecha_venta' => now(),
                 'notas' => $request->notas,
-            ]);
+            ];
 
-            // Crear los items de la venta
-            foreach ($request->items as $item) {
-                $subtotal = $item['cantidad'] * $item['precio_unitario'];
-                
-                VentaItem::create([
-                    'venta_id' => $venta->id,
-                    'articulo_id' => $item['articulo_id'],
-                    'cantidad' => $item['cantidad'],
-                    'precio_unitario' => $item['precio_unitario'],
-                    'subtotal' => $subtotal,
-                    'detalle' => $item['detalle'] ?? null,
-                ]);
-            }
-
-            DB::commit();
+            $venta = $this->ventaService->crearVenta($datosVenta, $request->items);
 
             return redirect()->route('ventas.show', $venta)
                 ->with('success', 'Venta registrada exitosamente.');
 
+        } catch (InsufficientStockException $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', $e->getMessage());
+                
+        } catch (VentaException $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', $e->getMessage());
+                
         } catch (\Exception $e) {
-            DB::rollBack();
-            
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Error al registrar la venta: ' . $e->getMessage());
@@ -108,20 +102,12 @@ class VentaController extends Controller
     public function destroy(Venta $venta)
     {
         try {
-            DB::beginTransaction();
-
-            // Eliminar la venta (los items se eliminarán automáticamente por cascade)
-            // y el stock se restaurará automáticamente por el evento del modelo VentaItem
-            $venta->delete();
-
-            DB::commit();
+            $this->ventaService->eliminarVenta($venta->id);
 
             return redirect()->route('ventas.index')
                 ->with('success', 'Venta eliminada exitosamente.');
 
         } catch (\Exception $e) {
-            DB::rollBack();
-            
             return redirect()->back()
                 ->with('error', 'Error al eliminar la venta: ' . $e->getMessage());
         }
@@ -132,34 +118,9 @@ class VentaController extends Controller
      */
     public function searchArticulos(Request $request)
     {
-        $search = $request->get('q', '');
+        $search = $request->get('q', '') ?: '';
         
-        $query = Articulo::select('id', 'nombre', 'codigo', 'precio', 'stock', 'imagen', 'descripcion')
-            ->where('stock', '>', 0); // Solo artículos con stock disponible
-
-        // Si hay búsqueda, aplicar filtros
-        if (strlen($search) >= 1) {
-            $query->where(function ($q) use ($search) {
-                $q->where('nombre', 'like', "%{$search}%")
-                  ->orWhere('codigo', 'like', "%{$search}%")
-                  ->orWhere('descripcion', 'like', "%{$search}%");
-            })
-            ->orderByRaw("
-                CASE 
-                    WHEN nombre LIKE ? THEN 1
-                    WHEN codigo LIKE ? THEN 2
-                    WHEN descripcion LIKE ? THEN 3
-                    ELSE 4
-                END
-            ", ["{$search}%", "{$search}%", "{$search}%"])
-            ->limit(15); // Límite para búsquedas específicas
-        } else {
-            // Si no hay búsqueda, devolver todos los artículos disponibles
-            $query->orderBy('nombre')
-                  ->limit(50); // Límite más alto para la lista completa
-        }
-
-        $articulos = $query->get();
+        $articulos = $this->articuloService->getArticulosDisponiblesParaVenta($search);
 
         return response()->json($articulos->map(function ($articulo) {
             return [
@@ -184,7 +145,7 @@ class VentaController extends Controller
         $fechaInicio = $request->get('fecha_inicio');
         $fechaFin = $request->get('fecha_fin');
 
-        $estadisticas = Venta::getEstadisticas($fechaInicio, $fechaFin);
+        $estadisticas = $this->ventaService->getEstadisticasVentas($fechaInicio, $fechaFin);
 
         return response()->json([
             'total_ventas' => $estadisticas['total_ventas'],

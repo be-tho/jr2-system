@@ -45,25 +45,31 @@ class VentaItem extends Model
 
     /**
      * Boot del modelo para eventos
+     * NOTA: La lógica de stock ahora se maneja en VentaService para mayor control y consistencia
      */
     protected static function boot()
     {
         parent::boot();
 
-        // Al crear un item de venta, actualizar el stock del artículo
+        // Logging para auditoría (opcional)
         static::created(function (VentaItem $ventaItem) {
-            $articulo = $ventaItem->articulo;
-            if ($articulo) {
-                $articulo->decrement('stock', $ventaItem->cantidad);
-            }
+            \Log::info('VentaItem creado', [
+                'venta_item_id' => $ventaItem->id,
+                'venta_id' => $ventaItem->venta_id,
+                'articulo_id' => $ventaItem->articulo_id,
+                'cantidad' => $ventaItem->cantidad,
+                'subtotal' => $ventaItem->subtotal
+            ]);
         });
 
-        // Al eliminar un item de venta, restaurar el stock del artículo
         static::deleted(function (VentaItem $ventaItem) {
-            $articulo = $ventaItem->articulo;
-            if ($articulo) {
-                $articulo->increment('stock', $ventaItem->cantidad);
-            }
+            \Log::info('VentaItem eliminado', [
+                'venta_item_id' => $ventaItem->id,
+                'venta_id' => $ventaItem->venta_id,
+                'articulo_id' => $ventaItem->articulo_id,
+                'cantidad' => $ventaItem->cantidad,
+                'subtotal' => $ventaItem->subtotal
+            ]);
         });
     }
 

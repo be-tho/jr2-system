@@ -15,12 +15,42 @@ class LoginController extends Controller
 
     public function login(LoginRequest $request)
     {
-        $credentials = $request->only(['email', 'password']);
-
-        if (Auth::attempt($credentials)) {
-            return to_route('home.index')->with('success', 'Login realizado con éxito');
-        } else {
-            return to_route('login.index')->with('error', 'Credenciales incorrectas');
+        try {
+            $credentials = $request->only(['email', 'password']);
+            $remember = $request->boolean('remember');
+            
+            if (Auth::attempt($credentials, $remember)) {
+                // Regenerar session ID para prevenir session fixation attacks
+                $request->session()->regenerate();
+                
+                \Log::info('Login exitoso', [
+                    'email' => $request->email,
+                    'ip' => $request->ip(),
+                    'remember' => $remember
+                ]);
+                
+                return to_route('home.index')->with('success', 'Login realizado con éxito');
+            }
+            
+            \Log::warning('Intento de login fallido', [
+                'email' => $request->email,
+                'ip' => $request->ip()
+            ]);
+            
+            return back()
+                ->withInput($request->only('email'))
+                ->with('error', 'Credenciales incorrectas');
+                
+        } catch (\Exception $e) {
+            \Log::error('Error en login', [
+                'error' => $e->getMessage(),
+                'email' => $request->email,
+                'ip' => $request->ip()
+            ]);
+            
+            return back()
+                ->withInput($request->only('email'))
+                ->with('error', 'Error al procesar el login. Inténtalo de nuevo.');
         }
     }
 

@@ -14,10 +14,16 @@ class Authenticate
      */
     public function handle(Request $request, Closure $next): Response
     {
-
         // si no esta autenticado redirigir a la pagina de login
         if (!auth()->check()) {
-            return redirect()->route('login.index')->with('error', 'Debes iniciar sesión para acceder a esta página');
+            \Log::warning('Usuario no autenticado intentando acceder', [
+                'url' => $request->url(),
+                'ip' => $request->ip(),
+                'user_agent' => $request->userAgent()
+            ]);
+            
+            return redirect()->route('login.index')
+                ->with('error', 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente');
         }
         return $next($request);
     }

@@ -84,6 +84,92 @@ class VentaService
     }
 
     /**
+     * Actualizar una venta existente
+     */
+    public function actualizarVenta(int $ventaId, array $datosVenta, array $items): Venta
+    {
+        try {
+            Log::info('Iniciando actualización de venta', [
+                'venta_id' => $ventaId,
+                'cliente' => $datosVenta['cliente_nombre'],
+                'items_count' => count($items),
+                'user_id' => Auth::id()
+            ]);
+
+            return DB::transaction(function () use ($ventaId, $datosVenta, $items) {
+                $venta = Venta::with('items')->findOrFail($ventaId);
+                
+                // 1. Restaurar stock de items originales
+                foreach ($venta->items as $itemOriginal) {
+                    $this->stockService->restaurarStock(
+                        $itemOriginal->articulo_id,
+                        $itemOriginal->cantidad,
+                        "actualizacion_venta_id_{$ventaId}"
+                    );
+                }
+
+                // 2. Validar stock para los nuevos items
+                $erroresStock = $this->stockService->verificarStockMultiple($items);
+                
+                if (!empty($erroresStock)) {
+                    // Si hay errores, restaurar el stock original
+                    foreach ($venta->items as $itemOriginal) {
+                        $this->stockService->reducirStock(
+                            $itemOriginal->articulo_id,
+                            $itemOriginal->cantidad,
+                            "rollback_actualizacion_venta_id_{$ventaId}"
+                        );
+                    }
+                    
+                    $mensaje = 'Stock insuficiente para los siguientes artículos: ';
+                    $mensaje .= collect($erroresStock)->map(function ($error) {
+                        return "{$error['articulo_nombre']} (disponible: {$error['stock_disponible']}, solicitado: {$error['cantidad_solicitada']})";
+                    })->join(', ');
+                    
+                    throw new InsufficientStockException($mensaje);
+                }
+
+                // 3. Calcular nuevo total
+                $total = $this->calcularTotalVenta($items);
+
+                // 4. Actualizar datos de la venta
+                $venta->update([
+                    'cliente_nombre' => $datosVenta['cliente_nombre'],
+                    'total' => $total,
+                    'notas' => $datosVenta['notas'] ?? null,
+                ]);
+
+                // 5. Eliminar items originales
+                $venta->items()->delete();
+
+                // 6. Crear nuevos items y reducir stock
+                foreach ($items as $item) {
+                    $this->crearItemVenta($venta->id, $item);
+                }
+
+                Log::info('Venta actualizada exitosamente', [
+                    'venta_id' => $venta->id,
+                    'total' => $total,
+                    'items_count' => count($items)
+                ]);
+
+                return $venta->load(['user', 'items.articulo']);
+            });
+
+        } catch (\Exception $e) {
+            Log::error('Error al actualizar venta', [
+                'venta_id' => $ventaId,
+                'error' => $e->getMessage(),
+                'cliente' => $datosVenta['cliente_nombre'] ?? 'N/A',
+                'items_count' => count($items),
+                'user_id' => Auth::id()
+            ]);
+            
+            throw $e;
+        }
+    }
+
+    /**
      * Crear un item de venta y reducir stock
      */
     protected function crearItemVenta(int $ventaId, array $item): VentaItem

@@ -6,6 +6,7 @@ use App\Models\Venta;
 use App\Models\VentaItem;
 use App\Models\Articulo;
 use App\Http\Requests\StoreVentaRequest;
+use App\Http\Requests\UpdateVentaRequest;
 use App\Services\VentaService;
 use App\Services\ArticuloService;
 use App\Exceptions\InsufficientStockException;
@@ -94,6 +95,64 @@ class VentaController extends Controller
         $venta->load(['user', 'items.articulo']);
         
         return view('sections.ventas.show', compact('venta'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Venta $venta)
+    {
+        $venta->load(['items.articulo']);
+        
+        // Preparar datos de la venta original
+        $ventaOriginal = $venta->items->map(function($item) {
+            return [
+                'id' => (int) $item->articulo->id,
+                'nombre' => $item->articulo->nombre,
+                'codigo' => $item->articulo->codigo,
+                'precio' => (float) $item->precio_unitario,
+                'stock' => (int) ($item->articulo->stock + $item->cantidad),
+                'imagen' => $item->articulo->imagen,
+                'cantidad' => (int) $item->cantidad,
+                'subtotal' => (float) $item->subtotal,
+                'detalle' => $item->detalle
+            ];
+        });
+        
+        return view('sections.ventas.edit', compact('venta', 'ventaOriginal'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(UpdateVentaRequest $request, Venta $venta)
+    {
+        try {
+            $datosVenta = [
+                'cliente_nombre' => $request->cliente_nombre,
+                'notas' => $request->notas,
+            ];
+
+            $ventaActualizada = $this->ventaService->actualizarVenta($venta->id, $datosVenta, $request->items);
+
+            return redirect()->route('ventas.show', $ventaActualizada)
+                ->with('success', 'Venta actualizada exitosamente.');
+
+        } catch (InsufficientStockException $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', $e->getMessage());
+                
+        } catch (VentaException $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', $e->getMessage());
+                
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Error al actualizar la venta: ' . $e->getMessage());
+        }
     }
 
     /**

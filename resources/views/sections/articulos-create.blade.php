@@ -165,6 +165,34 @@
                     @enderror
                 </div>
 
+                {{-- Precio Promocional --}}
+                <div>
+                    <label for="precio_promocion" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                        Precio Promocional <span class="text-neutral-400">(Opcional)</span>
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="ri-price-tag-3-line text-neutral-400 dark:text-neutral-500"></i>
+                        </div>
+                        <input 
+                            type="number" 
+                            id="precio_promocion" 
+                            name="precio_promocion" 
+                            value="{{ old('precio_promocion') }}"
+                            step="0.01"
+                            min="0"
+                            class="block w-full pl-10 pr-3 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:text-white dark:focus:ring-primary-400 dark:focus:border-primary-400 transition-colors duration-200 @error('precio_promocion') border-red-500 dark:border-red-400 @enderror"
+                            placeholder="0.00"
+                        >
+                    </div>
+                    <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
+                        <i class="ri-information-line"></i> Precio especial para ventas al por mayor o promociones
+                    </p>
+                    @error('precio_promocion')
+                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 {{-- Stock --}}
                 <div>
                     <label for="stock" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">

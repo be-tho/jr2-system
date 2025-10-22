@@ -189,7 +189,20 @@
                 <!-- Precio y stock -->
                 <div class="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-neutral-200 dark:border-neutral-700 p-6">
                     <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-2xl font-bold text-neutral-900 dark:text-white">${{ number_format($articulo->precio, 0, ',', '.') }}</h2>
+                        <div>
+                            @if($articulo->hasPrecioPromocion())
+                                <div class="space-y-2">
+                                    <h2 class="text-3xl font-bold text-green-600 dark:text-green-400">${{ number_format($articulo->precio_promocion, 0, ',', '.') }}</h2>
+                                    <p class="text-lg text-neutral-500 line-through">${{ number_format($articulo->precio, 0, ',', '.') }}</p>
+                                    <div class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300">
+                                        <i class="ri-price-tag-3-line mr-1"></i>
+                                        {{ $articulo->getDescuentoPorcentaje() }}% de descuento
+                                    </div>
+                                </div>
+                            @else
+                                <h2 class="text-2xl font-bold text-neutral-900 dark:text-white">${{ number_format($articulo->precio, 0, ',', '.') }}</h2>
+                            @endif
+                        </div>
                         
                         <!-- Badge de stock -->
                         @if($articulo->stock > 10)

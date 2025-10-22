@@ -26,6 +26,7 @@ class ArticuloRequest extends FormRequest
             'nombre' => ['required', 'min:3'],
             'descripcion' => ['required', 'min:3'],
             'precio' => ['required', 'numeric'],
+            'precio_promocion' => ['nullable', 'numeric', 'min:0'],
             'categoria_id' => ['required', 'numeric', 'not_in:0'],
             'temporada_id' => ['required', 'numeric', 'not_in:0'],
             'imagen' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp,heic,heif', 'max:51200'], // 50MB
@@ -45,6 +46,8 @@ class ArticuloRequest extends FormRequest
             'descripcion.min' => 'El campo descripción debe tener al menos 3 caracteres',
             'precio.required' => 'El campo precio es requerido',
             'precio.numeric' => 'El campo precio debe ser numérico',
+            'precio_promocion.numeric' => 'El campo precio promocional debe ser numérico',
+            'precio_promocion.min' => 'El campo precio promocional debe ser mayor o igual a 0',
             'categoria_id.required' => 'El campo categoría es requerido',
             'categoria_id.numeric' => 'El campo categoría debe ser numérico',
             'categoria_id.not_in' => 'Seleccione una categoría',

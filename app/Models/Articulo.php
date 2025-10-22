@@ -21,6 +21,7 @@ class Articulo extends Model
         'descripcion',
         'stock',
         'precio',
+        'precio_promocion',
         'imagen',
         'imagen_2',
         'imagen_3',
@@ -28,6 +29,7 @@ class Articulo extends Model
 
     protected $casts = [
         'precio' => 'integer',
+        'precio_promocion' => 'decimal:2',
         'stock' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
@@ -150,6 +152,34 @@ class Articulo extends Model
     public function hasMultipleImages(): bool
     {
         return !empty($this->imagen_2) || !empty($this->imagen_3);
+    }
+
+    /**
+     * Verificar si el artículo tiene precio promocional
+     */
+    public function hasPrecioPromocion(): bool
+    {
+        return !is_null($this->precio_promocion) && $this->precio_promocion > 0;
+    }
+
+    /**
+     * Obtener el precio efectivo (promocional si existe, sino el precio normal)
+     */
+    public function getPrecioEfectivo(): float
+    {
+        return $this->hasPrecioPromocion() ? $this->precio_promocion : $this->precio;
+    }
+
+    /**
+     * Calcular el porcentaje de descuento del precio promocional
+     */
+    public function getDescuentoPorcentaje(): float
+    {
+        if (!$this->hasPrecioPromocion()) {
+            return 0;
+        }
+        
+        return round((($this->precio - $this->precio_promocion) / $this->precio) * 100, 2);
     }
 
     /**

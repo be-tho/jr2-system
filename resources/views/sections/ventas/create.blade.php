@@ -38,8 +38,34 @@
                 <div class="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl shadow-sm p-6 mb-6">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-semibold text-neutral-900 dark:text-white">Artículos Disponibles</h3>
-                        <div class="text-sm text-neutral-500 dark:text-neutral-400">
-                            <span id="articulos-count">0</span> artículos
+                        <div class="flex items-center space-x-4">
+                            <!-- Toggle para usar precio promocional -->
+                            <div class="flex items-center space-x-3">
+                                <label class="flex items-center cursor-pointer group">
+                                    <input type="checkbox" 
+                                           id="usar-precio-promocion" 
+                                           class="hidden"
+                                           onchange="togglePrecioPromocion()">
+                                    <div class="relative">
+                                        <!-- Fondo del toggle -->
+                                        <div class="w-12 h-6 bg-gray-300 dark:bg-gray-600 rounded-full shadow-inner transition-all duration-300 ease-in-out group-hover:shadow-md"></div>
+                                        <!-- Círculo del toggle -->
+                                        <div class="absolute w-5 h-5 bg-white rounded-full shadow-lg top-0.5 left-0.5 transition-all duration-300 ease-in-out transform"></div>
+                                        <!-- Icono de descuento cuando está activo -->
+                                        <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300">
+                                            <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <span class="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors duration-200">
+                                        Usar Precio Promocional
+                                    </span>
+                                </label>
+                            </div>
+                            <div class="text-sm text-neutral-500 dark:text-neutral-400">
+                                <span id="articulos-count">0</span> artículos
+                            </div>
                         </div>
                     </div>
                     
@@ -180,7 +206,8 @@
             const state = {
                 itemsVenta: [],
                 todosLosArticulos: [],
-                searchTimeout: null
+                searchTimeout: null,
+                usarPrecioPromocion: false
             };
 
             // ===== ELEMENTOS DEL DOM =====
@@ -207,14 +234,32 @@
                     return 'text-red-600 dark:text-red-400';
                 },
                 
-                // Formatear precio
-                formatPrice: (precio) => precio.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+                // Formatear precio con validación mejorada
+                formatPrice: (precio) => {
+                    const numPrecio = parseFloat(precio);
+                    if (isNaN(numPrecio) || numPrecio < 0) return '0.00';
+                    return numPrecio.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                },
                 
                 // Escapar HTML para prevenir XSS
                 escapeHtml: (text) => text.replace(/"/g, '&quot;'),
                 
-                // Validar cantidad
-                validateQuantity: (cantidad, stock) => Math.max(1, Math.min(cantidad, stock))
+                // Validar cantidad con límites
+                validateQuantity: (cantidad, stock) => Math.max(1, Math.min(parseInt(cantidad) || 1, stock)),
+                
+                // Validar precio con límites
+                validatePrice: (precio) => {
+                    const numPrecio = parseFloat(precio);
+                    return isNaN(numPrecio) || numPrecio < 0 ? 0 : numPrecio;
+                },
+                
+                // Determinar precio efectivo según toggle y disponibilidad
+                getEffectivePrice: (articulo, usarPromocion) => {
+                    if (usarPromocion && articulo.tiene_precio_promocion) {
+                        return parseFloat(articulo.precio_promocion);
+                    }
+                    return parseFloat(articulo.precio_original);
+                }
             };
 
             // ===== INICIALIZACIÓN =====
@@ -244,7 +289,12 @@
             // ===== CARGAR ARTÍCULOS =====
             async function cargarArticulosDisponibles() {
                 try {
-                    const response = await fetch(`${CONFIG.ROUTES.SEARCH_ARTICULOS}?q=`, {
+                    const params = new URLSearchParams({
+                        q: '',
+                        usar_precio_promocion: state.usarPrecioPromocion
+                    });
+                    
+                    const response = await fetch(`${CONFIG.ROUTES.SEARCH_ARTICULOS}?${params}`, {
                         headers: {
                             'X-Requested-With': 'XMLHttpRequest',
                             'Accept': 'application/json',
@@ -274,42 +324,76 @@
             }
 
             function crearCardArticulo(articulo) {
-                const stockClass = utils.getStockClass(articulo.stock);
-                const imageUrl = utils.getImageUrl(articulo.imagen);
-                const escapedArticulo = utils.escapeHtml(JSON.stringify(articulo));
-                
-                return `
-                    <div class="bg-neutral-50 dark:bg-neutral-700 rounded-lg p-4 border border-neutral-200 dark:border-neutral-600 hover:border-primary-300 dark:hover:border-primary-600 transition-colors duration-200 cursor-pointer"
-                         onclick="agregarArticulo(${escapedArticulo})">
-                        <div class="flex items-center space-x-3">
-                            <img src="${imageUrl}" 
-                                 alt="${articulo.nombre}" 
-                                 class="w-12 h-12 object-cover rounded-lg flex-shrink-0" 
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                            <div class="w-12 h-12 bg-neutral-100 dark:bg-neutral-600 rounded-lg flex items-center justify-center flex-shrink-0" style="display: none;">
-                                <svg class="w-6 h-6 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                </svg>
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <div class="font-medium text-neutral-900 dark:text-white truncate">${articulo.nombre}</div>
-                                <div class="text-sm text-neutral-500 dark:text-neutral-400">Código: ${articulo.codigo}</div>
-                                <div class="flex items-center justify-between mt-2">
-                                    <div class="text-sm font-medium text-green-600 dark:text-green-400">${articulo.precio_formateado}</div>
-                                    <div class="flex items-center space-x-1">
-                                        <span class="text-xs text-neutral-500 dark:text-neutral-400">Stock:</span>
-                                        <span class="text-xs font-medium ${stockClass}">${articulo.stock}</span>
+                try {
+                    const stockClass = utils.getStockClass(articulo.stock);
+                    const imageUrl = utils.getImageUrl(articulo.imagen);
+                    const escapedArticulo = utils.escapeHtml(JSON.stringify(articulo));
+                    
+                    // Validar que los datos existan
+                    const tienePromocion = articulo.tiene_precio_promocion === true;
+                    const precioPromocionFormateado = articulo.precio_promocion_formateado || '';
+                    
+                    // Mostrar información de precios según el estado
+                    let precioInfo = '';
+                    if (tienePromocion && state.usarPrecioPromocion) {
+                        // Toggle ON: Mostrar precio promocional como principal y original tachado
+                        precioInfo = `
+                            <div class="text-sm font-medium text-green-600 dark:text-green-400">${articulo.precio_formateado || '$0.00'}</div>
+                            <div class="text-xs text-neutral-500 line-through">${articulo.precio_original_formateado || '$0.00'}</div>
+                        `;
+                    } else if (tienePromocion) {
+                        // Toggle OFF: Mostrar precio original como principal y promocional como info
+                        precioInfo = `
+                            <div class="text-sm font-medium text-green-600 dark:text-green-400">${articulo.precio_original_formateado || '$0.00'}</div>
+                            <div class="text-xs text-blue-600 dark:text-blue-400">Promo: ${precioPromocionFormateado}</div>
+                        `;
+                    } else {
+                        // Sin precio promocional: Mostrar solo precio original
+                        precioInfo = `<div class="text-sm font-medium text-green-600 dark:text-green-400">${articulo.precio_original_formateado || '$0.00'}</div>`;
+                    }
+                    
+                    return `
+                        <div class="bg-neutral-50 dark:bg-neutral-700 rounded-lg p-4 border border-neutral-200 dark:border-neutral-600 hover:border-primary-300 dark:hover:border-primary-600 transition-colors duration-200 cursor-pointer"
+                             onclick="agregarArticulo(${escapedArticulo})">
+                            <div class="flex items-center space-x-3">
+                                <img src="${imageUrl}" 
+                                     alt="${articulo.nombre}" 
+                                     class="w-12 h-12 object-cover rounded-lg flex-shrink-0" 
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <div class="w-12 h-12 bg-neutral-100 dark:bg-neutral-600 rounded-lg flex items-center justify-center flex-shrink-0" style="display: none;">
+                                    <svg class="w-6 h-6 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="font-medium text-neutral-900 dark:text-white truncate">${articulo.nombre}</div>
+                                    <div class="text-sm text-neutral-500 dark:text-neutral-400">Código: ${articulo.codigo}</div>
+                                    <div class="flex items-center justify-between mt-2">
+                                        <div>${precioInfo}</div>
+                                        <div class="flex items-center space-x-1">
+                                            <span class="text-xs text-neutral-500 dark:text-neutral-400">Stock:</span>
+                                            <span class="text-xs font-medium ${stockClass}">${articulo.stock}</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="flex-shrink-0">
-                                <svg class="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                </svg>
+                                <div class="flex-shrink-0">
+                                    <svg class="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                    </svg>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                } catch (error) {
+                    console.error('Error al crear card del artículo:', error, articulo);
+                    return `
+                        <div class="bg-red-50 dark:bg-red-900/20 rounded-lg p-4 border border-red-200 dark:border-red-800">
+                            <div class="text-red-600 dark:text-red-400 text-sm">
+                                Error al cargar: ${articulo.nombre || 'Artículo desconocido'}
+                            </div>
+                        </div>
+                    `;
+                }
             }
 
             function mostrarMensajeVacio(mensaje) {
@@ -335,16 +419,28 @@
             }
 
             // ===== FILTRADO =====
-            function filtrarArticulos(query) {
-                const articulos = query === '' 
-                    ? state.todosLosArticulos 
-                    : state.todosLosArticulos.filter(articulo => 
-                        articulo.nombre.toLowerCase().includes(query.toLowerCase()) ||
-                        articulo.codigo.toLowerCase().includes(query.toLowerCase()) ||
-                        (articulo.descripcion && articulo.descripcion.toLowerCase().includes(query.toLowerCase()))
-                    );
-                
-                mostrarArticulosDisponibles(articulos);
+            async function filtrarArticulos(query) {
+                try {
+                    const params = new URLSearchParams({
+                        q: query,
+                        usar_precio_promocion: state.usarPrecioPromocion
+                    });
+                    
+                    const response = await fetch(`${CONFIG.ROUTES.SEARCH_ARTICULOS}?${params}`, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json',
+                        }
+                    });
+                    
+                    if (!response.ok) throw new Error('Error en la respuesta del servidor');
+                    
+                    const data = await response.json();
+                    mostrarArticulosDisponibles(data);
+                } catch (error) {
+                    console.error('Error al filtrar artículos:', error);
+                    mostrarError('Error al filtrar los artículos');
+                }
             }
 
 
@@ -355,15 +451,18 @@
                     return;
                 }
 
+                const precioAUsar = utils.getEffectivePrice(articulo, state.usarPrecioPromocion);
+
                 state.itemsVenta.push({
                     id: articulo.id,
                     nombre: articulo.nombre,
                     codigo: articulo.codigo,
-                    precio: articulo.precio,
-                    stock: articulo.stock,
+                    precio: precioAUsar,
+                    precioOriginal: precioAUsar,
+                    stock: parseInt(articulo.stock),
                     imagen: articulo.imagen,
                     cantidad: 1,
-                    subtotal: articulo.precio
+                    subtotal: precioAUsar
                 });
 
                 actualizarVista();
@@ -376,14 +475,28 @@
 
             function actualizarCantidad(index, nuevaCantidad) {
                 const item = state.itemsVenta[index];
-                nuevaCantidad = utils.validateQuantity(nuevaCantidad, item.stock);
+                const cantidadValidada = utils.validateQuantity(nuevaCantidad, item.stock);
                 
-                if (nuevaCantidad > item.stock) {
-                    alert(`La cantidad no puede exceder el stock disponible (${item.stock})`);
+                if (cantidadValidada !== nuevaCantidad) {
+                    alert(`La cantidad se ajustó al límite disponible (${item.stock})`);
                 }
                 
-                item.cantidad = nuevaCantidad;
+                item.cantidad = cantidadValidada;
                 item.subtotal = item.cantidad * item.precio;
+                actualizarVista();
+            }
+
+            function actualizarPrecio(index, nuevoPrecio) {
+                const item = state.itemsVenta[index];
+                const precioValidado = utils.validatePrice(nuevoPrecio);
+                
+                if (precioValidado === 0 && nuevoPrecio !== '0') {
+                    alert('El precio debe ser un número válido');
+                    return;
+                }
+                
+                item.precio = precioValidado;
+                item.subtotal = item.cantidad * precioValidado;
                 actualizarVista();
             }
 
@@ -426,6 +539,7 @@
 
             function crearItemVenta(item, index) {
                 const imageUrl = utils.getImageUrl(item.imagen);
+                const precioModificado = item.precio !== item.precioOriginal;
                 
                 return `
                     <div class="bg-neutral-50 dark:bg-neutral-700 rounded-lg p-4">
@@ -443,7 +557,21 @@
                                 <div class="flex-1">
                                     <h4 class="font-medium text-neutral-900 dark:text-white">${item.nombre}</h4>
                                     <p class="text-sm text-neutral-500 dark:text-neutral-400">Código: ${item.codigo}</p>
-                                    <p class="text-sm font-medium text-green-600 dark:text-green-400">$${utils.formatPrice(item.precio)} c/u</p>
+                                    
+                                    <!-- Precio editable -->
+                                    <div class="flex items-center space-x-2 mt-1">
+                                        <label class="text-sm text-neutral-600 dark:text-neutral-400">Precio:</label>
+                                        <div class="relative">
+                                            <input type="number" 
+                                                   min="0" 
+                                                   step="0.01"
+                                                   value="${item.precio}"
+                                                   onchange="actualizarPrecio(${index}, this.value)"
+                                                   class="w-20 px-2 py-1 text-sm border ${precioModificado ? 'border-orange-400 bg-orange-50 dark:bg-orange-900/20' : 'border-neutral-300 dark:border-neutral-600'} rounded bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white focus:ring-primary-500 focus:border-primary-500">
+                                            ${precioModificado ? '<div class="absolute -top-1 -right-1 w-2 h-2 bg-orange-400 rounded-full" title="Precio modificado"></div>' : ''}
+                                        </div>
+                                        ${precioModificado ? `<span class="text-xs text-orange-600 dark:text-orange-400">Original: $${utils.formatPrice(item.precioOriginal)}</span>` : ''}
+                                    </div>
                                 </div>
                             </div>
                             <div class="flex items-center space-x-3">
@@ -513,6 +641,62 @@
             window.agregarArticulo = agregarArticulo;
             window.eliminarArticulo = eliminarArticulo;
             window.actualizarCantidad = actualizarCantidad;
+            window.actualizarPrecio = actualizarPrecio;
+            window.togglePrecioPromocion = togglePrecioPromocion;
+
+            // ===== TOGGLE PRECIO PROMOCIONAL =====
+            function togglePrecioPromocion() {
+                const checkbox = document.getElementById('usar-precio-promocion');
+                state.usarPrecioPromocion = checkbox.checked;
+                
+                // Actualizar el toggle visual
+                const toggleContainer = checkbox.nextElementSibling;
+                const toggleBackground = toggleContainer.querySelector('div:first-child');
+                const toggleCircle = toggleContainer.querySelector('div:nth-child(2)');
+                const toggleIcon = toggleContainer.querySelector('div:last-child');
+                
+                if (state.usarPrecioPromocion) {
+                    // Toggle activado - Color primario del sistema
+                    toggleBackground.classList.remove('bg-gray-300', 'dark:bg-gray-600');
+                    toggleBackground.classList.add('bg-primary-500', 'dark:bg-primary-400');
+                    toggleCircle.classList.remove('left-0.5');
+                    toggleCircle.classList.add('left-6');
+                    toggleIcon.classList.remove('opacity-0');
+                    toggleIcon.classList.add('opacity-100');
+                } else {
+                    // Toggle desactivado - Gris neutro
+                    toggleBackground.classList.remove('bg-primary-500', 'dark:bg-primary-400');
+                    toggleBackground.classList.add('bg-gray-300', 'dark:bg-gray-600');
+                    toggleCircle.classList.remove('left-6');
+                    toggleCircle.classList.add('left-0.5');
+                    toggleIcon.classList.remove('opacity-100');
+                    toggleIcon.classList.add('opacity-0');
+                }
+                
+                // Recargar artículos con el nuevo estado
+                const query = elements.searchInput.value.trim();
+                filtrarArticulos(query);
+                
+                // Actualizar items existentes en la venta
+                actualizarPreciosItemsVenta();
+            }
+            
+            function actualizarPreciosItemsVenta() {
+                state.itemsVenta.forEach(item => {
+                    const articuloActualizado = state.todosLosArticulos.find(a => a.id === item.id);
+                    if (articuloActualizado) {
+                        const nuevoPrecio = utils.getEffectivePrice(articuloActualizado, state.usarPrecioPromocion);
+                        
+                        // Solo actualizar si el precio original no ha sido modificado manualmente
+                        if (item.precio === item.precioOriginal) {
+                            item.precio = nuevoPrecio;
+                            item.precioOriginal = nuevoPrecio;
+                            item.subtotal = item.cantidad * nuevoPrecio;
+                        }
+                    }
+                });
+                actualizarVista();
+            }
 
             // ===== INICIALIZAR APLICACIÓN =====
             init();

@@ -178,21 +178,12 @@ class VentaController extends Controller
     public function searchArticulos(Request $request)
     {
         $search = $request->get('q', '') ?: '';
+        $usarPrecioPromocion = $request->get('usar_precio_promocion', false);
         
         $articulos = $this->articuloService->getArticulosDisponiblesParaVenta($search);
 
-        return response()->json($articulos->map(function ($articulo) {
-            return [
-                'id' => $articulo->id,
-                'nombre' => $articulo->nombre,
-                'codigo' => $articulo->codigo,
-                'precio' => $articulo->precio,
-                'stock' => $articulo->stock,
-                'imagen' => $articulo->getMainImage(),
-                'descripcion' => $articulo->descripcion,
-                'precio_formateado' => '$' . number_format($articulo->precio, 2, '.', ','),
-                'stock_disponible' => $articulo->stock > 0,
-            ];
+        return response()->json($articulos->map(function ($articulo) use ($usarPrecioPromocion) {
+            return $this->formatArticuloForSale($articulo, $usarPrecioPromocion);
         }));
     }
 
@@ -232,5 +223,34 @@ class VentaController extends Controller
             'document_date' => $venta->created_at->format('d/m/Y'),
             'document_time' => $venta->created_at->format('H:i'),
         ]);
+    }
+
+    /**
+     * Formatear artículo para venta con información de precios
+     */
+    private function formatArticuloForSale($articulo, bool $usarPrecioPromocion): array
+    {
+        $precioEfectivo = $usarPrecioPromocion && $articulo->hasPrecioPromocion() 
+            ? (float) $articulo->precio_promocion 
+            : (float) $articulo->precio;
+            
+        return [
+            'id' => $articulo->id,
+            'nombre' => $articulo->nombre,
+            'codigo' => $articulo->codigo,
+            'precio' => $precioEfectivo,
+            'precio_original' => (float) $articulo->precio,
+            'precio_promocion' => $articulo->precio_promocion ? (float) $articulo->precio_promocion : null,
+            'tiene_precio_promocion' => $articulo->hasPrecioPromocion(),
+            'stock' => (int) $articulo->stock,
+            'imagen' => $articulo->getMainImage(),
+            'descripcion' => $articulo->descripcion,
+            'precio_formateado' => '$' . number_format($precioEfectivo, 2, '.', ','),
+            'precio_original_formateado' => '$' . number_format($articulo->precio, 2, '.', ','),
+            'precio_promocion_formateado' => $articulo->hasPrecioPromocion() 
+                ? '$' . number_format($articulo->precio_promocion, 2, '.', ',') 
+                : null,
+            'stock_disponible' => $articulo->stock > 0,
+        ];
     }
 }

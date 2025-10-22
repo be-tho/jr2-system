@@ -234,17 +234,32 @@
                     return 'text-red-600 dark:text-red-400';
                 },
                 
-                // Formatear precio
+                // Formatear precio con validación mejorada
                 formatPrice: (precio) => {
                     const numPrecio = parseFloat(precio);
-                    return isNaN(numPrecio) ? '0.00' : numPrecio.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                    if (isNaN(numPrecio) || numPrecio < 0) return '0.00';
+                    return numPrecio.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
                 },
                 
                 // Escapar HTML para prevenir XSS
                 escapeHtml: (text) => text.replace(/"/g, '&quot;'),
                 
-                // Validar cantidad
-                validateQuantity: (cantidad, stock) => Math.max(1, Math.min(cantidad, stock))
+                // Validar cantidad con límites
+                validateQuantity: (cantidad, stock) => Math.max(1, Math.min(parseInt(cantidad) || 1, stock)),
+                
+                // Validar precio con límites
+                validatePrice: (precio) => {
+                    const numPrecio = parseFloat(precio);
+                    return isNaN(numPrecio) || numPrecio < 0 ? 0 : numPrecio;
+                },
+                
+                // Determinar precio efectivo según toggle y disponibilidad
+                getEffectivePrice: (articulo, usarPromocion) => {
+                    if (usarPromocion && articulo.tiene_precio_promocion) {
+                        return parseFloat(articulo.precio_promocion);
+                    }
+                    return parseFloat(articulo.precio_original);
+                }
             };
 
             // ===== INICIALIZACIÓN =====
@@ -436,20 +451,14 @@
                     return;
                 }
 
-                // Determinar el precio a usar según el estado del toggle
-                let precioAUsar;
-                if (state.usarPrecioPromocion && articulo.tiene_precio_promocion) {
-                    precioAUsar = parseFloat(articulo.precio_promocion);
-                } else {
-                    precioAUsar = parseFloat(articulo.precio_original);
-                }
+                const precioAUsar = utils.getEffectivePrice(articulo, state.usarPrecioPromocion);
 
                 state.itemsVenta.push({
                     id: articulo.id,
                     nombre: articulo.nombre,
                     codigo: articulo.codigo,
                     precio: precioAUsar,
-                    precioOriginal: precioAUsar, // Precio original para referencia
+                    precioOriginal: precioAUsar,
                     stock: parseInt(articulo.stock),
                     imagen: articulo.imagen,
                     cantidad: 1,
@@ -466,28 +475,28 @@
 
             function actualizarCantidad(index, nuevaCantidad) {
                 const item = state.itemsVenta[index];
-                nuevaCantidad = utils.validateQuantity(nuevaCantidad, item.stock);
+                const cantidadValidada = utils.validateQuantity(nuevaCantidad, item.stock);
                 
-                if (nuevaCantidad > item.stock) {
-                    alert(`La cantidad no puede exceder el stock disponible (${item.stock})`);
+                if (cantidadValidada !== nuevaCantidad) {
+                    alert(`La cantidad se ajustó al límite disponible (${item.stock})`);
                 }
                 
-                item.cantidad = nuevaCantidad;
-                item.subtotal = item.cantidad * parseFloat(item.precio);
+                item.cantidad = cantidadValidada;
+                item.subtotal = item.cantidad * item.precio;
                 actualizarVista();
             }
 
             function actualizarPrecio(index, nuevoPrecio) {
                 const item = state.itemsVenta[index];
-                nuevoPrecio = parseFloat(nuevoPrecio) || 0;
+                const precioValidado = utils.validatePrice(nuevoPrecio);
                 
-                if (nuevoPrecio < 0) {
-                    alert('El precio no puede ser negativo');
+                if (precioValidado === 0 && nuevoPrecio !== '0') {
+                    alert('El precio debe ser un número válido');
                     return;
                 }
                 
-                item.precio = nuevoPrecio;
-                item.subtotal = item.cantidad * nuevoPrecio;
+                item.precio = precioValidado;
+                item.subtotal = item.cantidad * precioValidado;
                 actualizarVista();
             }
 
@@ -674,19 +683,16 @@
             
             function actualizarPreciosItemsVenta() {
                 state.itemsVenta.forEach(item => {
-                    // Buscar el artículo actualizado en la lista
                     const articuloActualizado = state.todosLosArticulos.find(a => a.id === item.id);
                     if (articuloActualizado) {
-                        // Determinar el precio a usar según el estado del toggle
-                        let precioAUsar;
-                        if (state.usarPrecioPromocion && articuloActualizado.tiene_precio_promocion) {
-                            precioAUsar = parseFloat(articuloActualizado.precio_promocion);
-                        } else {
-                            precioAUsar = parseFloat(articuloActualizado.precio_original);
-                        }
+                        const nuevoPrecio = utils.getEffectivePrice(articuloActualizado, state.usarPrecioPromocion);
                         
-                        item.precio = precioAUsar;
-                        item.subtotal = item.cantidad * item.precio;
+                        // Solo actualizar si el precio original no ha sido modificado manualmente
+                        if (item.precio === item.precioOriginal) {
+                            item.precio = nuevoPrecio;
+                            item.precioOriginal = nuevoPrecio;
+                            item.subtotal = item.cantidad * nuevoPrecio;
+                        }
                     }
                 });
                 actualizarVista();

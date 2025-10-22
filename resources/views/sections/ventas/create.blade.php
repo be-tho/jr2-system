@@ -301,9 +301,6 @@
             function mostrarArticulosDisponibles(articulos) {
                 elements.articulosCount.textContent = articulos.length;
                 
-                // Debug: mostrar datos de artículos
-                console.log('Artículos recibidos:', articulos);
-                
                 if (articulos.length === 0) {
                     mostrarMensajeVacio('No se encontraron artículos');
                 } else {
@@ -452,6 +449,7 @@
                     nombre: articulo.nombre,
                     codigo: articulo.codigo,
                     precio: precioAUsar,
+                    precioOriginal: precioAUsar, // Precio original para referencia
                     stock: parseInt(articulo.stock),
                     imagen: articulo.imagen,
                     cantidad: 1,
@@ -476,6 +474,20 @@
                 
                 item.cantidad = nuevaCantidad;
                 item.subtotal = item.cantidad * parseFloat(item.precio);
+                actualizarVista();
+            }
+
+            function actualizarPrecio(index, nuevoPrecio) {
+                const item = state.itemsVenta[index];
+                nuevoPrecio = parseFloat(nuevoPrecio) || 0;
+                
+                if (nuevoPrecio < 0) {
+                    alert('El precio no puede ser negativo');
+                    return;
+                }
+                
+                item.precio = nuevoPrecio;
+                item.subtotal = item.cantidad * nuevoPrecio;
                 actualizarVista();
             }
 
@@ -518,6 +530,7 @@
 
             function crearItemVenta(item, index) {
                 const imageUrl = utils.getImageUrl(item.imagen);
+                const precioModificado = item.precio !== item.precioOriginal;
                 
                 return `
                     <div class="bg-neutral-50 dark:bg-neutral-700 rounded-lg p-4">
@@ -535,7 +548,21 @@
                                 <div class="flex-1">
                                     <h4 class="font-medium text-neutral-900 dark:text-white">${item.nombre}</h4>
                                     <p class="text-sm text-neutral-500 dark:text-neutral-400">Código: ${item.codigo}</p>
-                                    <p class="text-sm font-medium text-green-600 dark:text-green-400">$${utils.formatPrice(item.precio)} c/u</p>
+                                    
+                                    <!-- Precio editable -->
+                                    <div class="flex items-center space-x-2 mt-1">
+                                        <label class="text-sm text-neutral-600 dark:text-neutral-400">Precio:</label>
+                                        <div class="relative">
+                                            <input type="number" 
+                                                   min="0" 
+                                                   step="0.01"
+                                                   value="${item.precio}"
+                                                   onchange="actualizarPrecio(${index}, this.value)"
+                                                   class="w-20 px-2 py-1 text-sm border ${precioModificado ? 'border-orange-400 bg-orange-50 dark:bg-orange-900/20' : 'border-neutral-300 dark:border-neutral-600'} rounded bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white focus:ring-primary-500 focus:border-primary-500">
+                                            ${precioModificado ? '<div class="absolute -top-1 -right-1 w-2 h-2 bg-orange-400 rounded-full" title="Precio modificado"></div>' : ''}
+                                        </div>
+                                        ${precioModificado ? `<span class="text-xs text-orange-600 dark:text-orange-400">Original: $${utils.formatPrice(item.precioOriginal)}</span>` : ''}
+                                    </div>
                                 </div>
                             </div>
                             <div class="flex items-center space-x-3">
@@ -605,6 +632,7 @@
             window.agregarArticulo = agregarArticulo;
             window.eliminarArticulo = eliminarArticulo;
             window.actualizarCantidad = actualizarCantidad;
+            window.actualizarPrecio = actualizarPrecio;
             window.togglePrecioPromocion = togglePrecioPromocion;
 
             // ===== TOGGLE PRECIO PROMOCIONAL =====

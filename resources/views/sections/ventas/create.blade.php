@@ -32,12 +32,12 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Panel izquierdo: Búsqueda y lista de artículos -->
+            <!-- Panel izquierdo: Botón para abrir modal y lista de artículos agregados -->
             <div class="lg:col-span-2">
-                <!-- Lista de artículos disponibles -->
+                <!-- Botón para abrir modal de búsqueda -->
                 <div class="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl shadow-sm p-6 mb-6">
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-semibold text-neutral-900 dark:text-white">Artículos Disponibles</h3>
+                        <h3 class="text-lg font-semibold text-neutral-900 dark:text-white">Agregar Artículos</h3>
                         <div class="flex items-center space-x-4">
                             <!-- Toggle para usar precio promocional -->
                             <div class="flex items-center space-x-3">
@@ -63,27 +63,19 @@
                                     </span>
                                 </label>
                             </div>
-                            <div class="text-sm text-neutral-500 dark:text-neutral-400">
-                                <span id="articulos-count">0</span> artículos
-                            </div>
                         </div>
                     </div>
                     
-                    <!-- Campo de búsqueda -->
-                    <div class="relative mb-4">
-                        <input type="text" 
-                               id="search-articulos" 
-                               placeholder="🔍 Buscar productos por nombre o código..." 
-                               class="w-full px-4 py-2 pl-10 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white focus:ring-primary-500 focus:border-primary-500"
-                               autocomplete="off">
-                        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <!-- Botón para abrir modal -->
+                    <button type="button" 
+                            id="btn-abrir-modal" 
+                            onclick="abrirModalArticulos()"
+                            class="w-full px-4 py-3 bg-primary-500 hover:bg-primary-600 text-white rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
-                    </div>
-                    
-                    <div id="articulos-disponibles" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto">
-                        <!-- Los artículos se cargan aquí -->
-                    </div>
+                        <span>Buscar y Agregar Artículos</span>
+                    </button>
                 </div>
 
                 <!-- Lista de artículos agregados -->
@@ -190,9 +182,61 @@
         </div>
     </x-container-wrapp>
 
+    <!-- Modal para búsqueda de artículos -->
+    <div id="modal-articulos" class="fixed inset-0 bg-gray-950 bg-opacity-90 z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white dark:bg-neutral-800 rounded-xl shadow-xl w-full max-w-6xl max-h-[90vh] overflow-hidden">
+                <!-- Header del modal -->
+                <div class="flex items-center justify-between p-6 border-b border-neutral-200 dark:border-neutral-700">
+                    <h3 class="text-xl font-semibold text-neutral-900 dark:text-white">Buscar Artículos</h3>
+                    <button type="button" 
+                            onclick="cerrarModalArticulos()"
+                            class="p-2 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-lg transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Contenido del modal -->
+                <div class="p-6">
+                    <!-- Campo de búsqueda -->
+                    <div class="relative mb-6">
+                        <input type="text" 
+                               id="search-modal-articulos" 
+                               placeholder="🔍 Buscar productos por nombre o código..." 
+                               class="w-full px-4 py-3 pl-12 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white focus:ring-primary-500 focus:border-primary-500"
+                               autocomplete="off">
+                        <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
+
+                    <!-- Lista de artículos -->
+                    <div id="articulos-modal-disponibles" class="space-y-2 max-h-96 overflow-y-auto">
+                        <!-- Los artículos se cargan aquí -->
+                    </div>
+                </div>
+
+                <!-- Footer del modal -->
+                <div class="flex items-center justify-end space-x-3 p-6 border-t border-neutral-200 dark:border-neutral-700">
+                    <button type="button" 
+                            onclick="cerrarModalArticulos()"
+                            class="px-4 py-2 text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 transition-colors">
+                        Cancelar
+                    </button>
+                    <button type="button" 
+                            onclick="cerrarModalArticulos()"
+                            class="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg transition-colors">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // ===== CONFIGURACIÓN =====
             const CONFIG = {
                 SEARCH_DELAY: 300,
                 IMAGE_BASE_URL: '{{ asset('src/assets/uploads/articulos/') }}/',
@@ -202,7 +246,6 @@
                 }
             };
 
-            // ===== ESTADO DE LA APLICACIÓN =====
             const state = {
                 itemsVenta: [],
                 todosLosArticulos: [],
@@ -210,11 +253,10 @@
                 usarPrecioPromocion: false
             };
 
-            // ===== ELEMENTOS DEL DOM =====
             const elements = {
-                articulosDisponibles: document.getElementById('articulos-disponibles'),
-                searchInput: document.getElementById('search-articulos'),
-                articulosCount: document.getElementById('articulos-count'),
+                modal: document.getElementById('modal-articulos'),
+                modalSearchInput: document.getElementById('search-modal-articulos'),
+                modalArticulosDisponibles: document.getElementById('articulos-modal-disponibles'),
                 itemsList: document.getElementById('items-list'),
                 itemsCount: document.getElementById('items-count'),
                 totalVenta: document.getElementById('total-venta'),
@@ -222,38 +264,30 @@
                 ventaForm: document.getElementById('venta-form')
             };
 
-            // ===== FUNCIONES AUXILIARES =====
             const utils = {
-                // Generar URL de imagen con fallback
                 getImageUrl: (imagen) => `${CONFIG.IMAGE_BASE_URL}${imagen}`,
                 
-                // Obtener clase CSS según el stock
                 getStockClass: (stock) => {
                     if (stock > 10) return 'text-green-600 dark:text-green-400';
                     if (stock > 5) return 'text-yellow-600 dark:text-yellow-400';
                     return 'text-red-600 dark:text-red-400';
                 },
                 
-                // Formatear precio con validación mejorada
                 formatPrice: (precio) => {
                     const numPrecio = parseFloat(precio);
                     if (isNaN(numPrecio) || numPrecio < 0) return '0.00';
                     return numPrecio.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
                 },
                 
-                // Escapar HTML para prevenir XSS
                 escapeHtml: (text) => text.replace(/"/g, '&quot;'),
                 
-                // Validar cantidad con límites
                 validateQuantity: (cantidad, stock) => Math.max(1, Math.min(parseInt(cantidad) || 1, stock)),
                 
-                // Validar precio con límites
                 validatePrice: (precio) => {
                     const numPrecio = parseFloat(precio);
                     return isNaN(numPrecio) || numPrecio < 0 ? 0 : numPrecio;
                 },
                 
-                // Determinar precio efectivo según toggle y disponibilidad
                 getEffectivePrice: (articulo, usarPromocion) => {
                     if (usarPromocion && articulo.tiene_precio_promocion) {
                         return parseFloat(articulo.precio_promocion);
@@ -262,18 +296,15 @@
                 }
             };
 
-            // ===== INICIALIZACIÓN =====
             function init() {
-                cargarArticulosDisponibles();
                 setupEventListeners();
             }
 
-            // ===== EVENT LISTENERS =====
             function setupEventListeners() {
-                elements.searchInput.addEventListener('input', function(e) {
+                elements.modalSearchInput.addEventListener('input', function(e) {
                     const query = e.target.value.trim();
                     clearTimeout(state.searchTimeout);
-                    state.searchTimeout = setTimeout(() => filtrarArticulos(query), CONFIG.SEARCH_DELAY);
+                    state.searchTimeout = setTimeout(() => filtrarArticulosModal(query), CONFIG.SEARCH_DELAY);
                 });
 
                 elements.ventaForm.addEventListener('submit', function(e) {
@@ -284,142 +315,21 @@
                     }
                     enviarVenta();
                 });
-            }
 
-            // ===== CARGAR ARTÍCULOS =====
-            async function cargarArticulosDisponibles() {
-                try {
-                    const params = new URLSearchParams({
-                        q: '',
-                        usar_precio_promocion: state.usarPrecioPromocion
-                    });
-                    
-                    const response = await fetch(`${CONFIG.ROUTES.SEARCH_ARTICULOS}?${params}`, {
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'Accept': 'application/json',
-                        }
-                    });
-                    
-                    if (!response.ok) throw new Error('Error en la respuesta del servidor');
-                    
-                    const data = await response.json();
-                    state.todosLosArticulos = data;
-                    mostrarArticulosDisponibles(data);
-                } catch (error) {
-                    console.error('Error al cargar artículos:', error);
-                    mostrarError('Error al cargar los artículos');
-                }
-            }
-
-            // ===== MOSTRAR ARTÍCULOS =====
-            function mostrarArticulosDisponibles(articulos) {
-                elements.articulosCount.textContent = articulos.length;
-                
-                if (articulos.length === 0) {
-                    mostrarMensajeVacio('No se encontraron artículos');
-                } else {
-                    elements.articulosDisponibles.innerHTML = articulos.map(crearCardArticulo).join('');
-                }
-            }
-
-            function crearCardArticulo(articulo) {
-                try {
-                    const stockClass = utils.getStockClass(articulo.stock);
-                    const imageUrl = utils.getImageUrl(articulo.imagen);
-                    const escapedArticulo = utils.escapeHtml(JSON.stringify(articulo));
-                    
-                    // Validar que los datos existan
-                    const tienePromocion = articulo.tiene_precio_promocion === true;
-                    const precioPromocionFormateado = articulo.precio_promocion_formateado || '';
-                    
-                    // Mostrar información de precios según el estado
-                    let precioInfo = '';
-                    if (tienePromocion && state.usarPrecioPromocion) {
-                        // Toggle ON: Mostrar precio promocional como principal y original tachado
-                        precioInfo = `
-                            <div class="text-sm font-medium text-green-600 dark:text-green-400">${articulo.precio_formateado || '$0.00'}</div>
-                            <div class="text-xs text-neutral-500 line-through">${articulo.precio_original_formateado || '$0.00'}</div>
-                        `;
-                    } else if (tienePromocion) {
-                        // Toggle OFF: Mostrar precio original como principal y promocional como info
-                        precioInfo = `
-                            <div class="text-sm font-medium text-green-600 dark:text-green-400">${articulo.precio_original_formateado || '$0.00'}</div>
-                            <div class="text-xs text-blue-600 dark:text-blue-400">Promo: ${precioPromocionFormateado}</div>
-                        `;
-                    } else {
-                        // Sin precio promocional: Mostrar solo precio original
-                        precioInfo = `<div class="text-sm font-medium text-green-600 dark:text-green-400">${articulo.precio_original_formateado || '$0.00'}</div>`;
+                elements.modal.addEventListener('click', function(e) {
+                    if (e.target === elements.modal) {
+                        cerrarModalArticulos();
                     }
-                    
-                    return `
-                        <div class="bg-neutral-50 dark:bg-neutral-700 rounded-lg p-4 border border-neutral-200 dark:border-neutral-600 hover:border-primary-300 dark:hover:border-primary-600 transition-colors duration-200 cursor-pointer"
-                             onclick="agregarArticulo(${escapedArticulo})">
-                            <div class="flex items-center space-x-3">
-                                <img src="${imageUrl}" 
-                                     alt="${articulo.nombre}" 
-                                     class="w-12 h-12 object-cover rounded-lg flex-shrink-0" 
-                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                <div class="w-12 h-12 bg-neutral-100 dark:bg-neutral-600 rounded-lg flex items-center justify-center flex-shrink-0" style="display: none;">
-                                    <svg class="w-6 h-6 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                    </svg>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <div class="font-medium text-neutral-900 dark:text-white truncate">${articulo.nombre}</div>
-                                    <div class="text-sm text-neutral-500 dark:text-neutral-400">Código: ${articulo.codigo}</div>
-                                    <div class="flex items-center justify-between mt-2">
-                                        <div>${precioInfo}</div>
-                                        <div class="flex items-center space-x-1">
-                                            <span class="text-xs text-neutral-500 dark:text-neutral-400">Stock:</span>
-                                            <span class="text-xs font-medium ${stockClass}">${articulo.stock}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="flex-shrink-0">
-                                    <svg class="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                } catch (error) {
-                    console.error('Error al crear card del artículo:', error, articulo);
-                    return `
-                        <div class="bg-red-50 dark:bg-red-900/20 rounded-lg p-4 border border-red-200 dark:border-red-800">
-                            <div class="text-red-600 dark:text-red-400 text-sm">
-                                Error al cargar: ${articulo.nombre || 'Artículo desconocido'}
-                            </div>
-                        </div>
-                    `;
-                }
+                });
+
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' && !elements.modal.classList.contains('hidden')) {
+                        cerrarModalArticulos();
+                    }
+                });
             }
 
-            function mostrarMensajeVacio(mensaje) {
-                elements.articulosDisponibles.innerHTML = `
-                    <div class="col-span-full text-center py-8">
-                        <svg class="mx-auto h-12 w-12 text-neutral-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                        <p class="text-neutral-500 dark:text-neutral-400">${mensaje}</p>
-                    </div>
-                `;
-            }
-
-            function mostrarError(mensaje) {
-                elements.articulosDisponibles.innerHTML = `
-                    <div class="col-span-full text-center py-8">
-                        <svg class="mx-auto h-12 w-12 text-red-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        <p class="text-red-600 dark:text-red-400">${mensaje}</p>
-                    </div>
-                `;
-            }
-
-            // ===== FILTRADO =====
-            async function filtrarArticulos(query) {
+            async function cargarArticulosModal(query = '') {
                 try {
                     const params = new URLSearchParams({
                         q: query,
@@ -436,16 +346,128 @@
                     if (!response.ok) throw new Error('Error en la respuesta del servidor');
                     
                     const data = await response.json();
-                    mostrarArticulosDisponibles(data);
+                    state.todosLosArticulos = data;
+                    mostrarArticulosModal(data);
                 } catch (error) {
-                    console.error('Error al filtrar artículos:', error);
-                    mostrarError('Error al filtrar los artículos');
+                    console.error('Error al cargar artículos:', error);
+                    mostrarErrorModal('Error al cargar los artículos');
                 }
             }
 
+            function mostrarArticulosModal(articulos) {
+                if (articulos.length === 0) {
+                    mostrarMensajeVacioModal('No se encontraron artículos');
+                } else {
+                    elements.modalArticulosDisponibles.innerHTML = articulos.map(crearCardArticuloModal).join('');
+                }
+            }
 
-            // ===== GESTIÓN DE ARTÍCULOS EN VENTA =====
-            function agregarArticulo(articulo) {
+            function crearCardArticuloModal(articulo) {
+                const stockClass = utils.getStockClass(articulo.stock);
+                const imageUrl = utils.getImageUrl(articulo.imagen);
+                const escapedArticulo = utils.escapeHtml(JSON.stringify(articulo));
+                
+                const tienePromocion = articulo.tiene_precio_promocion === true;
+                const precioPromocionFormateado = articulo.precio_promocion_formateado || '';
+                
+                let precioInfo = '';
+                if (tienePromocion && state.usarPrecioPromocion) {
+                    precioInfo = `
+                        <span class="text-sm font-medium text-green-600 dark:text-green-400">${articulo.precio_formateado || '$0.00'}</span>
+                        <span class="text-xs text-neutral-500 line-through ml-1">${articulo.precio_original_formateado || '$0.00'}</span>
+                    `;
+                } else if (tienePromocion) {
+                    precioInfo = `
+                        <span class="text-sm font-medium text-green-600 dark:text-green-400">${articulo.precio_original_formateado || '$0.00'}</span>
+                        <span class="text-xs text-blue-600 dark:text-blue-400 ml-1">Promo: ${precioPromocionFormateado}</span>
+                    `;
+                } else {
+                    precioInfo = `<span class="text-sm font-medium text-green-600 dark:text-green-400">${articulo.precio_original_formateado || '$0.00'}</span>`;
+                }
+                
+                return `
+                    <div class="flex items-center justify-between p-3 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors duration-200">
+                        <div class="flex items-center space-x-3 flex-1 min-w-0">
+                            <img src="${imageUrl}" 
+                                 alt="${articulo.nombre}" 
+                                 class="w-10 h-10 object-cover rounded-lg flex-shrink-0" 
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="w-10 h-10 bg-neutral-100 dark:bg-neutral-600 rounded-lg flex items-center justify-center flex-shrink-0" style="display: none;">
+                                <svg class="w-5 h-5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="font-medium text-neutral-900 dark:text-white truncate">${articulo.nombre}</div>
+                                <div class="text-sm text-neutral-500 dark:text-neutral-400">Código: ${articulo.codigo}</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4 flex-shrink-0">
+                            <div class="text-right">
+                                <div class="text-sm">${precioInfo}</div>
+                                <div class="text-xs text-neutral-500 dark:text-neutral-400">
+                                    Stock: <span class="font-medium ${stockClass}">${articulo.stock}</span>
+                                </div>
+                            </div>
+                            <button onclick="agregarArticuloDesdeModal(${escapedArticulo})" 
+                                    class="px-3 py-1 bg-primary-500 hover:bg-primary-600 text-white text-sm rounded-lg transition-colors duration-200 flex items-center space-x-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                                <span>Agregar</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            function mostrarMensajeVacioModal(mensaje) {
+                elements.modalArticulosDisponibles.innerHTML = `
+                    <div class="text-center py-8">
+                        <svg class="mx-auto h-12 w-12 text-neutral-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <p class="text-neutral-500 dark:text-neutral-400">${mensaje}</p>
+                    </div>
+                `;
+            }
+
+            function mostrarErrorModal(mensaje) {
+                elements.modalArticulosDisponibles.innerHTML = `
+                    <div class="text-center py-8">
+                        <svg class="mx-auto h-12 w-12 text-red-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p class="text-red-600 dark:text-red-400">${mensaje}</p>
+                    </div>
+                `;
+            }
+
+            async function filtrarArticulosModal(query) {
+                try {
+                    const params = new URLSearchParams({
+                        q: query,
+                        usar_precio_promocion: state.usarPrecioPromocion
+                    });
+                    
+                    const response = await fetch(`${CONFIG.ROUTES.SEARCH_ARTICULOS}?${params}`, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json',
+                        }
+                    });
+                    
+                    if (!response.ok) throw new Error('Error en la respuesta del servidor');
+                    
+                    const data = await response.json();
+                    mostrarArticulosModal(data);
+                } catch (error) {
+                    console.error('Error al filtrar artículos:', error);
+                    mostrarErrorModal('Error al filtrar los artículos');
+                }
+            }
+
+            function agregarArticuloDesdeModal(articulo) {
                 if (state.itemsVenta.find(item => item.id === articulo.id)) {
                     alert('Este artículo ya está agregado a la venta');
                     return;
@@ -466,6 +488,9 @@
                 });
 
                 actualizarVista();
+                
+                // Mostrar feedback visual de que se agregó
+                mostrarFeedbackAgregado(articulo.nombre);
             }
 
             function eliminarArticulo(index) {
@@ -500,7 +525,6 @@
                 actualizarVista();
             }
 
-            // ===== ACTUALIZAR VISTA =====
             function actualizarVista() {
                 actualizarContadores();
                 actualizarTotal();
@@ -600,7 +624,6 @@
                 `;
             }
 
-            // ===== ENVÍO DE VENTA =====
             function enviarVenta() {
                 crearInputsOcultos();
                 mostrarLoading();
@@ -637,47 +660,65 @@
                 `;
             }
 
-            // ===== FUNCIONES GLOBALES =====
-            window.agregarArticulo = agregarArticulo;
+            function abrirModalArticulos() {
+                elements.modal.classList.remove('hidden');
+                elements.modalSearchInput.focus();
+                cargarArticulosModal('');
+            }
+
+            function cerrarModalArticulos() {
+                elements.modal.classList.add('hidden');
+                elements.modalSearchInput.value = '';
+                elements.modalArticulosDisponibles.innerHTML = '';
+            }
+
+            function mostrarFeedbackAgregado(nombreArticulo) {
+                const notification = document.createElement('div');
+                notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 flex items-center space-x-2';
+                notification.innerHTML = `
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>${nombreArticulo} agregado a la venta</span>
+                `;
+                
+                document.body.appendChild(notification);
+                setTimeout(() => notification.remove(), 3000);
+            }
+
+            window.agregarArticuloDesdeModal = agregarArticuloDesdeModal;
             window.eliminarArticulo = eliminarArticulo;
             window.actualizarCantidad = actualizarCantidad;
             window.actualizarPrecio = actualizarPrecio;
             window.togglePrecioPromocion = togglePrecioPromocion;
+            window.abrirModalArticulos = abrirModalArticulos;
+            window.cerrarModalArticulos = cerrarModalArticulos;
 
             // ===== TOGGLE PRECIO PROMOCIONAL =====
             function togglePrecioPromocion() {
                 const checkbox = document.getElementById('usar-precio-promocion');
                 state.usarPrecioPromocion = checkbox.checked;
                 
-                // Actualizar el toggle visual
                 const toggleContainer = checkbox.nextElementSibling;
                 const toggleBackground = toggleContainer.querySelector('div:first-child');
                 const toggleCircle = toggleContainer.querySelector('div:nth-child(2)');
                 const toggleIcon = toggleContainer.querySelector('div:last-child');
                 
                 if (state.usarPrecioPromocion) {
-                    // Toggle activado - Color primario del sistema
-                    toggleBackground.classList.remove('bg-gray-300', 'dark:bg-gray-600');
-                    toggleBackground.classList.add('bg-primary-500', 'dark:bg-primary-400');
-                    toggleCircle.classList.remove('left-0.5');
-                    toggleCircle.classList.add('left-6');
-                    toggleIcon.classList.remove('opacity-0');
-                    toggleIcon.classList.add('opacity-100');
+                    toggleBackground.className = 'w-12 h-6 bg-primary-500 dark:bg-primary-400 rounded-full shadow-inner transition-all duration-300 ease-in-out group-hover:shadow-md';
+                    toggleCircle.className = 'absolute w-5 h-5 bg-white rounded-full shadow-lg top-0.5 left-6 transition-all duration-300 ease-in-out transform';
+                    toggleIcon.className = 'absolute inset-0 flex items-center justify-center opacity-100 transition-opacity duration-300';
                 } else {
-                    // Toggle desactivado - Gris neutro
-                    toggleBackground.classList.remove('bg-primary-500', 'dark:bg-primary-400');
-                    toggleBackground.classList.add('bg-gray-300', 'dark:bg-gray-600');
-                    toggleCircle.classList.remove('left-6');
-                    toggleCircle.classList.add('left-0.5');
-                    toggleIcon.classList.remove('opacity-100');
-                    toggleIcon.classList.add('opacity-0');
+                    toggleBackground.className = 'w-12 h-6 bg-gray-300 dark:bg-gray-600 rounded-full shadow-inner transition-all duration-300 ease-in-out group-hover:shadow-md';
+                    toggleCircle.className = 'absolute w-5 h-5 bg-white rounded-full shadow-lg top-0.5 left-0.5 transition-all duration-300 ease-in-out transform';
+                    toggleIcon.className = 'absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300';
                 }
                 
-                // Recargar artículos con el nuevo estado
-                const query = elements.searchInput.value.trim();
-                filtrarArticulos(query);
+                if (!elements.modal.classList.contains('hidden')) {
+                    const query = elements.modalSearchInput.value.trim();
+                    filtrarArticulosModal(query);
+                }
                 
-                // Actualizar items existentes en la venta
                 actualizarPreciosItemsVenta();
             }
             

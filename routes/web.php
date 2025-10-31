@@ -12,6 +12,10 @@ use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\TemporadaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VentaController;
+use App\Http\Controllers\TiendaController;
+use App\Http\Controllers\CarritoController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\PedidoController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,6 +38,35 @@ Route::middleware('guest')->group(function () {
     // Authentication routes
     Route::get('/login', [LoginController::class, 'index'])->name('login.index');
     Route::post('/login', [LoginController::class, 'login'])->name('login.login');
+});
+
+// ============================================================================
+// TIENDA ROUTES (Public - No authentication required)
+// ============================================================================
+// Rutas de tienda con prefijo /tienda
+// Funciona tanto en localhost (localhost:8000/tienda) como en producción
+// Para producción con subdominio, configurar el servidor web para redirigir shop.tudominio.com a /tienda
+Route::prefix('tienda')->middleware(['shop.domain'])->group(function () {
+    // Catálogo de productos
+    Route::get('/', [TiendaController::class, 'index'])->name('tienda.index');
+    Route::get('/producto/{articulo}', [TiendaController::class, 'show'])->name('tienda.show');
+    
+    // Carrito de compras (API routes)
+    Route::prefix('carrito')->name('carrito.')->group(function () {
+        Route::get('/', [CarritoController::class, 'index'])->name('index');
+        Route::post('/agregar', [CarritoController::class, 'agregar'])->name('agregar');
+        Route::put('/actualizar', [CarritoController::class, 'actualizar'])->name('actualizar');
+        Route::delete('/eliminar', [CarritoController::class, 'eliminar'])->name('eliminar');
+        Route::post('/limpiar', [CarritoController::class, 'limpiar'])->name('limpiar');
+        Route::get('/cantidad', [CarritoController::class, 'cantidad'])->name('cantidad');
+    });
+    
+    // Checkout
+    Route::prefix('checkout')->name('checkout.')->group(function () {
+        Route::get('/', [CheckoutController::class, 'index'])->name('index');
+        Route::post('/procesar', [CheckoutController::class, 'procesar'])->name('procesar');
+        Route::get('/confirmacion/{numeroOrden}', [CheckoutController::class, 'confirmacion'])->name('confirmacion');
+    });
 });
 
 // ============================================================================
@@ -149,6 +182,14 @@ Route::middleware('auth')->group(function () {
             // Rutas AJAX para estadísticas en tiempo real
             Route::get('/stats/realtime', [ReporteController::class, 'getRealTimeStats'])->name('stats.realtime');
         });
+        
+        // ====================================================================
+        // PEDIDOS ONLINE - Todos los usuarios autenticados pueden ver
+        // ====================================================================
+        Route::prefix('pedidos')->name('pedidos.')->group(function () {
+            Route::get('/', [PedidoController::class, 'index'])->name('index');
+            Route::get('/{pedido}', [PedidoController::class, 'show'])->name('show');
+        });
     });
 
     // ========================================================================
@@ -244,6 +285,14 @@ Route::middleware('auth')->group(function () {
             Route::put('/{user}', [UserController::class, 'update'])->name('update');
             Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
             Route::patch('/{user}/role', [UserController::class, 'changeRole'])->name('change-role');
+        });
+        
+        // ====================================================================
+        // PEDIDOS ONLINE MANAGEMENT - Solo administradores
+        // ====================================================================
+        Route::prefix('pedidos')->name('pedidos.')->group(function () {
+            Route::put('/{pedido}/estado', [PedidoController::class, 'actualizarEstado'])->name('actualizar-estado');
+            Route::put('/{pedido}/notas', [PedidoController::class, 'actualizarNotas'])->name('actualizar-notas');
         });
     });
 });

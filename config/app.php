@@ -17,6 +17,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Shop Subdomain
+    |--------------------------------------------------------------------------
+    |
+    | This value is the subdomain used for the ecommerce shop.
+    | Default is 'shop'. Example: shop.yourdomain.com
+    |
+    */
+
+    'shop_subdomain' => env('SHOP_SUBDOMAIN', 'shop'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Environment
     |--------------------------------------------------------------------------
     |

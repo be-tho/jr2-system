@@ -14,10 +14,16 @@ class Venta extends Model
 
     protected $fillable = [
         'user_id',
+        'numero_orden',
         'cliente_nombre',
+        'cliente_apellido',
+        'cliente_email',
+        'cliente_telefono',
         'total',
         'fecha_venta',
         'notas',
+        'tipo',
+        'estado',
     ];
 
     protected $casts = [
@@ -26,6 +32,24 @@ class Venta extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    /**
+     * Boot del modelo
+     */
+    protected static function boot()
+    {
+        parent::boot();
+        
+        // Establecer tipo por defecto basado en si tiene user_id o no
+        static::creating(function ($venta) {
+            if (empty($venta->tipo)) {
+                $venta->tipo = $venta->user_id ? 'manual' : 'online';
+            }
+            if ($venta->tipo === 'online' && empty($venta->estado)) {
+                $venta->estado = 'pendiente';
+            }
+        });
+    }
 
     /**
      * Relación con el usuario que registró la venta
@@ -86,6 +110,54 @@ class Venta extends Model
     }
 
     /**
+     * Scope para filtrar por tipo (manual/online)
+     */
+    public function scopeByTipo(Builder $query, string $tipo): Builder
+    {
+        return $query->where('tipo', $tipo);
+    }
+
+    /**
+     * Scope para filtrar pedidos online
+     */
+    public function scopeOnline(Builder $query): Builder
+    {
+        return $query->where('tipo', 'online');
+    }
+
+    /**
+     * Scope para filtrar ventas manuales
+     */
+    public function scopeManual(Builder $query): Builder
+    {
+        return $query->where('tipo', 'manual');
+    }
+
+    /**
+     * Scope para filtrar por estado
+     */
+    public function scopeByEstado(Builder $query, string $estado): Builder
+    {
+        return $query->where('estado', $estado);
+    }
+
+    /**
+     * Scope para filtrar por número de orden
+     */
+    public function scopeByNumeroOrden(Builder $query, string $numeroOrden): Builder
+    {
+        return $query->where('numero_orden', $numeroOrden);
+    }
+
+    /**
+     * Scope para buscar por email
+     */
+    public function scopeByEmail(Builder $query, string $email): Builder
+    {
+        return $query->where('cliente_email', 'like', "%{$email}%");
+    }
+
+    /**
      * Calcular el total de la venta sumando todos los items
      */
     public function calcularTotal(): float
@@ -107,6 +179,48 @@ class Venta extends Model
     public function getFechaVentaFormateadaAttribute(): string
     {
         return $this->fecha_venta->format('d/m/Y H:i');
+    }
+
+    /**
+     * Obtener nombre completo del cliente
+     */
+    public function getClienteNombreCompletoAttribute(): string
+    {
+        $nombre = $this->cliente_nombre ?? '';
+        $apellido = $this->cliente_apellido ?? '';
+        
+        return trim("{$nombre} {$apellido}");
+    }
+
+    /**
+     * Obtener el estado formateado
+     */
+    public function getEstadoNombreAttribute(): string
+    {
+        $estados = [
+            'pendiente' => 'Pendiente',
+            'procesado' => 'Procesado',
+            'completado' => 'Completado',
+            'cancelado' => 'Cancelado',
+        ];
+        
+        return $estados[$this->estado] ?? $this->estado;
+    }
+
+    /**
+     * Verificar si es un pedido online
+     */
+    public function esOnline(): bool
+    {
+        return $this->tipo === 'online';
+    }
+
+    /**
+     * Verificar si es una venta manual
+     */
+    public function esManual(): bool
+    {
+        return $this->tipo === 'manual';
     }
 
     /**

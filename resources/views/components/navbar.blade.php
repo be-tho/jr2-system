@@ -155,6 +155,16 @@
                         </div>
                     </div>
 
+                    {{-- Sección Pedidos Online --}}
+                    <a href="{{ route('pedidos.index') }}" 
+                       class="nav-item flex items-center gap-x-2 px-3 py-2.5 rounded-lg text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-300 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all duration-200 relative group cursor-pointer {{ Route::is('pedidos.*') ? 'bg-primary-50 dark:bg-primary-950/20 text-primary-600 dark:text-primary-400 border-r-2 border-primary-500' : '' }}"
+                       data-tooltip="Pedidos Online">
+                        <div class="w-8 h-8 rounded-lg {{ Route::is('pedidos.*') ? 'bg-primary-500' : 'bg-green-100 dark:bg-green-900/20 group-hover:bg-green-100 dark:group-hover:bg-green-900/20' }} flex items-center justify-center transition-all duration-200">
+                            <i class="ri-shopping-bag-3-line text-sm {{ Route::is('pedidos.*') ? 'text-white' : 'text-green-600 dark:text-green-400 group-hover:text-green-600 dark:group-hover:text-green-300' }}"></i>
+                        </div>
+                        <span class="nav-text text-sm font-medium {{ Route::is('pedidos.*') ? 'font-semibold' : '' }}">Pedidos</span>
+                    </a>
+
                     {{-- Sección Análisis Colapsable --}}
                     <div class="nav-section" data-section="analisis">
                         <button class="nav-section-toggle w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-600 transition-colors duration-200" 
@@ -319,8 +329,17 @@
                         </div>
                     </div>
 
+                    {{-- Sección Pedidos Online (Mobile) --}}
+                    <a href="{{ route('pedidos.index') }}" 
+                       class="flex items-center gap-x-2 px-2 py-2 rounded-lg text-neutral-900 dark:text-white hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-colors duration-200 {{ Route::is('pedidos.*') ? 'bg-primary-50 dark:bg-primary-950/20 text-primary-600 dark:text-primary-400' : '' }}">
+                        <div class="w-7 h-7 rounded-lg bg-green-100 dark:bg-green-900/20 flex items-center justify-center">
+                            <i class="ri-shopping-bag-3-line text-xs text-green-600 dark:text-green-400"></i>
+                        </div>
+                        <span class="text-sm font-medium">Pedidos</span>
+                    </a>
+
                     {{-- Sección Análisis Colapsable --}}
-                    <div class="mobile-section" data-section="analisis">
+                        <div class="mobile-section" data-section="analisis">
                         <button class="w-full flex items-center justify-between px-2 py-2 text-left rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors duration-200" 
                                 onclick="toggleMobileSection('analisis')">
                             <div class="flex items-center gap-x-2">

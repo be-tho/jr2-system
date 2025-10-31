@@ -261,7 +261,23 @@ class VentaService
      */
     public function getVentasConFiltros(array $filtros = [], int $perPage = 15)
     {
-        return Venta::getOptimizedList($filtros, $perPage);
+        $query = Venta::with(['user:id,name', 'items.articulo:id,nombre,codigo'])
+            ->recent();
+
+        // Aplicar filtros
+        if (!empty($filtros['fecha_inicio']) || !empty($filtros['fecha_fin'])) {
+            $query->byFecha($filtros['fecha_inicio'] ?? null, $filtros['fecha_fin'] ?? null);
+        }
+
+        if (!empty($filtros['cliente'])) {
+            $query->byCliente($filtros['cliente']);
+        }
+
+        if (!empty($filtros['articulo_id'])) {
+            $query->byArticulo($filtros['articulo_id']);
+        }
+
+        return $query->paginate($perPage);
     }
 
     /**
@@ -360,5 +376,76 @@ class VentaService
             ->orderBy('total_vendido', 'desc')
             ->limit($limite)
             ->get();
+    }
+
+    /**
+     * Crear un pedido online (sin usuario registrado)
+     */
+    public function crearPedidoOnline(array $datosCliente, array $items, $ordenService): Venta
+    {
+        try {
+            Log::info('Iniciando creación de pedido online', [
+                'cliente_email' => $datosCliente['cliente_email'],
+                'items_count' => count($items),
+            ]);
+
+            return DB::transaction(function () use ($datosCliente, $items, $ordenService) {
+                // 1. Validar stock para todos los artículos
+                $erroresStock = $this->stockService->verificarStockMultiple($items);
+                
+                if (!empty($erroresStock)) {
+                    $mensaje = 'Stock insuficiente para los siguientes artículos: ';
+                    $mensaje .= collect($erroresStock)->map(function ($error) {
+                        return "{$error['articulo_nombre']} (disponible: {$error['stock_disponible']}, solicitado: {$error['cantidad_solicitada']})";
+                    })->join(', ');
+                    
+                    throw new InsufficientStockException($mensaje);
+                }
+
+                // 2. Generar número de orden único
+                $numeroOrden = $ordenService->generarNumeroOrden();
+
+                // 3. Calcular total del pedido
+                $total = $this->calcularTotalVenta($items);
+
+                // 4. Crear el pedido (venta tipo online)
+                $venta = Venta::create([
+                    'user_id' => null, // Pedido online sin usuario registrado
+                    'numero_orden' => $numeroOrden,
+                    'cliente_nombre' => $datosCliente['cliente_nombre'],
+                    'cliente_apellido' => $datosCliente['cliente_apellido'],
+                    'cliente_email' => $datosCliente['cliente_email'],
+                    'cliente_telefono' => $datosCliente['cliente_telefono'],
+                    'total' => $total,
+                    'fecha_venta' => now(),
+                    'tipo' => 'online',
+                    'estado' => 'pendiente',
+                    'notas' => $datosCliente['notas'] ?? null,
+                ]);
+
+                // 5. Crear items y reducir stock
+                foreach ($items as $item) {
+                    $this->crearItemVenta($venta->id, $item);
+                }
+
+                Log::info('Pedido online creado exitosamente', [
+                    'venta_id' => $venta->id,
+                    'numero_orden' => $numeroOrden,
+                    'total' => $total,
+                    'items_count' => count($items)
+                ]);
+
+                return $venta->load(['items.articulo']);
+            });
+
+        } catch (\Exception $e) {
+            Log::error('Error al crear pedido online', [
+                'error' => $e->getMessage(),
+                'cliente_email' => $datosCliente['cliente_email'] ?? 'N/A',
+                'items_count' => count($items),
+            ]);
+            
+            throw $e;
+        }
     }
 }

@@ -28,6 +28,7 @@ class VentaController extends Controller
 
     /**
      * Display a listing of the resource.
+     * Solo muestra ventas manuales (del dashboard)
      */
     public function index(Request $request)
     {
@@ -38,7 +39,25 @@ class VentaController extends Controller
             'articulo_id' => $request->get('articulo_id'),
         ];
 
-        $ventas = $this->ventaService->getVentasConFiltros($filtros);
+        // Filtrar solo ventas manuales
+        $ventas = Venta::manual()
+            ->with(['user:id,name', 'items.articulo:id,nombre,codigo'])
+            ->recent();
+
+        // Aplicar filtros
+        if (!empty($filtros['fecha_inicio']) || !empty($filtros['fecha_fin'])) {
+            $ventas->byFecha($filtros['fecha_inicio'] ?? null, $filtros['fecha_fin'] ?? null);
+        }
+
+        if (!empty($filtros['cliente'])) {
+            $ventas->byCliente($filtros['cliente']);
+        }
+
+        if (!empty($filtros['articulo_id'])) {
+            $ventas->byArticulo($filtros['articulo_id']);
+        }
+
+        $ventas = $ventas->paginate(15);
         
         // Para el filtro de artículos
         $articulos = Articulo::select('id', 'nombre', 'codigo')->orderBy('nombre')->get();

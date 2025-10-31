@@ -24,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => RoleMiddleware::class,
             'permission' => PermissionMiddleware::class,
             'telescope.auth' => TelescopeAuthorize::class,
+            'shop.domain' => \App\Http\Middleware\ShopDomain::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

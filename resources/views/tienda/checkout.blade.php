@@ -146,39 +146,41 @@ function cargarCarrito() {
 }
 
 function eliminarDelCarrito(articuloId, nombreProducto) {
-    if (!confirm(`¿Eliminar "${nombreProducto}" del carrito?`)) {
-        return;
-    }
-
-    fetch('{{ route('carrito.eliminar') }}', {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-        },
-        body: JSON.stringify({
-            articulo_id: articuloId
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            mostrarNotificacion('Eliminado', 'success');
-            cargarCarrito();
-            
-            if (data.cart_count === 0) {
-                setTimeout(() => {
-                    window.location.href = '{{ route('tienda.index') }}';
-                }, 1500);
-            }
-        } else {
-            mostrarNotificacion(data.message || 'Error', 'error');
+    mostrarConfirmacion(
+        'Eliminar producto',
+        `¿Estás seguro de que deseas eliminar "${nombreProducto}" del carrito?`,
+        () => {
+            fetch('{{ route('carrito.eliminar') }}', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({
+                    articulo_id: articuloId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    mostrarNotificacion('Eliminado', 'success');
+                    cargarCarrito();
+                    
+                    if (data.cart_count === 0) {
+                        setTimeout(() => {
+                            window.location.href = '{{ route('tienda.index') }}';
+                        }, 1500);
+                    }
+                } else {
+                    mostrarNotificacion(data.message || 'Error', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                mostrarNotificacion('Error', 'error');
+            });
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        mostrarNotificacion('Error', 'error');
-    });
+    );
 }
 
 document.addEventListener('DOMContentLoaded', function() {

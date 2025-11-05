@@ -5,67 +5,68 @@
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <h1 class="text-3xl font-bold text-neutral-900 dark:text-white mb-8">Finalizar Pedido</h1>
 
-    <form action="{{ route('checkout.procesar') }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        @csrf
-
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <!-- Información del Cliente -->
-        <div class="bg-white dark:bg-neutral-800 rounded-lg shadow-sm p-6">
-            <h2 class="text-xl font-semibold text-neutral-900 dark:text-white mb-6">Información de Contacto</h2>
+        <form action="{{ route('checkout.procesar') }}" method="POST" id="checkout-form">
+            @csrf
+            <div class="bg-white dark:bg-neutral-800 rounded-lg shadow-sm p-6">
+                <h2 class="text-xl font-semibold text-neutral-900 dark:text-white mb-6">Información de Contacto</h2>
 
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-                        Nombre <span class="text-red-500">*</span>
-                    </label>
-                    <input type="text" name="cliente_nombre" value="{{ old('cliente_nombre') }}" required
-                           class="w-full px-4 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-neutral-700 dark:text-white">
-                    @error('cliente_nombre')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                            Nombre <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="cliente_nombre" value="{{ old('cliente_nombre') }}" required
+                               class="w-full px-4 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-neutral-700 dark:text-white">
+                        @error('cliente_nombre')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-                        Apellido <span class="text-red-500">*</span>
-                    </label>
-                    <input type="text" name="cliente_apellido" value="{{ old('cliente_apellido') }}" required
-                           class="w-full px-4 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-neutral-700 dark:text-white">
-                    @error('cliente_apellido')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
+                    <div>
+                        <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                            Apellido <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="cliente_apellido" value="{{ old('cliente_apellido') }}" required
+                               class="w-full px-4 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-neutral-700 dark:text-white">
+                        @error('cliente_apellido')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-                        Correo Electrónico <span class="text-red-500">*</span>
-                    </label>
-                    <input type="email" name="cliente_email" value="{{ old('cliente_email') }}" required
-                           class="w-full px-4 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-neutral-700 dark:text-white">
-                    @error('cliente_email')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
+                    <div>
+                        <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                            Correo Electrónico <span class="text-red-500">*</span>
+                        </label>
+                        <input type="email" name="cliente_email" value="{{ old('cliente_email') }}" required
+                               class="w-full px-4 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-neutral-700 dark:text-white">
+                        @error('cliente_email')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-                        Teléfono <span class="text-red-500">*</span>
-                    </label>
-                    <input type="tel" name="cliente_telefono" value="{{ old('cliente_telefono') }}" required
-                           class="w-full px-4 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-neutral-700 dark:text-white">
-                    @error('cliente_telefono')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
+                    <div>
+                        <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                            Teléfono <span class="text-red-500">*</span>
+                        </label>
+                        <input type="tel" name="cliente_telefono" value="{{ old('cliente_telefono') }}" required
+                               class="w-full px-4 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-neutral-700 dark:text-white">
+                        @error('cliente_telefono')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-                        Notas (opcional)
-                    </label>
-                    <textarea name="notas" rows="3"
-                              class="w-full px-4 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-neutral-700 dark:text-white">{{ old('notas') }}</textarea>
+                    <div>
+                        <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                            Notas (opcional)
+                        </label>
+                        <textarea name="notas" rows="3"
+                                  class="w-full px-4 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-neutral-700 dark:text-white">{{ old('notas') }}</textarea>
+                    </div>
                 </div>
             </div>
-        </div>
+        </form>
 
         <!-- Resumen del Pedido -->
         <div class="bg-white dark:bg-neutral-800 rounded-lg shadow-sm p-6">
@@ -82,11 +83,11 @@
                 </div>
             </div>
 
-            <button type="submit" class="w-full bg-primary-500 text-white px-6 py-3 rounded-lg hover:bg-primary-600 transition-colors mt-6 font-semibold">
+            <button type="submit" form="checkout-form" class="w-full bg-primary-500 text-white px-6 py-3 rounded-lg hover:bg-primary-600 transition-colors mt-6 font-semibold">
                 Confirmar Pedido
             </button>
         </div>
-    </form>
+    </div>
 </div>
 
 @push('scripts')
@@ -115,8 +116,10 @@ function cargarCarrito() {
                         </div>
                         <div class="flex items-center space-x-4">
                             <span class="font-semibold text-neutral-900 dark:text-white">${item.subtotal_formateado}</span>
-                            <button onclick="eliminarDelCarrito(${item.articulo_id}, ${JSON.stringify(item.nombre)})" 
-                                    class="text-red-500 hover:text-red-700 dark:hover:text-red-400 transition-colors p-2"
+                            <button type="button" 
+                                    class="btn-eliminar text-red-500 hover:text-red-700 dark:hover:text-red-400 transition-colors p-2"
+                                    data-articulo-id="${item.articulo_id}"
+                                    data-nombre="${item.nombre.replace(/"/g, '&quot;')}"
                                     title="Eliminar del carrito">
                                 <i class="ri-delete-bin-line text-lg"></i>
                             </button>
@@ -128,6 +131,17 @@ function cargarCarrito() {
             summaryDiv.innerHTML = html;
             totalDiv.textContent = data.total_formateado;
             actualizarCarrito();
+            
+            // Agregar event listeners a los botones de eliminar
+            document.querySelectorAll('.btn-eliminar').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const articuloId = parseInt(this.getAttribute('data-articulo-id'));
+                    const nombre = this.getAttribute('data-nombre');
+                    eliminarDelCarrito(articuloId, nombre);
+                });
+            });
         })
         .catch(error => {
             console.error('Error al cargar carrito:', error);
@@ -137,6 +151,8 @@ function cargarCarrito() {
 
 // Eliminar producto del carrito
 function eliminarDelCarrito(articuloId, nombreProducto) {
+    console.log('eliminarDelCarrito llamado:', articuloId, nombreProducto);
+    
     if (!confirm(`¿Eliminar "${nombreProducto}" del carrito?`)) {
         return;
     }
@@ -151,8 +167,15 @@ function eliminarDelCarrito(articuloId, nombreProducto) {
             articulo_id: articuloId
         })
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('Response status:', response.status);
+        if (!response.ok) {
+            return response.json().then(err => Promise.reject(err));
+        }
+        return response.json();
+    })
     .then(data => {
+        console.log('Response data:', data);
         if (data.success) {
             mostrarNotificacion('Eliminado', 'success');
             cargarCarrito(); // Recargar el carrito
@@ -168,7 +191,7 @@ function eliminarDelCarrito(articuloId, nombreProducto) {
         }
     })
     .catch(error => {
-        console.error('Error:', error);
+        console.error('Error completo:', error);
         mostrarNotificacion('Error', 'error');
     });
 }

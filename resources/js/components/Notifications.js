@@ -24,7 +24,7 @@ export function Notifications() {
                 this.show({
                     type: 'success',
                     message: successMessage.textContent.trim(),
-                    duration: 5000
+                    duration: 3000
                 });
             }
             
@@ -32,7 +32,7 @@ export function Notifications() {
                 this.show({
                     type: 'error',
                     message: errorMessage.textContent.trim(),
-                    duration: 8000
+                    duration: 4000
                 });
             }
             
@@ -40,7 +40,7 @@ export function Notifications() {
                 this.show({
                     type: 'warning',
                     message: warningMessage.textContent.trim(),
-                    duration: 6000
+                    duration: 3000
                 });
             }
             
@@ -48,18 +48,18 @@ export function Notifications() {
                 this.show({
                     type: 'info',
                     message: infoMessage.textContent.trim(),
-                    duration: 5000
+                    duration: 3000
                 });
             }
         },
         
         show(notification) {
-            const id = Date.now();
+            const id = Date.now() + Math.random();
             const newNotification = {
                 id: id,
                 type: notification.type || 'info',
                 message: notification.message,
-                duration: notification.duration || 5000,
+                duration: notification.duration || 3000,
                 show: true
             };
             
@@ -79,7 +79,7 @@ export function Notifications() {
                 this.notifications[index].show = false;
                 setTimeout(() => {
                     this.notifications.splice(index, 1);
-                }, 300); // Tiempo para la animación de salida
+                }, 150); // Tiempo para la animación de salida (más rápido)
             }
         },
         
@@ -89,7 +89,17 @@ export function Notifications() {
             });
             setTimeout(() => {
                 this.notifications = [];
-            }, 300);
+            }, 150);
+        },
+        
+        getIconClass(type) {
+            const icons = {
+                success: 'ri-checkbox-circle-fill',
+                error: 'ri-error-warning-fill',
+                warning: 'ri-alert-fill',
+                info: 'ri-information-fill'
+            };
+            return icons[type] || icons.info;
         },
         
         getIcon(type) {
@@ -115,7 +125,7 @@ export function Notifications() {
 }
 
 // Función helper para mostrar notificaciones desde cualquier parte del código
-window.showNotification = function(type, message, duration = 5000) {
+window.showNotification = function(type, message, duration = 3000) {
     window.dispatchEvent(new CustomEvent('show-notification', {
         detail: { type, message, duration }
     }));

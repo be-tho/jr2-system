@@ -62,59 +62,23 @@
         </footer>
     </div>
 
-    <!-- Contenedor de Notificaciones Globales -->
-    <div id="notifications-container" class="fixed top-20 right-4 z-50 space-y-3 max-w-md w-full px-4 sm:px-0"></div>
+    <!-- Sistema de Notificaciones con Alpine.js -->
+    @include('components.notifications-alpine')
 
-    <!-- Scripts para carrito y notificaciones -->
+    <!-- Scripts para carrito -->
     <script>
-        // Sistema de Notificaciones Globales
+        // Función helper para mostrar notificaciones (usa Alpine.js)
         function mostrarNotificacion(mensaje, tipo = 'success') {
-            const container = document.getElementById('notifications-container');
-            if (!container) return;
-
-            const notification = document.createElement('div');
-            const tipos = {
-                success: {
-                    bg: 'bg-green-500',
-                    icon: 'ri-checkbox-circle-fill',
-                    text: 'text-white'
-                },
-                error: {
-                    bg: 'bg-red-500',
-                    icon: 'ri-error-warning-fill',
-                    text: 'text-white'
-                },
-                info: {
-                    bg: 'bg-blue-500',
-                    icon: 'ri-information-fill',
-                    text: 'text-white'
-                },
-                warning: {
-                    bg: 'bg-yellow-500',
-                    icon: 'ri-alert-fill',
-                    text: 'text-white'
-                }
-            };
-
-            const config = tipos[tipo] || tipos.success;
-            
-            notification.className = `${config.bg} ${config.text} px-6 py-4 rounded-lg shadow-lg flex items-center space-x-3 animate-slide-in-right transform transition-all duration-300`;
-            notification.innerHTML = `
-                <i class="${config.icon} text-xl"></i>
-                <span class="flex-1 font-medium">${mensaje}</span>
-                <button onclick="this.parentElement.remove()" class="hover:opacity-75 transition-opacity">
-                    <i class="ri-close-line text-xl"></i>
-                </button>
-            `;
-
-            container.appendChild(notification);
-
-            // Auto-eliminar después de 4 segundos
-            setTimeout(() => {
-                notification.style.opacity = '0';
-                notification.style.transform = 'translateX(100%)';
-                setTimeout(() => notification.remove(), 300);
-            }, 4000);
+            if (window.showNotification) {
+                window.showNotification(tipo, mensaje, 3000); // 3 segundos
+            } else {
+                // Fallback si Alpine no está cargado aún
+                setTimeout(() => {
+                    if (window.showNotification) {
+                        window.showNotification(tipo, mensaje, 3000);
+                    }
+                }, 100);
+            }
         }
 
         // Actualizar contador del carrito
@@ -133,33 +97,17 @@
         // Actualizar carrito al cargar la página
         document.addEventListener('DOMContentLoaded', function() {
             actualizarCarrito();
+            
+            // Mostrar mensajes de sesión
+            @if(session('success'))
+                mostrarNotificacion('{{ session('success') }}', 'success');
+            @endif
+
+            @if(session('error'))
+                mostrarNotificacion('{{ session('error') }}', 'error');
+            @endif
         });
-
-        // Mensajes de sesión
-        @if(session('success'))
-            mostrarNotificacion('{{ session('success') }}', 'success');
-        @endif
-
-        @if(session('error'))
-            mostrarNotificacion('{{ session('error') }}', 'error');
-        @endif
     </script>
-
-    <style>
-        @keyframes slide-in-right {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-        .animate-slide-in-right {
-            animation: slide-in-right 0.3s ease-out;
-        }
-    </style>
 
     @stack('scripts')
 </body>

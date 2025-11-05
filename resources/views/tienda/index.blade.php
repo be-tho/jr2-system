@@ -134,7 +134,6 @@
 @push('scripts')
 <script>
 function agregarAlCarrito(articuloId, element) {
-    // Deshabilitar botón mientras se procesa
     const button = element || (window.event ? window.event.target.closest('button') : null);
     const originalText = button ? button.innerHTML : null;
     
@@ -168,7 +167,6 @@ function agregarAlCarrito(articuloId, element) {
         mostrarNotificacion('Error', 'error');
     })
     .finally(() => {
-        // Restaurar botón
         if (button && originalText) {
             button.disabled = false;
             button.innerHTML = originalText;

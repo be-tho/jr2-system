@@ -65,14 +65,11 @@
     <!-- Sistema de Notificaciones con Alpine.js -->
     @include('components.notifications-alpine')
 
-    <!-- Scripts para carrito -->
     <script>
-        // Función helper para mostrar notificaciones (usa Alpine.js)
         function mostrarNotificacion(mensaje, tipo = 'success') {
             if (window.showNotification) {
-                window.showNotification(tipo, mensaje, 3000); // 3 segundos
+                window.showNotification(tipo, mensaje, 3000);
             } else {
-                // Fallback si Alpine no está cargado aún
                 setTimeout(() => {
                     if (window.showNotification) {
                         window.showNotification(tipo, mensaje, 3000);
@@ -81,7 +78,6 @@
             }
         }
 
-        // Actualizar contador del carrito
         function actualizarCarrito() {
             fetch('{{ route('carrito.cantidad') }}')
                 .then(response => response.json())
@@ -94,11 +90,9 @@
                 .catch(error => console.error('Error al actualizar carrito:', error));
         }
 
-        // Actualizar carrito al cargar la página
         document.addEventListener('DOMContentLoaded', function() {
             actualizarCarrito();
             
-            // Mostrar mensajes de sesión
             @if(session('success'))
                 mostrarNotificacion('{{ session('success') }}', 'success');
             @endif

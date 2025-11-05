@@ -72,9 +72,7 @@
         <div class="bg-white dark:bg-neutral-800 rounded-lg shadow-sm p-6">
             <h2 class="text-xl font-semibold text-neutral-900 dark:text-white mb-6">Resumen del Pedido</h2>
 
-            <div id="cart-summary" class="space-y-4 mb-6">
-                <!-- Items del carrito se cargarán aquí -->
-            </div>
+            <div id="cart-summary" class="space-y-4 mb-6"></div>
 
             <div class="border-t border-neutral-200 dark:border-neutral-700 pt-4">
                 <div class="flex justify-between items-center text-xl font-bold text-neutral-900 dark:text-white">
@@ -92,7 +90,6 @@
 
 @push('scripts')
 <script>
-// Cargar resumen del carrito
 function cargarCarrito() {
     fetch('{{ route('carrito.index') }}')
         .then(response => response.json())
@@ -132,7 +129,6 @@ function cargarCarrito() {
             totalDiv.textContent = data.total_formateado;
             actualizarCarrito();
             
-            // Agregar event listeners a los botones de eliminar
             document.querySelectorAll('.btn-eliminar').forEach(btn => {
                 btn.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -149,10 +145,7 @@ function cargarCarrito() {
         });
 }
 
-// Eliminar producto del carrito
 function eliminarDelCarrito(articuloId, nombreProducto) {
-    console.log('eliminarDelCarrito llamado:', articuloId, nombreProducto);
-    
     if (!confirm(`¿Eliminar "${nombreProducto}" del carrito?`)) {
         return;
     }
@@ -167,20 +160,12 @@ function eliminarDelCarrito(articuloId, nombreProducto) {
             articulo_id: articuloId
         })
     })
-    .then(response => {
-        console.log('Response status:', response.status);
-        if (!response.ok) {
-            return response.json().then(err => Promise.reject(err));
-        }
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
-        console.log('Response data:', data);
         if (data.success) {
             mostrarNotificacion('Eliminado', 'success');
-            cargarCarrito(); // Recargar el carrito
+            cargarCarrito();
             
-            // Si el carrito queda vacío, redirigir a la tienda
             if (data.cart_count === 0) {
                 setTimeout(() => {
                     window.location.href = '{{ route('tienda.index') }}';
@@ -191,12 +176,11 @@ function eliminarDelCarrito(articuloId, nombreProducto) {
         }
     })
     .catch(error => {
-        console.error('Error completo:', error);
+        console.error('Error:', error);
         mostrarNotificacion('Error', 'error');
     });
 }
 
-// Cargar carrito al iniciar
 document.addEventListener('DOMContentLoaded', function() {
     cargarCarrito();
 });

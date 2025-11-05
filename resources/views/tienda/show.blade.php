@@ -110,7 +110,6 @@ function agregarAlCarrito(articuloId, element) {
     const button = element || (window.event ? window.event.target.closest('button') : null);
     const originalText = button ? button.innerHTML : null;
     
-    // Deshabilitar botón mientras se procesa
     if (button) {
         button.disabled = true;
         button.innerHTML = '<i class="ri-loader-4-line animate-spin mr-2"></i>Agregando...';
@@ -142,7 +141,6 @@ function agregarAlCarrito(articuloId, element) {
         mostrarNotificacion('Error', 'error');
     })
     .finally(() => {
-        // Restaurar botón
         if (button && originalText) {
             button.disabled = false;
             button.innerHTML = originalText;

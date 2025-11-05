@@ -92,37 +92,91 @@
 @push('scripts')
 <script>
 // Cargar resumen del carrito
-fetch('{{ route('carrito.index') }}')
+function cargarCarrito() {
+    fetch('{{ route('carrito.index') }}')
+        .then(response => response.json())
+        .then(data => {
+            const summaryDiv = document.getElementById('cart-summary');
+            const totalDiv = document.getElementById('cart-total');
+
+            if (data.items.length === 0) {
+                summaryDiv.innerHTML = '<p class="text-neutral-500">Tu carrito está vacío</p>';
+                totalDiv.textContent = '$0.00';
+                return;
+            }
+
+            let html = '';
+            data.items.forEach(item => {
+                html += `
+                    <div class="flex justify-between items-center py-3 border-b border-neutral-200 dark:border-neutral-700" id="cart-item-${item.articulo_id}">
+                        <div class="flex-1">
+                            <p class="font-medium text-neutral-900 dark:text-white">${item.nombre}</p>
+                            <p class="text-sm text-neutral-500">Cantidad: ${item.cantidad} × ${item.precio_formateado}</p>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <span class="font-semibold text-neutral-900 dark:text-white">${item.subtotal_formateado}</span>
+                            <button onclick="eliminarDelCarrito(${item.articulo_id}, ${JSON.stringify(item.nombre)})" 
+                                    class="text-red-500 hover:text-red-700 dark:hover:text-red-400 transition-colors p-2"
+                                    title="Eliminar del carrito">
+                                <i class="ri-delete-bin-line text-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            summaryDiv.innerHTML = html;
+            totalDiv.textContent = data.total_formateado;
+            actualizarCarrito();
+        })
+        .catch(error => {
+            console.error('Error al cargar carrito:', error);
+            mostrarNotificacion('Error', 'error');
+        });
+}
+
+// Eliminar producto del carrito
+function eliminarDelCarrito(articuloId, nombreProducto) {
+    if (!confirm(`¿Eliminar "${nombreProducto}" del carrito?`)) {
+        return;
+    }
+
+    fetch('{{ route('carrito.eliminar') }}', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({
+            articulo_id: articuloId
+        })
+    })
     .then(response => response.json())
     .then(data => {
-        const summaryDiv = document.getElementById('cart-summary');
-        const totalDiv = document.getElementById('cart-total');
-
-        if (data.items.length === 0) {
-            summaryDiv.innerHTML = '<p class="text-neutral-500">Tu carrito está vacío</p>';
-            totalDiv.textContent = '$0.00';
-            return;
+        if (data.success) {
+            mostrarNotificacion('Eliminado', 'success');
+            cargarCarrito(); // Recargar el carrito
+            
+            // Si el carrito queda vacío, redirigir a la tienda
+            if (data.cart_count === 0) {
+                setTimeout(() => {
+                    window.location.href = '{{ route('tienda.index') }}';
+                }, 1500);
+            }
+        } else {
+            mostrarNotificacion(data.message || 'Error', 'error');
         }
-
-        let html = '';
-        data.items.forEach(item => {
-            html += `
-                <div class="flex justify-between items-center py-2 border-b border-neutral-200 dark:border-neutral-700">
-                    <div>
-                        <p class="font-medium text-neutral-900 dark:text-white">${item.nombre}</p>
-                        <p class="text-sm text-neutral-500">Cantidad: ${item.cantidad}</p>
-                    </div>
-                    <span class="font-semibold text-neutral-900 dark:text-white">${item.subtotal_formateado}</span>
-                </div>
-            `;
-        });
-
-        summaryDiv.innerHTML = html;
-        totalDiv.textContent = data.total_formateado;
     })
     .catch(error => {
-        console.error('Error al cargar carrito:', error);
+        console.error('Error:', error);
+        mostrarNotificacion('Error', 'error');
     });
+}
+
+// Cargar carrito al iniciar
+document.addEventListener('DOMContentLoaded', function() {
+    cargarCarrito();
+});
 </script>
 @endpush
 @endsection

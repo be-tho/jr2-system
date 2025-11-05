@@ -103,7 +103,7 @@
                         </div>
 
                         @if($articulo->stock > 0)
-                            <button onclick="agregarAlCarrito({{ $articulo->id }})" 
+                            <button onclick="agregarAlCarrito({{ $articulo->id }}, this)" 
                                     class="w-full bg-primary-500 text-white px-4 py-2 rounded-lg hover:bg-primary-600 transition-colors flex items-center justify-center">
                                 <i class="ri-shopping-cart-line mr-2"></i>
                                 Agregar al carrito
@@ -133,7 +133,16 @@
 
 @push('scripts')
 <script>
-function agregarAlCarrito(articuloId) {
+function agregarAlCarrito(articuloId, element) {
+    // Deshabilitar botón mientras se procesa
+    const button = element || (window.event ? window.event.target.closest('button') : null);
+    const originalText = button ? button.innerHTML : null;
+    
+    if (button) {
+        button.disabled = true;
+        button.innerHTML = '<i class="ri-loader-4-line animate-spin mr-2"></i>Agregando...';
+    }
+
     fetch('{{ route('carrito.agregar') }}', {
         method: 'POST',
         headers: {
@@ -148,15 +157,22 @@ function agregarAlCarrito(articuloId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert('Producto agregado al carrito');
+            mostrarNotificacion('Agregado', 'success');
             actualizarCarrito();
         } else {
-            alert(data.message || 'Error al agregar producto');
+            mostrarNotificacion(data.message || 'Error', 'error');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Error al agregar producto al carrito');
+        mostrarNotificacion('Error', 'error');
+    })
+    .finally(() => {
+        // Restaurar botón
+        if (button && originalText) {
+            button.disabled = false;
+            button.innerHTML = originalText;
+        }
     });
 }
 </script>

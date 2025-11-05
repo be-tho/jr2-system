@@ -74,7 +74,7 @@
                         </div>
                     </div>
 
-                    <button onclick="agregarAlCarrito({{ $articulo->id }})" 
+                    <button onclick="agregarAlCarrito({{ $articulo->id }}, this)" 
                             class="w-full bg-primary-500 text-white px-6 py-3 rounded-lg hover:bg-primary-600 transition-colors flex items-center justify-center text-lg font-semibold">
                         <i class="ri-shopping-cart-line mr-2"></i>
                         Agregar al carrito
@@ -105,8 +105,16 @@ function cambiarCantidad(delta) {
     }
 }
 
-function agregarAlCarrito(articuloId) {
+function agregarAlCarrito(articuloId, element) {
     const cantidad = parseInt(document.getElementById('cantidad').value);
+    const button = element || (window.event ? window.event.target.closest('button') : null);
+    const originalText = button ? button.innerHTML : null;
+    
+    // Deshabilitar botón mientras se procesa
+    if (button) {
+        button.disabled = true;
+        button.innerHTML = '<i class="ri-loader-4-line animate-spin mr-2"></i>Agregando...';
+    }
     
     fetch('{{ route('carrito.agregar') }}', {
         method: 'POST',
@@ -122,15 +130,23 @@ function agregarAlCarrito(articuloId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert('Producto agregado al carrito');
+            const mensaje = cantidad > 1 ? `${cantidad} agregados` : 'Agregado';
+            mostrarNotificacion(mensaje, 'success');
             actualizarCarrito();
         } else {
-            alert(data.message || 'Error al agregar producto');
+            mostrarNotificacion(data.message || 'Error', 'error');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Error al agregar producto al carrito');
+        mostrarNotificacion('Error', 'error');
+    })
+    .finally(() => {
+        // Restaurar botón
+        if (button && originalText) {
+            button.disabled = false;
+            button.innerHTML = originalText;
+        }
     });
 }
 </script>

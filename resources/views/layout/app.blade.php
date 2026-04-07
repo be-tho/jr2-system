@@ -25,6 +25,7 @@
 
     <!-- Linkear el css de build -->
     <link rel="stylesheet" href="{{ asset('build/assets/app-C1gA0mwz.css') }}">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <!-- Theme Script -->
     <script>
@@ -280,6 +281,6 @@
             // Los formularios con confirmación ahora son manejados por los componentes delete-button y delete-modal
         });
 </script>
-    <script src="{{ asset('build/assets/app-Q25KwOla.js') }}"></script>
+@vite(['resources/js/app.js'])
 </body>
 </html>

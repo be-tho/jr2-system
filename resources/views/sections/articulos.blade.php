@@ -255,9 +255,20 @@
 
                         <!-- Badge de precio -->
                         <div class="absolute bottom-3 left-3">
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-white/90 text-gray-900 shadow-sm">
-                                ${{ number_format($articulo->precio, 0, ',', '.') }}
-                            </span>
+                            @if($articulo->hasPrecioPromocion())
+                                <div class="space-y-1">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-green-500/90 text-white shadow-sm">
+                                        ${{ number_format($articulo->precio_promocion, 0, ',', '.') }}
+                                    </span>
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-white/90 text-gray-600 line-through">
+                                        ${{ number_format($articulo->precio, 0, ',', '.') }}
+                                    </span>
+                                </div>
+                            @else
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-white/90 text-gray-900 shadow-sm">
+                                    ${{ number_format($articulo->precio, 0, ',', '.') }}
+                                </span>
+                            @endif
                         </div>
                     </div>
 

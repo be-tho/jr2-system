@@ -73,50 +73,81 @@ class StatsRepository
     }
 
     /**
-     * Calcular estadísticas de rendimiento
+     * Calcular estadísticas de rendimiento optimizado
      */
     private function calculatePerformanceStats(): array
     {
-        // Estadísticas de artículos por categoría
-        $articulosPorCategoria = DB::table('articulos')
-            ->join('categoria', 'articulos.categoria_id', '=', 'categoria.id')
+        // Usar una sola query con CTE para obtener todas las estadísticas
+        $stats = DB::select("
+            WITH articulos_stats AS (
+                SELECT 
+                    COUNT(CASE WHEN stock = 0 THEN 1 END) as sin_stock,
+                    COUNT(CASE WHEN stock > 0 AND stock <= 5 THEN 1 END) as stock_critico,
+                    COUNT(CASE WHEN stock > 5 AND stock <= 20 THEN 1 END) as stock_bajo,
+                    COUNT(CASE WHEN stock > 20 THEN 1 END) as stock_normal
+                FROM articulos
+            ),
+            categoria_stats AS (
+                SELECT 
+                    c.nombre as categoria,
+                    COUNT(a.id) as cantidad,
+                    AVG(a.precio) as precio_promedio
+                FROM categoria c
+                LEFT JOIN articulos a ON c.id = a.categoria_id
+                GROUP BY c.id, c.nombre
+                ORDER BY cantidad DESC
+                LIMIT 5
+            ),
+            cortes_mes_stats AS (
+                SELECT 
+                    DATE_FORMAT(fecha, '%Y-%m') as mes,
+                    COUNT(*) as cantidad,
+                    SUM(cantidad_total) as total_articulos
+                FROM cortes
+                WHERE fecha >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+                GROUP BY mes
+                ORDER BY mes
+            )
+            SELECT 
+                (SELECT sin_stock FROM articulos_stats) as sin_stock,
+                (SELECT stock_critico FROM articulos_stats) as stock_critico,
+                (SELECT stock_bajo FROM articulos_stats) as stock_bajo,
+                (SELECT stock_normal FROM articulos_stats) as stock_normal
+        ")[0];
+
+        // Obtener estadísticas de categorías
+        $articulosPorCategoria = DB::table('categoria')
+            ->leftJoin('articulos', 'categoria.id', '=', 'articulos.categoria_id')
             ->select('categoria.nombre as categoria')
-            ->selectRaw('COUNT(*) as cantidad, AVG(articulos.precio) as precio_promedio')
+            ->selectRaw('COUNT(articulos.id) as cantidad, AVG(articulos.precio) as precio_promedio')
             ->groupBy('categoria.id', 'categoria.nombre')
             ->orderBy('cantidad', 'desc')
             ->limit(5)
             ->get();
 
-        // Estadísticas de cortes por mes (últimos 6 meses)
+        // Obtener estadísticas de cortes por mes usando whereBetween para mejor uso de índices
+        $fechaInicio = now()->subMonths(6)->startOfMonth();
+        $fechaFin = now()->endOfMonth();
+        
         $cortesPorMes = DB::table('cortes')
             ->selectRaw('
                 DATE_FORMAT(fecha, "%Y-%m") as mes,
                 COUNT(*) as cantidad,
                 SUM(cantidad_total) as total_articulos
             ')
-            ->where('fecha', '>=', now()->subMonths(6))
+            ->whereBetween('fecha', [$fechaInicio, $fechaFin])
             ->groupBy('mes')
             ->orderBy('mes')
             ->get();
-
-        // Estadísticas de stock
-        $stockStats = DB::table('articulos')
-            ->selectRaw('
-                COUNT(CASE WHEN stock = 0 THEN 1 END) as sin_stock,
-                COUNT(CASE WHEN stock > 0 AND stock <= 5 THEN 1 END) as stock_critico,
-                COUNT(CASE WHEN stock > 5 AND stock <= 20 THEN 1 END) as stock_bajo,
-                COUNT(CASE WHEN stock > 20 THEN 1 END) as stock_normal
-            ')
-            ->first();
 
         return [
             'articulos_por_categoria' => $articulosPorCategoria,
             'cortes_por_mes' => $cortesPorMes,
             'stock_stats' => [
-                'sin_stock' => $stockStats->sin_stock ?? 0,
-                'stock_critico' => $stockStats->stock_critico ?? 0,
-                'stock_bajo' => $stockStats->stock_bajo ?? 0,
-                'stock_normal' => $stockStats->stock_normal ?? 0,
+                'sin_stock' => $stats->sin_stock ?? 0,
+                'stock_critico' => $stats->stock_critico ?? 0,
+                'stock_bajo' => $stats->stock_bajo ?? 0,
+                'stock_normal' => $stats->stock_normal ?? 0,
             ],
         ];
     }

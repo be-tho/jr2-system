@@ -22,10 +22,9 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 
     <!-- Scripts -->
-
-    <!-- Linkear el css de build -->
-    <link rel="stylesheet" href="{{ asset('build/assets/app-C1gA0mwz.css') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <!--<link rel="stylesheet" href="{{ asset('build/assets/app-CYIgpKKf.css') }}"> -->
     
     <!-- Theme Script -->
     <script>
@@ -281,6 +280,13 @@
             // Los formularios con confirmación ahora son manejados por los componentes delete-button y delete-modal
         });
 </script>
-@vite(['resources/js/app.js'])
+<script src="{{ asset('build/assets/app-CyXi5qGE.js') }}"></script> 
+    <!--@vite('resources/js/app.js')-->
+    
+    <!-- Notificaciones dinámicas -->
+    @include('components.notifications-alpine')
+    
+    <!-- Stack para scripts adicionales -->
+    @stack('scripts')
 </body>
 </html>

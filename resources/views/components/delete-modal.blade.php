@@ -12,11 +12,12 @@
     'icon' => 'ri-delete-bin-line',
     'triggerClass' => '',
     'fullWidth' => false,
-    'itemName' => 'elemento'
+    'itemName' => 'elemento',
+    'modalId' => null
 ])
 
 @php
-    $modalId = 'delete-modal-' . uniqid();
+    $modalId = $modalId ?? 'delete-modal-' . uniqid();
     
     // Definir tamaños
     $sizes = [
@@ -151,7 +152,7 @@
         
         // Manejar envío de formularios de eliminación en modales
         document.addEventListener('DOMContentLoaded', function() {
-            const deleteForms = document.querySelectorAll('[id^="delete-form-delete-modal-"]');
+            const deleteForms = document.querySelectorAll('[id^="delete-form-"]');
             
             deleteForms.forEach(form => {
                 form.addEventListener('submit', function(e) {

@@ -14,22 +14,27 @@ class OptimizedQueryService
     private const CACHE_TTL = 300; // 5 minutos
 
     /**
-     * Obtener estadísticas optimizadas con una sola consulta
+     * Obtener estadísticas optimizadas con una sola consulta mejorada
      */
     public function getOptimizedStats(): array
     {
-        return Cache::remember('optimized_stats', self::CACHE_TTL, function () {
+        return Cache::remember('optimized_stats_v2', self::CACHE_TTL, function () {
+            // Usar una sola query con JOINs para mejor rendimiento
             $stats = DB::select("
                 SELECT 
-                    (SELECT COUNT(*) FROM articulos) as total_articulos,
-                    (SELECT SUM(stock) FROM articulos) as stock_total,
-                    (SELECT SUM(precio * stock) FROM articulos) as valor_total_inventario,
-                    (SELECT COUNT(*) FROM articulos WHERE stock = 0) as articulos_sin_stock,
-                    (SELECT COUNT(*) FROM articulos WHERE stock > 0 AND stock <= 10) as articulos_stock_bajo,
-                    (SELECT COUNT(*) FROM cortes) as total_cortes,
-                    (SELECT COUNT(*) FROM cortes WHERE estado IN (0, 1)) as cortes_pendientes,
-                    (SELECT COUNT(*) FROM categoria) as categorias_activas,
-                    (SELECT COUNT(*) FROM temporada) as temporadas_activas
+                    COUNT(DISTINCT a.id) as total_articulos,
+                    COALESCE(SUM(a.stock), 0) as stock_total,
+                    COALESCE(SUM(a.precio * a.stock), 0) as valor_total_inventario,
+                    COUNT(CASE WHEN a.stock = 0 THEN 1 END) as articulos_sin_stock,
+                    COUNT(CASE WHEN a.stock > 0 AND a.stock <= 10 THEN 1 END) as articulos_stock_bajo,
+                    COUNT(DISTINCT c.id) as total_cortes,
+                    COUNT(CASE WHEN c.estado IN (0, 1) THEN 1 END) as cortes_pendientes,
+                    COUNT(DISTINCT cat.id) as categorias_activas,
+                    COUNT(DISTINCT t.id) as temporadas_activas
+                FROM articulos a
+                LEFT JOIN cortes c ON 1=1
+                LEFT JOIN categoria cat ON 1=1
+                LEFT JOIN temporada t ON 1=1
             ")[0];
 
             return [
@@ -193,16 +198,29 @@ class OptimizedQueryService
      */
     public function clearAllCaches(): void
     {
-        Cache::forget('optimized_stats');
-        Cache::forget('form_data');
-        Cache::forget('categorias_for_filters');
-        Cache::forget('categorias_for_form');
-        Cache::forget('temporadas_for_filters');
-        Cache::forget('temporadas_for_form');
+        $cacheKeys = [
+            'optimized_stats',
+            'optimized_stats_v2',
+            'form_data',
+            'categorias_for_filters',
+            'categorias_for_form',
+            'temporadas_for_filters',
+            'temporadas_for_form',
+            'articulos_estadisticas',
+            'articulos_por_categoria',
+            'articulos_por_temporada',
+            'form_data_articulos'
+        ];
+
+        foreach ($cacheKeys as $key) {
+            Cache::forget($key);
+        }
         
         // Limpiar cachés de artículos populares
         for ($i = 1; $i <= 20; $i++) {
             Cache::forget("popular_articulos_{$i}");
+            Cache::forget("articulos_populares_{$i}");
+            Cache::forget("articulos_recientes_{$i}");
         }
         
         // Limpiar cachés de cortes recientes

@@ -126,6 +126,35 @@
                         </div>
                     </div>
 
+                    {{-- Sección Ventas Colapsable --}}
+                    <div class="nav-section" data-section="ventas">
+                        <button class="nav-section-toggle w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-600 transition-colors duration-200" 
+                                onclick="toggleNavSection('ventas')">
+                            <div class="flex items-center gap-x-2">
+                                <div class="w-8 h-8 rounded-lg bg-orange-100 dark:bg-orange-900/20 flex items-center justify-center">
+                                    <i class="ri-shopping-cart-2-line text-sm text-orange-600 dark:text-orange-400"></i>
+                                </div>
+                                <span class="nav-text text-sm font-medium text-neutral-900 dark:text-white">Ventas</span>
+                            </div>
+                            <i class="nav-arrow ri-arrow-down-s-line text-neutral-500 dark:text-neutral-400 transform transition-transform duration-200" 
+                               id="ventas-arrow"></i>
+                        </button>
+                        <div class="nav-section-items ml-4 mt-1 space-y-1 hidden" id="ventas-items">
+                            <a href="{{ route('ventas.create') }}" 
+                               class="nav-item flex items-center gap-x-2 px-3 py-2 rounded-md text-sm text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-colors duration-200 {{ Route::is('ventas.create') ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/20' : '' }}"
+                               data-tooltip="Registrar Nueva Venta">
+                                <i class="ri-add-circle-line text-sm"></i>
+                                <span class="nav-text">Nueva Venta</span>
+                            </a>
+                            <a href="{{ route('ventas.index') }}" 
+                               class="nav-item flex items-center gap-x-2 px-3 py-2 rounded-md text-sm text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-colors duration-200 {{ Route::is('ventas.index') || Route::is('ventas.show') ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/20' : '' }}"
+                               data-tooltip="Historial de Ventas">
+                                <i class="ri-history-line text-sm"></i>
+                                <span class="nav-text">Historial</span>
+                            </a>
+                        </div>
+                    </div>
+
                     {{-- Sección Análisis Colapsable --}}
                     <div class="nav-section" data-section="analisis">
                         <button class="nav-section-toggle w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-600 transition-colors duration-200" 
@@ -259,6 +288,33 @@
                                class="flex items-center gap-x-2 px-2 py-1.5 rounded-md text-sm text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 {{ Route::is('temporadas.*') ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/20' : '' }}">
                                 <i class="ri-calendar-line text-xs"></i>
                                 <span>Temporadas</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    {{-- Sección Ventas Colapsable --}}
+                    <div class="mobile-section" data-section="ventas">
+                        <button class="w-full flex items-center justify-between px-2 py-2 text-left rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors duration-200" 
+                                onclick="toggleMobileSection('ventas')">
+                            <div class="flex items-center gap-x-2">
+                                <div class="w-7 h-7 rounded-lg bg-orange-100 dark:bg-orange-900/20 flex items-center justify-center">
+                                    <i class="ri-shopping-cart-2-line text-xs text-orange-600 dark:text-orange-400"></i>
+                                </div>
+                                <span class="text-sm font-medium text-neutral-900 dark:text-white">Ventas</span>
+                            </div>
+                            <i class="ri-arrow-down-s-line text-neutral-500 dark:text-neutral-400 transform transition-transform duration-200" 
+                               id="mobile-ventas-arrow"></i>
+                        </button>
+                        <div class="ml-4 mt-1 space-y-1 hidden" id="mobile-ventas-items">
+                            <a href="{{ route('ventas.create') }}" 
+                               class="flex items-center gap-x-2 px-2 py-1.5 rounded-md text-sm text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 {{ Route::is('ventas.create') ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/20' : '' }}">
+                                <i class="ri-add-circle-line text-xs"></i>
+                                <span>Nueva Venta</span>
+                            </a>
+                            <a href="{{ route('ventas.index') }}" 
+                               class="flex items-center gap-x-2 px-2 py-1.5 rounded-md text-sm text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 {{ Route::is('ventas.index') || Route::is('ventas.show') ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/20' : '' }}">
+                                <i class="ri-history-line text-xs"></i>
+                                <span>Historial</span>
                             </a>
                         </div>
                     </div>

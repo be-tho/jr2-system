@@ -24,7 +24,6 @@
     <!-- Scripts -->
 
     <!-- Linkear el css de build -->
-    <link rel="stylesheet" href="{{ asset('build/assets/app-C1gA0mwz.css') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <!-- Theme Script -->

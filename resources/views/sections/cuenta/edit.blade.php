@@ -1,5 +1,7 @@
 @extends('layout.app')
 
+@section('title', 'Editar Perfil')
+
 @section('content')
 <div class="min-h-screen bg-gradient-neutral-subtle dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900">
     <div class="container mx-auto px-4 py-8">

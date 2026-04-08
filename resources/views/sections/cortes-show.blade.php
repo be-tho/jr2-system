@@ -3,6 +3,8 @@
 ?>
 @extends('layout.app')
 
+@section('title', 'Corte N° ' . $corte->numero_corte)
+
 @section('content')
 <div class="space-y-6">
     {{-- Header de la página --}}

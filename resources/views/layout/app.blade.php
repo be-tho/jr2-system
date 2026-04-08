@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'JR2 System') }}</title>
+    <!-- <title>{{ config('app.name', 'JR2 System') }}</title> -->
+    <title>JR2 | @yield('title', 'Home')</title>
+    <meta name="description" content="{{ config('app.description', 'Sistema de Gestión de la Moda') }}">
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
@@ -24,7 +26,9 @@
     <!-- Scripts -->
 
     <!-- Linkear el css de build -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!--@vite(['resources/css/app.css', 'resources/js/app.js'])-->
+    <!-- Linkear el css de build que esta en public/build/css/app.css-->
+    <link rel="stylesheet" href="{{ asset('build/assets/app-BntlsAbM.css') }}">
     
     <!-- Theme Script -->
     <script>
@@ -280,6 +284,8 @@
             // Los formularios con confirmación ahora son manejados por los componentes delete-button y delete-modal
         });
 </script>
-@vite(['resources/js/app.js'])
+<!--@vite(['resources/js/app.js'])-->
+//linkar el js de build que esta en public/build/js/app-BntlsAbM.js
+<script src="{{ asset('build/assets/app-CyXi5qGE.js') }}"></script>
 </body>
 </html>

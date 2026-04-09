@@ -3,8 +3,6 @@
 ?>
 @extends('layout.app')
 
-@section('title', 'Editar Artículo')
-
 @section('content')
 <div class="space-y-6">
     {{-- Header de la página --}}

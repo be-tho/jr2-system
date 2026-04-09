@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>JR2 | {{ $title ?? 'Imprimir' }}</title>
+    <title>{{ $title ?? 'Imprimir' }} - {{ config('app.name', 'JR2 System') }}</title>
     
     <!-- Estilos específicos para impresión -->
     <style>

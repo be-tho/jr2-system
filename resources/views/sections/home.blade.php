@@ -1,7 +1,5 @@
 @extends('layout.app')
 
-@section('title', 'Home')
-
 @section('content')
 <div class="space-y-6">
     {{-- Header de la página --}}

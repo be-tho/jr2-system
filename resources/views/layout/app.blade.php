@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <!-- <title>{{ config('app.name', 'JR2 System') }}</title> -->
-    <title>JR2 | @yield('title', 'Home')</title>
-    <meta name="description" content="{{ config('app.description', 'Sistema de Gestión de la Moda') }}">
+    <title>{{ config('app.name', 'JR2 System') }}</title>
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
@@ -27,14 +25,7 @@
 <<<<<<< HEAD
 
     <!-- Linkear el css de build -->
-    <!--@vite(['resources/css/app.css', 'resources/js/app.js'])-->
-    <!-- Linkear el css de build que esta en public/build/css/app.css-->
-    <link rel="stylesheet" href="{{ asset('build/assets/app-BntlsAbM.css') }}">
-=======
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-    <!--<link rel="stylesheet" href="{{ asset('build/assets/app-CYIgpKKf.css') }}"> -->
->>>>>>> parent of c9de45b (Merge pull request #17 from be-tho/develop)
     
     <!-- Theme Script -->
     <script>
@@ -290,19 +281,6 @@
             // Los formularios con confirmación ahora son manejados por los componentes delete-button y delete-modal
         });
 </script>
-<<<<<<< HEAD
-<!--@vite(['resources/js/app.js'])-->
-//linkar el js de build que esta en public/build/js/app-BntlsAbM.js
-<script src="{{ asset('build/assets/app-CyXi5qGE.js') }}"></script>
-=======
-<script src="{{ asset('build/assets/app-CyXi5qGE.js') }}"></script> 
-    <!--@vite('resources/js/app.js')-->
-    
-    <!-- Notificaciones dinámicas -->
-    @include('components.notifications-alpine')
-    
-    <!-- Stack para scripts adicionales -->
-    @stack('scripts')
->>>>>>> parent of c9de45b (Merge pull request #17 from be-tho/develop)
+@vite(['resources/js/app.js'])
 </body>
 </html>

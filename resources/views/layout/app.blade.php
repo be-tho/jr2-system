@@ -24,11 +24,17 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 
     <!-- Scripts -->
+<<<<<<< HEAD
 
     <!-- Linkear el css de build -->
     <!--@vite(['resources/css/app.css', 'resources/js/app.js'])-->
     <!-- Linkear el css de build que esta en public/build/css/app.css-->
     <link rel="stylesheet" href="{{ asset('build/assets/app-BntlsAbM.css') }}">
+=======
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <!--<link rel="stylesheet" href="{{ asset('build/assets/app-CYIgpKKf.css') }}"> -->
+>>>>>>> parent of c9de45b (Merge pull request #17 from be-tho/develop)
     
     <!-- Theme Script -->
     <script>
@@ -284,8 +290,19 @@
             // Los formularios con confirmación ahora son manejados por los componentes delete-button y delete-modal
         });
 </script>
+<<<<<<< HEAD
 <!--@vite(['resources/js/app.js'])-->
 //linkar el js de build que esta en public/build/js/app-BntlsAbM.js
 <script src="{{ asset('build/assets/app-CyXi5qGE.js') }}"></script>
+=======
+<script src="{{ asset('build/assets/app-CyXi5qGE.js') }}"></script> 
+    <!--@vite('resources/js/app.js')-->
+    
+    <!-- Notificaciones dinámicas -->
+    @include('components.notifications-alpine')
+    
+    <!-- Stack para scripts adicionales -->
+    @stack('scripts')
+>>>>>>> parent of c9de45b (Merge pull request #17 from be-tho/develop)
 </body>
 </html>
